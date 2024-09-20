@@ -139,6 +139,15 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	});
 });
 
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth']], function() {
+	Route::get('amenities', 'AmenityController@index')->name('amenities.index');
+	Route::get('amenities/create', 'AmenityController@create')->name('amenities.create');
+	Route::post('amenities', 'AmenityController@store')->name('amenities.store');
+	Route::get('amenities/{id}/edit', 'AmenityController@edit')->name('amenities.edit');
+	Route::put('amenities/{id}/edit', 'AmenityController@update')->name('amenities.update');
+	Route::delete('amenities/delete/{id}', 'AmenityController@destroy')->name('amenities.destroy');
+});
+
 
 Route::get('/', function () {
 	return redirect('login');

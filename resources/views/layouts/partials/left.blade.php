@@ -34,6 +34,18 @@
                          @endif
                      </ul>
                  </li>
+                <li class="treeview {{ Request::is('*amenity*') ? 'active' : '' }}">
+                    <a href="#"><i class="fa fa-files-o"></i> <span>Proman Setup</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{{ Request::is('admin/amenities') ? 'active' : '' }}">
+                            <a href="{{ route('admin.amenities.index') }}">Amenities</a>
+                        </li>
+                    </ul>
+                </li>
                  <li
                      class="treeview {{ request()->is('*email_templates*', '*admin/time-slots*', '*admin/categories*', '*admin/attribute-types*', '*admin/attribute-values*', '*admin/products*', '*admin/skis*', '*admin/ski_boot*', '*admin/inventories*', '*addons*', '*maintenance*') ? 'active' : '' }}">
 
