@@ -160,6 +160,13 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::get('bedroom/{id}/edit', 'BedroomController@edit')->name('bedroom.edit');
 	Route::post('bedroom/{id}/edit', 'BedroomController@update')->name('bedroom.update');
 	Route::delete('bedroom/delete/{id}', 'BedroomController@destroy')->name('bedroom.destroy');
+	
+	Route::get('bathrooms', 'BathroomController@index')->name('bathrooms.index');
+	Route::get('bathroom/create', 'BathroomController@create')->name('bathroom.create');
+	Route::post('bathroom', 'BathroomController@store')->name('bathroom.store');
+	Route::get('bathroom/{id}/edit', 'BathroomController@edit')->name('bathroom.edit');
+	Route::post('bathroom/{id}/edit', 'BathroomController@update')->name('bathroom.update');
+	Route::delete('bathroom/delete/{id}', 'BathroomController@destroy')->name('bathroom.destroy');
 });
 
 

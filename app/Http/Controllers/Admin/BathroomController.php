@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Helpers\ResponseHelper;
-use Log; 
+use Log;
 use Session;
 
-use App\Http\Requests\AddBedroomRequest;
-use App\Models\Bedroom;
+use App\Http\Requests\AddBathroomRequest;
+use App\Models\Bathroom;
 
-class BedroomController extends Controller
+class BathroomController extends Controller
 {
 	/**
      * Display a listing of the resource.
@@ -21,8 +21,8 @@ class BedroomController extends Controller
     public function index()
     {
         try {
-            $bedrooms = Bedroom::orderby('display_order')->get();
-            return view('admin.bedroom.index')->with('bedrooms', $bedrooms);
+            $bathrooms = Bathroom::orderby('display_order')->get();
+            return view('admin.bathroom.index')->with('bathrooms', $bathrooms);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             Session::flash('error', 'Something went wrong. Please try again.');
@@ -37,7 +37,7 @@ class BedroomController extends Controller
      */
     public function create()
     {
-        return view('admin.bedroom.create');
+        return view('admin.bathroom.create');
     }
 
     /**
@@ -46,15 +46,15 @@ class BedroomController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AddBedroomRequest $request)
+    public function store(AddBathroomRequest $request)
     {
         try {
-            $bedroom = new Bedroom();
-            $bedroom->title = $request->get('title');
-            $bedroom->display_order = $request->get('display_order');
-            $bedroom->save();
+            $bathroom = new Bathroom();
+            $bathroom->title = $request->get('title');
+            $bathroom->display_order = $request->get('display_order');
+            $bathroom->save();
             
-            return ResponseHelper::jsonResponse('success', 'Bedroom added successfully.', route('admin.bedrooms.index'));
+            return ResponseHelper::jsonResponse('success', 'Bathroom added successfully.', route('admin.bathrooms.index'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return ResponseHelper::jsonResponse('error', 'Something went wrong. Please try again.', null, 500);
@@ -70,8 +70,8 @@ class BedroomController extends Controller
     public function edit($id)
     {
         try {
-            $bedroom = Bedroom::find($id);
-            return view('admin.bedroom.edit')->with('bedroom', $bedroom);
+            $bathroom = Bathroom::find($id);
+            return view('admin.bathroom.edit')->with('bathroom', $bathroom);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             Session::flash('error', 'Something went wrong. Please try again.');
@@ -86,15 +86,15 @@ class BedroomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(AddBedroomRequest $request, $id)
+    public function update(AddBathroomRequest $request, $id)
     {
         try {
-            $bedroom = Bedroom::find($id);
-            $bedroom->title = $request->get('title');
-            $bedroom->display_order = $request->get('display_order');
-            $bedroom->save();
-            
-            return ResponseHelper::jsonResponse('success', 'Bedroom updated successfully.', route('admin.bedrooms.index'));
+            $bathroom = Bathroom::find($id);
+            $bathroom->title = $request->get('title');
+            $bathroom->display_order = $request->get('display_order');
+            $bathroom->save();
+
+            return ResponseHelper::jsonResponse('success', 'Bathroom updated successfully.', route('admin.bathrooms.index'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return ResponseHelper::jsonResponse('error', 'Something went wrong. Please try again.', null, 500);
@@ -110,7 +110,7 @@ class BedroomController extends Controller
     public function destroy($id)
     {
         try {
-            Bedroom::destroy($id);
+            Bathroom::destroy($id);
             return response()->json('success');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
