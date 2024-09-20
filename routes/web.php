@@ -149,10 +149,17 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	
 	Route::get('types', 'TypeController@index')->name('types.index');
 	Route::get('type/create', 'TypeController@create')->name('type.create');
-	Route::post('type', 'TypeController@store');
+	Route::post('type', 'TypeController@store')->name('type.store');
 	Route::get('type/{id}/edit', 'TypeController@edit')->name('type.edit');
 	Route::post('type/{id}/edit', 'TypeController@update')->name('type.update');
-	Route::delete('type/delete/{id}', 'TypeController@destroy');
+	Route::delete('type/delete/{id}', 'TypeController@destroy')->name('type.destroy');
+	
+	Route::get('bedrooms', 'BedroomController@index')->name('bedrooms.index');
+	Route::get('bedroom/create', 'BedroomController@create')->name('bedroom.create');
+	Route::post('bedroom', 'BedroomController@store')->name('bedroom.store');
+	Route::get('bedroom/{id}/edit', 'BedroomController@edit')->name('bedroom.edit');
+	Route::post('bedroom/{id}/edit', 'BedroomController@update')->name('bedroom.update');
+	Route::delete('bedroom/delete/{id}', 'BedroomController@destroy')->name('bedroom.destroy');
 });
 
 

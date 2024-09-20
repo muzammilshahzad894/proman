@@ -51,7 +51,7 @@
                                 </a>
                                 <ul class="treeview-menu">
                                     <li><a href="{{ url('admin/types') }}">Types</a></li>
-                                    <li><a href="{{ url('admin/bedroom') }}">Bedrooms</a></li>
+                                    <li><a href="{{ url('admin/bedrooms') }}">Bedrooms</a></li>
                                     <li><a href="{{ url('admin/bathrooms') }}">Bathrooms</a></li>
                                     <li><a href="{{ url('admin/sleeps') }}">Sleeps</a></li>
                                 </ul>

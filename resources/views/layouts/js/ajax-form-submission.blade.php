@@ -4,11 +4,9 @@
         const form = $(this);
         const url = form.attr('action');
         const method = form.attr('method');
-        const data = form.serialize();
         clearMessages();
         
         const formData = new FormData(form[0]);
-        console.log(formData);
         
         $.ajax({
             url: url,
@@ -19,7 +17,7 @@
             success: function(response) {
                 if (response.status == 'success') {
                     showMessage('success', response.message);
-                    redirectTo(response.redirect, 2000);
+                    redirectTo(response.redirect, 1000);
                 } else {
                     showMessage('danger', response.message || 'An error occurred');
                 }
@@ -48,7 +46,6 @@
                 '</div>';
             $('#show-messages').html(messageHtml);
         }
-        
     }
     
     function redirectTo(url, time) {
