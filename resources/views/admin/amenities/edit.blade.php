@@ -29,7 +29,7 @@ Amenity - Edit
                     
                         <div class="row">
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                <form action="{{ url('/admin/amenities') }}/{{$amenity->id}}/edit" method="PUT" class="ajax-submission">
+                                <form action="{{ url('/admin/amenities') }}/{{$amenity->id}}/edit" method="POST" class="ajax-submission">
                                     @csrf
                                     <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                                         <label for="" class="field-required">Title</label>
@@ -96,7 +96,6 @@ Amenity - Edit
     </section>
 </div> <!-- content-wrapper -->
 @stop
-
 
 @section('javascript')
 @include('layouts.js.ajax-form-submission')

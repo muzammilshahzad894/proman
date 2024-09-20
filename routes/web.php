@@ -144,8 +144,15 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::get('amenities/create', 'AmenityController@create')->name('amenities.create');
 	Route::post('amenities', 'AmenityController@store')->name('amenities.store');
 	Route::get('amenities/{id}/edit', 'AmenityController@edit')->name('amenities.edit');
-	Route::put('amenities/{id}/edit', 'AmenityController@update')->name('amenities.update');
+	Route::post('amenities/{id}/edit', 'AmenityController@update')->name('amenities.update');
 	Route::delete('amenities/delete/{id}', 'AmenityController@destroy')->name('amenities.destroy');
+	
+	Route::get('types', 'TypeController@index')->name('types.index');
+	Route::get('type/create', 'TypeController@create')->name('type.create');
+	Route::post('type', 'TypeController@store');
+	Route::get('type/{id}/edit', 'TypeController@edit')->name('type.edit');
+	Route::post('type/{id}/edit', 'TypeController@update')->name('type.update');
+	Route::delete('type/delete/{id}', 'TypeController@destroy');
 });
 
 

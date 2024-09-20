@@ -7,10 +7,15 @@
         const data = form.serialize();
         clearMessages();
         
+        const formData = new FormData(form[0]);
+        console.log(formData);
+        
         $.ajax({
             url: url,
             method: method,
-            data: data,
+            data: formData,
+            processData: false,  // Important: Prevent jQuery from processing the data
+            contentType: false,  // Important: Let the browser set the Content-Type as multipart/form-data
             success: function(response) {
                 if (response.status == 'success') {
                     showMessage('success', response.message);
@@ -37,6 +42,10 @@
                 description: message
             });
         } else {
+            let messageHtml = '<div class="alert alert-danger">' +
+                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                message +
+                '</div>';
             $('#show-messages').html(messageHtml);
         }
         

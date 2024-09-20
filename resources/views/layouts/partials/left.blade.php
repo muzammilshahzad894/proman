@@ -34,7 +34,7 @@
                          @endif
                      </ul>
                  </li>
-                <li class="treeview {{ Request::is('*amenity*') ? 'active' : '' }}">
+                <li class="treeview {{ Request::is('*admin/amenities*') ? 'active' : '' }}">
                     <a href="#"><i class="fa fa-files-o"></i> <span>Proman Setup</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
@@ -43,6 +43,19 @@
                     <ul class="treeview-menu">
                         <li class="{{ Request::is('admin/amenities') ? 'active' : '' }}">
                             <a href="{{ route('admin.amenities.index') }}">Amenities</a>
+                            <li class="treeview ">
+                                <a href="#">Property Master
+                                    <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="{{ url('admin/types') }}">Types</a></li>
+                                    <li><a href="{{ url('admin/bedroom') }}">Bedrooms</a></li>
+                                    <li><a href="{{ url('admin/bathrooms') }}">Bathrooms</a></li>
+                                    <li><a href="{{ url('admin/sleeps') }}">Sleeps</a></li>
+                                </ul>
+                            </li>
                         </li>
                     </ul>
                 </li>

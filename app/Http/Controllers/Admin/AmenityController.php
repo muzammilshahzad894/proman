@@ -27,7 +27,7 @@ class AmenityController extends Controller
             return redirect()->back();
         }
     }
-    
+
     /**
      * Show the form for creating a new resource.
      */
@@ -35,7 +35,7 @@ class AmenityController extends Controller
     {
         return view('admin.amenities.create');
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -52,7 +52,7 @@ class AmenityController extends Controller
             $amenity->display_order = $request->get('display_order');
             $amenity->created_by = 1;
 
-            if($request->type == 'CheckBox' || $request->type == 'Dropdown') {
+            if ($request->type == 'CheckBox' || $request->type == 'Dropdown') {
                 $amenity->option = ($request->option) ? json_encode($request->option) : null;
             }
 
@@ -66,16 +66,14 @@ class AmenityController extends Controller
             return ResponseHelper::jsonResponse('error', 'Something went wrong. Please try again.', null, 500);
         }
     }
-    
+
     private function addDropdownValues($request, $amenity_id)
     {
         $values = $request->get('values');
-        if( $values!=null )
-        {
+        if ($values != null) {
             //first delete old dropdown values
             Amenity::find($amenity_id)->dropdownValues()->delete();
-            foreach($values as $value)
-            {
+            foreach ($values as $value) {
                 $dropdown_value = new AmenityDropdownValue();
                 $dropdown_value->amenity_id = $amenity_id;
                 $dropdown_value->value = $value;
@@ -83,7 +81,7 @@ class AmenityController extends Controller
             }
         }
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -101,7 +99,7 @@ class AmenityController extends Controller
             return redirect()->back();
         }
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -118,10 +116,10 @@ class AmenityController extends Controller
             $amenity->group = $request->get('group');
             $amenity->display_order = $request->get('display_order');
 
-            if($request->type == 'CheckBox' || $request->type == 'Dropdown') {
+            if ($request->type == 'CheckBox' || $request->type == 'Dropdown') {
                 $amenity->option = ($request->option) ? json_encode($request->option) : null;
             }
-            
+
             $amenity->save();
 
             $this->addDropdownValues($request, $amenity->id);
@@ -132,7 +130,7 @@ class AmenityController extends Controller
             return ResponseHelper::jsonResponse('error', 'Something went wrong. Please try again.', null, 500);
         }
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -144,7 +142,6 @@ class AmenityController extends Controller
         try {
             Amenity::destroy($id);
             return response()->json('success');
-            return ResponseHelper::jsonResponse('success', 'Amenity deleted successfully.');
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return ResponseHelper::jsonResponse('error', 'Something went wrong. Please try again.', null, 500);
