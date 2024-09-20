@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Rentals Clients</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+  
+    
+    <div class="wrap">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-sm-6 col-sm-6">
+            	<ol>
+            		<li>
+            			<a target="_blank" href="https://demo.rezosystems.com/bike_rental/migrate/install">Demo</a>	
+            		</li>
+            		<li>
+            			<a target="_blank" href="https://rental.brokenspokesantafe.com/migrate/install">Broken spoke</a>
+            		</li>
+                <li>
+                  <a target="_blank" href="https://rentals.greatoutdoorshop.com/migrate/install">Great Outdoor</a>
+                </li>
+                <li>
+                  <a target="_blank" href="https://saltaryoutdoor.com/rental/migrate/install">Saltary Ski tech</a>
+                </li>
+                <li>
+                  <a target="_blank" href="https://rentals.switchbacksports.com/migrate/install">Switch back</a>
+                </li>
+                <li>
+                  <a target="_blank" href="https://rental.epicmountainsports.com/new/migrate/install">Epic</a>
+                </li>
+                <li>
+                  <a target="_blank" href="https://rentals.breckenridgeskishop.com/migrate/install">Carvers</a>
+                </li>
+                <li>
+                  <a target="_blank" href="https://rentals.projectbikebend.com/new-bike/migrate/install">Project Bike</a>
+                </li>
+                <li>
+                  <a target="_blank" href="https://rentals.skibarndurango.com/migrate/install">Ski Barn</a>
+                </li>
+                <li>
+                  <a target="_blank" href="https://rentals.rodgersskiandsport.com/migrate/install">Rogers</a>
+                </li>
+
+            		
+            	</ol>
+            	
+            
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+          		<a href="" id="openall">Open All In New Tabs</a>
+          </div>
+        </div> <!-- row -->
+      </div> <!-- container -->
+
+    </div> <!-- wrap -->
+     
+	
+      <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+      <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+      
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+    <script src="http://localhost/assets/js/bootstrap.min.js"></script>
+  </body>
+</html>
+
+<script>	
+	
+	jQuery(document).ready(function($) {
+		
+		$('#openall').on('click', function(event) {
+			event.preventDefault();
+			$('[target]').each(function(index, el) {
+				console.log(el);
+				el.click();
+			});
+		});
+
+	});
+
+</script>
+
+<style>
+  body {
+    padding: 50px;
+  }
+  a {
+  	text-transform: capitalize;; 
+  }
+  .wrap {
+    padding: 45px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      word-wrap: break-word;
+}
+
+</style>

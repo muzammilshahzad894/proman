@@ -1,0 +1,428 @@
+<?php
+
+include __DIR__ .'/aritsan_routes.php';
+Route::get('test', function () {
+    return view('welcome');
+});
+
+// Authentication Routes...
+Route::get('logs', 'LogViewerController@index');
+Route::get('getTransactionList', 'LogViewerController@getTransactionList');
+$this->get('login', 'Auth\LoginController@showLoginForm')->name('login');
+$this->post('login', 'Auth\LoginController@login');
+$this->get('logout', 'Auth\LoginController@logout')->name('logout');
+$this->get('check_res_session',function ()
+{
+    print_r(session('tour_reservation'));
+});
+
+$this->get('test',function ()
+{
+    $filename="1532771019_500.jpg";
+        list($width, $height) = getimagesize("uploads/$filename");
+        return [$width,$height];
+});
+
+// Registration Routes...
+$this->get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+$this->post('register', 'Auth\RegisterController@register');
+
+// Password Reset Routes...
+$this->get('password/request', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+$this->post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+$this->get('password/reset', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+$this->resource('reservation_emails', 'ReservationEmailsController');
+$this->get('send_email_by_id/{id}/{is_tour_reservation?}', 'ReservationEmailsController@send_email_by_id');
+$this->get('tours/abandon_cart_email_send', 'ReservationEmailsController@abandon_cart_email_send');
+$this->post('password/reset', 'Auth\ResetPasswordController@reset');
+Route::get('tours/listing/{type?}', 'Tours\TourController@frontend_listing');
+// If profile pic not found will show default pic
+Route::get('/storage/products/{filename}', function($filename) {
+    return response( file_get_contents('./img/default.jpg') )->header('Content-Type','image/png');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Admin Protected Routes
+|--------------------------------------------------------------------------
+|
+| Here you can register web routes for admin role
+|	, 'middleware' => ['auth', 'role:admin']
+*/
+/*tours routes*/
+Route::resource('inventory_maintenance','InventoryMaintenanceController');
+Route::resource('maintenance','MaintenanceController');
+Route::group(['namespace' => 'Tours'], function() {
+    Route::get('tours/reservations/waivers/{reservation_id}', 'WaiversController@index');
+    Route::get('tours/check_waiver_signed/{reservation_id}', 'WaiversController@check_waiver_signed');
+    Route::get('/reservations/print_waivers/{reservation_id}', 'WaiversController@print_waivers');
+    Route::get('/reservations/waivers/{reservation_id}/{person_number}', 'WaiversController@edit');
+    Route::post('/reservations/waivers/save', 'WaiversController@store');
+    Route::resource('tour_types','TourTypeController');
+    /*Reservation Routes*/
+    Route::GET('/reservation_cancel/{id}', 'ReservationController@reservation_cancel');
+    $this->get('tours/abandon_emails_cron', 'ReservationController@send_abandon_emails_cron');
+
+    Route::get('/tours/get_magic_quotes_runtime()/id', 'ReservationController@new_reservation');
+    Route::get('/tours/reservation/new_reservation/{id}', 'ReservationController@new_reservation');
+    Route::get('/tours/reservations_cleanup', 'ReservationController@reservations_cleanup');
+    Route::POST('/tours/reservation/check_availablity', 'ReservationController@check_availablity');
+    
+    Route::get('/tours/reservation/step_1', 'ReservationController@step_1');
+    Route::POST('/tours/reservation/check_availablity_jeeps', 'ReservationController@check_availablity_jeeps');
+    Route::get('/tours/reservation/step_1a', 'ReservationController@step_1a');
+    Route::post('/tours/reservation/step_1a', 'ReservationController@step_1a_store');
+    Route::get('/tours/reservation/step_2', 'ReservationController@step_2');
+    Route::post('/tours/reservation/step_1', 'ReservationController@step_1_store');
+    Route::post('/tours/reservation/step_2', 'ReservationController@step_2_store');
+    Route::GET('/tours/reservation/step_3', 'ReservationController@step_3');
+    Route::post('/tours/reservation/step_3', 'ReservationController@step_3_store');
+    Route::GET('/tours/reservation/step_4', 'ReservationController@step_4');
+    Route::post('/tours/reservation/step_4', 'ReservationController@step_4_store');
+    Route::GET('/tours/reservation/step_5', 'ReservationController@step_5');
+    Route::POST('/tours/reservation/step_5', 'ReservationController@step_5_store');
+    Route::GET('/tours/reservation/finished', 'ReservationController@booking_complete');
+    Route::post('tour_reservation_cal_price', 'ReservationController@cal_price');
+
+
+    Route::GET('admin/tour_reservation/step1', 'AdminReservationController@step1');
+    Route::POST('admin/tour_reservation/step1', 'AdminReservationController@step1_store');
+
+
+    Route::GET('admin/tour_reservation/step2', 'AdminReservationController@step2');
+    Route::POST('admin/tour_reservation/step2', 'AdminReservationController@step2_store');
+    
+
+
+
+    
+    /*END Reservation Routes*/
+
+
+});
+Route::group(['middleware' => 'auth','namespace' => 'Tours'], function() {
+    
+    Route::resource('tours/reservations', 'ReservationController');
+    Route::get('tours/reservations/print_reservation/{id}', 'ReservationController@printReservation');
+    Route::get('tours/reservations/send_email_again/{id}', 'ReservationController@send_email_again');
+    Route::get('tours/reservations/send_guide_new_job_email/{id}', 'ReservationController@send_guide_new_job_email');
+    
+    
+    Route::Post('tours/reservation/update_guides/{id}', 'ReservationController@update_guides');
+    Route::Post('tours/reservation/update_rentals/{id}', 'ReservationController@update_rentals');
+
+    
+    
+
+    /*tour routes*/
+    Route::resource('tours', 'TourController');
+    Route::resource('timeslots', 'TimeslotController');
+    Route::get('tours/tours_reports', 'TourController@reports');
+    
+    
+    
+    /*end tour routes*/
+});
+Route::group(['middleware' => 'auth','prefix' => 'tours/reports/'], function() {
+    Route::get('sales_by_date', 'TourReportsController@sales_by_date');
+    Route::get('sales_by_day', 'TourReportsController@sales_by_day');
+    Route::get('sales_by_tour', 'TourReportsController@sales_by_tour');
+    Route::get('sales_by_tour_type', 'TourReportsController@sales_by_tour_type');
+});
+
+Route::group(['namespace' => 'Tours'], function() {
+    
+    
+    Route::get('tours/get_timeslots/{id}', 'TourController@get_timeslots');
+    Route::get('tours/get_timeslots_customer/{id}', 'TourController@get_timeslots_customer');
+    
+    /*end tour routes*/
+});
+Route::get('get_booking_hours/{id}', 'Admin\TimeSlotsController@get_booking_hours');
+
+Route::group(['namespace' => 'Tours', 'middleware' => ['auth', 'role:admin|Guide']], function() {
+    Route::get('guides/schedule', 'GuideController@guidesScheduleCalender')->name('guides.schedule');
+    });
+Route::group(['namespace' => 'Tours', 'middleware' => ['auth', 'role:admin|Guide']], function() {
+    Route::get('products/create', 'ProductsController@create');
+    Route::post('products/delete', 'ProductsController@destroy');
+    Route::get('products/{id}', 'ProductsController@show');
+    Route::get('products/{id}/edit', 'ProductsController@edit');
+    Route::POST('products/email', 'ProductsController@email');
+    Route::resource('products', 'ProductsController');
+    Route::resource('clients', 'ClientController');
+        Route::post('tours_reservations/process_payment/{reservation_id}','ReservationController@process_payment');
+        Route::post('tours_reservations/refund/{reservation_id}', 'ReservationController@refund');
+        Route::post('tours_reservations/update_billing/{reservation_id}','ReservationController@update_billing');
+        Route::post('/reservations/update_addons', 'ReservationController@update_addons');
+    //Route::resource('tours', 'TourController');
+    Route::get('unavailable_dates', 'ReservationController@unavailable_dates');
+    Route::resource('/reservations', 'ReservationController');
+    Route::get('/reservations/print_reservation/{id}', 'ReservationController@printReservation');
+
+    
+    /*Guide Routes*/
+    Route::get('guides/guides_reports', 'GuideController@reports');
+    Route::get('guides/mycalendar/{id?}', 'GuideController@myCalender')->name('guides.mycalendar');
+    Route::post('guides/availability', 'GuideController@guideAvailabilityStore')->name('guides.availability.store');
+    Route::get('availability/calendar', 'GuideController@guideAvailabilityIndex')->name('availability.index');
+    //Route::get('guides/schedule', 'GuideController@guidesScheduleCalender')->name('guides.schedule');
+    Route::get('statuses/{date}', 'GuideController@getGuideDateStatuses')->name('guides.statuses');
+
+    Route::resource('guides', 'GuideController');
+    Route::get('guides/calendar/{month}/{year}/{id?}', 'GuideController@calendar');
+    Route::post('guides/off_dates', 'GuideController@off_dates');
+    /*END Guide Routes*/
+
+    /*tour routes*/
+    Route::get('tours/tours_reports', 'TourController@reports');
+    /*end tour routes*/
+    Route::get('tour/destroy_tourtimeslot/{id}',function ($id)
+    {
+        DB::table('tour_timeslots')->whereId($id)->delete();
+        return back();
+    });
+
+
+});
+	Route::resource('addons', 'AddonController');
+/*tours routes*/
+
+Route::group(['namespace' => 'Admin', 'prefix' => 'guide', 'as' => 'guide.', 'middleware' => ['auth', 'role:admin|Guide']], function() {
+    Route::get('dashboard', 'DashboardController@guide_dashboard');
+});
+
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'role:admin|Guide']], function() {
+
+	// user managmet 
+	Route::get('dashboard', 'DashboardController@index')->name('dashboard');;
+	Route::resource('users', 'AdminController');
+	Route::resource('categories', 'CategoriesController');
+
+    //-------------------- Attribute Types Module -------------------//
+    Route::group(['prefix' => 'attribute-types', 'as' => 'attribute-types.'], function () {
+        Route::post('selected-values', 'AttributeTypesController@getSelectedTypeValues')->name('attribute-values');
+        Route::get('manage/{type_id}/{product_id}/{is_managed}', 'AttributeTypesController@manage')->name('manage');;
+    });
+	Route::resource('attribute-types', 'AttributeTypesController');
+    
+    //-------------------- End ------------------------------------//
+
+    //-------------------- Attribute Values Module -------------------//
+    Route::resource('attribute-values', 'AttributeValuesController');
+    //-------------------- End ------------------------------------//
+
+    //-------------------- Products Module -------------------//
+    Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
+        Route::post('get/time-slot/amount', 'ProductsController@getTimeSlotAmount')->name('time-slot.amount');
+        Route::get('remove/attribute/{product_id}/{attribute_type_id}', 'ProductsController@attributeRemove')->name('attribute.remove');;
+    });
+    Route::resource('products', 'ProductsController');
+    //-------------------- End ------------------------------------//
+
+    Route::resource('inventories', 'InventoriesController');
+	Route::resource('time-slots', 'TimeSlotsController');
+
+    //-------------------- Email Template Module -------------------//
+    Route::resource('email_templates','EmailTemplateController');
+    //-------------------- End ------------------------------------//
+
+    //-------------------- Reservations Module -------------------//
+    Route::group(['prefix' => 'reservations', 'as' => 'reservations.'], function ()
+    {
+        Route::get('print/{reservation_id}', 'ReservationsController@print_reservation')->name('print');
+        Route::get('select-product', 'ReservationsController@selectProduct')->name('selectProduct');
+        Route::get('add-reservee/{product}', 'ReservationsController@addReservee')->name('addReservee');
+        Route::post('store-reservee/{product}', 'ReservationsController@storeReservee')->name('storeReservee');
+        Route::get('list/units/{reservee}', 'ReservationsController@listUnits')->name('list.units');
+        Route::get('list/product_units/{reservee}/{product_id}', 'ReservationsController@listUnitsByProduct');
+        Route::post('change/unit/{reservee_id}', 'ReservationsController@changeUnit')->name('change.unit');
+
+        Route::post('change/change_resevee', 'ReservationsController@change_resevee')->name('change.resevee');
+        Route::post('new/new_resevee', 'ReservationsController@new_resevee')->name('new.resevee');
+        Route::get('delete/delete_resevee/{reservee}', 'ReservationsController@delete_resevee')->name('delete.resevee');
+        Route::post('change/timeslots/{reservation}', 'ReservationsController@changeTimeSlot')->name('change.timeslots');
+
+        Route::post('available/inventory', 'ReservationsController@availableInventories')->name('availableInventories');
+        Route::get('monthly-calender/{date?}/{inventory_id?}', 'ReservationsController@monthlyCalendar')->name('monthlyCalendar');
+        Route::get('single-calender/{inventory}/{date?}', 'ReservationsController@singleProductCalendar')->name('singleProductCalendar');
+        Route::get('hourly-calender/{date}', 'ReservationsController@hourlyCalendar')->name('hourlyCalendar');
+
+        Route::get('returns', 'ReservationsController@returns')->name('returns');
+        Route::get('check-in/{reservation}', 'ReservationsController@checkIn')->name('checkIn');
+        Route::post('update/damage/{reservation}', 'ReservationsController@updateDegreeOfDamage')->name('update.damage');
+        Route::get('product/return/{reservation}', 'ReservationsController@returnProduct')->name('return.product');
+        Route::get('toggle_force_returned/{reservation}', 'ReservationsController@toggle_force_returned')->name('reservation.toggle_force_returned');
+        Route::get('email/{id}', 'ReservationsController@getEmail')->name('email');
+        Route::get('resend/email/{id}', 'ReservationsController@resendEmail')->name('resend.email');
+        Route::post('process_payment/{id}', 'ReservationsController@process_payment')->name('process_payment');
+        Route::post('refund_payment/{id}', 'ReservationsController@refund_payment')->name('refund_payment');
+    });
+
+    Route::resource('reservations', 'ReservationsController');
+    //-------------------- End ------------------------------------//
+
+    //-------------------- Reporting Module -------------------//
+    Route::group(['prefix' => 'reports', 'as' => 'reports.'], function () {
+        Route::get('products/sale', 'ReportsController@productSales')->name('products.sale');
+        Route::get('sale/by-date', 'ReportsController@saleByDate')->name('by-date.sale');
+        Route::get('sale/by-category', 'ReportsController@saleByCategory')->name('by-category.sale');
+        Route::get('by_category', 'ReportsController@by_category')->name('by-category');
+        Route::get('sale/by-model', 'ReportsController@saleByModel')->name('by-model.sale');
+        Route::get('sale/by-product', 'ReportsController@saleByProduct')->name('by-product.sale');
+         Route::get('sale/by-month', 'ReportsController@saleByMonth')->name('by-month.sale');
+        Route::get('survey', 'ReportsController@surveyReport')->name('survey');
+        Route::get('survey/{survey_id}', 'ReportsController@surveyReportDetails')->name('survey.details');
+    });
+    //-------------------- End --------------------------------//
+
+	// settigns routes group
+	Route::group(['prefix' => 'settings', 'as' => 'settings.'], function ()
+	{	
+	 	Route::get('general', 'SettingController@showGeneral')->name('general');
+	 	Route::post('general', 'SettingController@updateGeneral')->name('general');
+
+	 	Route::get('mail', 'SettingController@showMail')->name('mail');
+	 	Route::post('mail', 'SettingController@updateMail')->name('mail');
+
+	 	Route::post('send-email', 'SettingController@sendEmail')->name('send-email');
+                
+	 	Route::get('gateway', 'SettingController@showGateway')->name('gateway');
+        Route::get('admin-gateway', 'SettingController@showGatewayAdmin')->name('gateway-admin');
+	 	Route::post('gateway', 'SettingController@updateGateway')->name('gateway');
+
+	 	Route::delete('{setting_id}/email/{email?}', [
+	 		'as' => 'destroy_email',
+	 		'uses' => 'SettingController@destroy_email'
+	 	]);
+
+        Route::get('site_settings', 'SettingController@siteSetting')->name('site');
+        Route::post('site_settings', 'SettingController@storeSiteSetting')->name('store.site');
+
+        Route::get('twilio', 'SettingController@twilioSetting')->name('twilio');
+        Route::post('twilio', 'SettingController@storeTwilioSetting')->name('store.twilio');
+
+        Route::get('/survey', 'SettingController@surveySetting')->name('survey');
+        Route::post('/survey', 'SettingController@storeSurveySetting')->name('store.survey');
+    });
+
+
+    //-------------------- Survey Module -------------------//
+    Route::get('/survey-email/{id}', 'SurveyController@surveyEmail')->name('survey.email');
+    Route::resource('survey', 'SurveyController');
+    //-------------------- End --------------------------------//
+
+
+    //-------------------- Questions Module -------------------//
+    Route::resource('questions', 'SurveysQuestionsController');
+    Route::resource('pre-trips-questions', 'PreTripsQuestionnaireController');
+
+    //-------------------- End --------------------------------//
+});
+
+
+
+// route for handling ajax file deletion calls
+    Route::delete('static_page/{page_id}/file/{file_id}', [
+        'as' => 'static_page.destroy_file',
+        'uses' => 'StaticPageController@destroy_file'
+    ]);
+    Route::resource('static_page', 'StaticPageController', [
+        'only' => ['edit', 'update']
+    ]);
+
+
+/*
+|--------------------------------------------------------------------------
+| AuthUsers Protected Routes
+|--------------------------------------------------------------------------
+|
+| Here you can register web routes for authenticated Users
+|
+*/
+
+Route::group(['namespace' => 'AuthUsers', 'middleware' => ['auth']], function() {
+
+	 Route::get('index', 'SampleController@index')->name('index');
+
+	
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| App Guest Routes
+|--------------------------------------------------------------------------
+|
+| Here you can register web routes unauthenticated users
+|
+*/
+
+
+Route::get('/', 'FrontController@welcome');
+
+
+//-------------------- Frontend Booking Module -------------------//
+Route::group(['prefix' => 'rentals', 'as' => 'bikes.'], function () {
+    Route::get('getTransactionList', 'FrontendController@getTransactionList');
+    Route::get('/', 'FrontendController@listProducts')->name('products.list');
+    Route::get('booking/step1/{product}', 'FrontendController@bookingStepOne')->name('booking.step1');
+    Route::post('store/reservee/{product}', 'FrontendController@storeReservee')->name('store.reservee');
+    Route::get('booking/step2', 'FrontendController@bookingStepTwo')->name('booking.step2');
+    Route::get('booking/products', 'FrontendController@getSelectedProducts')->name('selected.products');
+    Route::get('sign/waivers', 'FrontendController@signWaiver')->name('sign.waiver');
+    Route::post('store/waivers', 'FrontendController@storeWaivers')->name('store.waivers');
+    Route::post('booking/step2/store', 'FrontendController@step2Store')->name('booking.step2.store');
+    Route::get('booking/checkout', 'FrontendController@checkout')->name('booking.checkout');
+    Route::post('store/reservation', 'FrontendController@storeReservation')->name('store.reservation');
+    Route::get('check_waiver_signed', 'FrontendController@check_waiver_signed')->name('check_waiver_signed');
+
+
+    Route::post('available/inventory', 'FrontendController@availableInventories')->name('availableInventories');
+    Route::post('get/time-slot/amount', 'FrontendController@getTimeSlotAmount')->name('time-slot.amount');
+
+});
+
+Route::get('reservation/survey/{reservation}/{survey}', 'FrontendController@getReservationSurvey')->name('reservation.survey');
+Route::post('reservation/survey/save', 'FrontendController@saveReservationSurvey')->name('reservation.survey.save');
+
+// Reservation Trip Questions
+Route::get('reservation/questionnaire/{reservation}', 'FrontendController@getReservationQuestionnaire')->name('reservation.questionnaire');
+Route::post('reservation/questionnaire', 'FrontendController@saveReservationQuestionnaire')->name('reservation.questionnaire.store');
+
+
+//-------------------- End --------------------------------//
+
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('log',function ()
+{
+    // from PHP documentations
+     $logFile = file(storage_path().'/logs/laravel.log');
+     $logCollection = [];
+     // Loop through an array, show HTML source as HTML source; and line numbers too.
+     foreach ($logFile as $line_num => $line) {
+        $logCollection[] = array('line'=> $line_num, 'content'=> htmlspecialchars($line));
+     }
+     dump($logFile);
+});
+
+Route::get('log/delete',function ()
+{
+  
+	$file = storage_path().'/logs/laravel.log';
+	if (unlink($file)) {
+		dump('deleted');
+	}
+	
+
+}); 
+Route::get('/privacy_policy', 'FrontController@privacy_policy')->name('privacy_policy');
+Route::get('/terms_and_conditions', 'FrontController@terms_and_conditions')->name('terms_and_conditons');
+
+
+Route::get('survey/run',function ()
+{
+    Artisan::call('reservation:survey'); 
+});

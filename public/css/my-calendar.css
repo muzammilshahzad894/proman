@@ -1,0 +1,322 @@
+/*
+* ----------------------------------------------------------------------------------------
+* Helpers.
+* ----------------------------------------------------------------------------------------
+*/
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+.width100 {
+    width: 100%;
+}
+.width75 {
+    width: 75%;
+}
+.width50 {
+    width: 50%;
+}
+.m-l-r-0 {
+    margin-left: 0;
+    margin-right: 0;
+}
+.m-b-20 {
+    margin-bottom: 20px !important;
+}
+.m-b-10 {
+    margin-bottom: 10px !important;
+}
+.m-b-30 {
+    margin-bottom: 30px !important;
+}
+.m-b-40 {
+    margin-bottom: 40px !important;
+}
+.m-b-50 {
+    margin-bottom: 50px !important;
+}
+.m-b-100 {
+    margin-bottom: 100px !important;
+}
+.m-t-10 {
+    margin-top: 10px !important;
+}
+.m-t-20 {
+    margin-top: 20px !important;
+}
+.m-t-30 {
+    margin-top: 30px !important;
+}
+.m-t-40 {
+    margin-top: 30px !important;
+}
+.m-t-50 {
+    margin-top: 50px !important;
+}
+.m-t-100 {
+    margin-top: 100px !important;
+}
+.seprater-bottom-30 {
+    content: "";
+    height: 1px;
+    display: block;
+    margin-bottom: 30px;
+}
+.seprater-bottom-50 {
+    content: "";
+    height: 1px;
+    display: block;
+    margin-bottom: 50px;
+}
+.seprater-bottom-100 {
+    content: "";
+    height: 1px;
+    display: block;
+    margin-bottom: 100px;
+}
+.border1 {
+    border: 1px solid #000;
+}
+.border2 {
+    border: 2px solid #000;
+}
+.border-0 {
+    border: 0;
+}
+.no-gutter > [class*='col-'] {
+    padding-right: 0;
+    padding-left: 0;
+}
+.m-0 {
+    margin: 0 !important;
+}
+.p-0 {
+    padding: 0 !important;
+}
+.p-l-0 {
+    padding-left: 0 !important;
+}
+.p-r-0 {
+    padding-right: 0 !important;
+}
+.devider-90 {
+    content: "";
+    width: 90%;
+    height: 1px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background: #ddd;
+}
+.devider-100 {
+    content: "";
+    width: 100%;
+    height: 1px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background: #ddd;
+}
+.underline {
+    text-decoration: underline;
+}
+.bold {
+    font-weight: bold;
+}
+.text-left {
+    text-align: left !important;
+}
+.text-center {
+    text-align: center !important;
+}
+.text-right {
+    text-align: right !important;
+}
+.inline-element {
+    display: inline !important;
+}
+.two-fields {
+    font-size: 0;
+}
+.two-fields .form-group {
+    font-size: 12px;
+}
+.two-fields .form-group {
+    width: 50%;
+    display: inline-block;
+    padding: 0;
+}
+.two-fields .form-group input {
+    width: 100%;
+}
+.two-fields .form-group select {
+    width: 100%;
+}
+.two-fields .form-group:first-child {
+    padding-right: 15px;
+}
+.two-fields .form-group:last-child {
+    padding-left: 15px;
+}
+.three-fields {
+    font-size: 0;
+}
+.three-fields .form-group {
+    font-size: 12px;
+}
+.three-fields .form-group {
+    width: 33.33%;
+    display: inline-block;
+    padding: 0;
+}
+.three-fields .form-group input {
+    width: 95%;
+}
+.three-fields .form-group select {
+    width: 95%;
+}
+.three-fields .form-group:last-child input {
+    width: 100%;
+    padding-left: 15px;
+}
+.three-fields .form-group:last-child select {
+    width: 100%;
+    padding-left: 15px;
+}
+.three-fields .form-group:last-child {
+    padding-left: 15px;
+}
+.three-fields .form-group:first-child {
+    padding-right: 15px;
+}
+.four-fields {
+    font-size: 0;
+}
+.four-fields .single {
+    font-size: 14px;
+}
+.four-fields .form-group {
+    font-size: 14px;
+}
+.four-fields .form-group {
+    width: 25%;
+    display: inline-block;
+    padding: 10px;
+}
+.four-fields .form-group input {
+    width: 95%;
+}
+.four-fields .form-group select {
+    width: 95%;
+}
+.four-fields .form-group:last-child input {
+    width: 100%;
+    padding-left: 10px;
+}
+.four-fields .form-group:last-child select {
+    width: 100%;
+    padding-left: 10px;
+}
+.four-fields .form-group:last-child {
+    padding-left: 0;
+}
+.four-fields .form-group:first-child {
+    padding-right: 10px;
+    padding-left: 0;
+}
+.five-fields {
+    font-size: 0;
+}
+.five-fields .single {
+    font-size: 14px;
+}
+.five-fields .div {
+    font-size: 14px;
+}
+.five-fields .div {
+    width: 20%;
+    display: inline-block;
+    padding: 10px;
+}
+.five-fields .div input {
+    width: 95%;
+}
+.five-fields .div select {
+    width: 95%;
+}
+.five-fields .div:last-child input {
+    width: 100%;
+    padding-left: 10px;
+}
+.five-fields .div:last-child select {
+    width: 100%;
+    padding-left: 10px;
+}
+.five-fields .div:last-child {
+    padding-left: 10px;
+    padding-right: 0;
+}
+.five-fields .div:first-child {
+    padding-right: 10px;
+    padding-left: 0;
+}
+.grid-0 > [class*='col-'] {
+    padding: 0;
+}
+
+
+/*
+* ----------------------------------------------------------------------------------------
+* Main styles.
+* ----------------------------------------------------------------------------------------
+*/
+.input-half {
+    max-width: 50%;
+}
+
+.required {
+    color: red;
+}
+
+.normal-table tbody > tr > td {
+    vertical-align: middle;
+}
+
+.page-title {
+    font-size: 40px;
+    margin-left: 280px;
+    margin-top: 40px;
+}
+
+.go_to_last-page {
+    margin-left: 100px;
+    font-size: 22px;
+}
+
+.go_to_next-page {
+    margin-left: 150px;
+    font-size: 22px;
+}
+
+.guide_view_box {
+    margin-left: 30px;
+}
+
+.table-calendar thead tr > th {
+    border-bottom: none;
+    border-top: none;
+}
+
+.table-calendar tbody tr > td {
+    padding-top: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+    border-top: none;
+}
+
+.table-calendar thead, h5 {
+    background: #999999;
+    padding-top: 10px;
+    color: #fff;
+}

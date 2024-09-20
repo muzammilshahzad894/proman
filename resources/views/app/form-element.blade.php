@@ -1,0 +1,1 @@
+<h1 style="text-align: center; margin-top: 10%;">Rezo Systems Laravel Boilerplate </h1>
