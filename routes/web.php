@@ -174,6 +174,14 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::get('sleep/{id}/edit', 'SleepController@edit')->name('sleep.edit');
 	Route::post('sleep/{id}/edit', 'SleepController@update')->name('sleep.update');
 	Route::delete('sleep/delete/{id}', 'SleepController@destroy')->name('sleep.destroy');
+	
+	Route::get('seasonrate', 'SeasonController@index')->name('seasonrate.index');
+	Route::get('seasonrate/create', 'SeasonController@create')->name('seasonrate.create');
+	Route::post('seasonrate', 'SeasonController@store')->name('seasonrate.store');
+	Route::get('seasonrate-daily', 'SeasonController@getDailyRate')->name('seasonrate.daily');
+	Route::get('seasonrate/{id}/edit', 'SeasonController@edit')->name('seasonrate.edit');
+	Route::post('seasonrate/{id}/edit', 'SeasonController@update')->name('seasonrate.update');
+	Route::delete('seasonrate/delete/{id}', 'SeasonController@destroy')->name('seasonrate.destroy');
 });
 
 
