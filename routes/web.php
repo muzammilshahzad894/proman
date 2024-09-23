@@ -182,6 +182,13 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::get('seasonrate/{id}/edit', 'SeasonController@edit')->name('seasonrate.edit');
 	Route::post('seasonrate/{id}/edit', 'SeasonController@update')->name('seasonrate.update');
 	Route::delete('seasonrate/delete/{id}', 'SeasonController@destroy')->name('seasonrate.destroy');
+	
+	Route::get('housekeepers', 'HouseKeeperController@index')->name('housekeepers.index');
+	Route::get('housekeeper/create', 'HouseKeeperController@create')->name('housekeeper.create');
+	Route::post('housekeeper', 'HouseKeeperController@store')->name('housekeeper.store');
+	Route::get('housekeeper/{id}/edit', 'HouseKeeperController@edit')->name('housekeeper.edit');
+	Route::post('housekeeper/{id}/edit', 'HouseKeeperController@update')->name('housekeeper.update');
+	Route::delete('housekeeper/delete/{id}', 'HouseKeeperController@destroy')->name('housekeeper.destroy');
 });
 
 

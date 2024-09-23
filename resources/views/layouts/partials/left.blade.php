@@ -57,6 +57,7 @@
                                 </ul>
                             </li>
                             <li><a href="{{ route('admin.seasonrate.index') }}">Rates Seasons</a></li>
+                            <li><a href="{{ route('admin.housekeepers.index') }}">Housekeepers</a></li>
                         </li>
                     </ul>
                 </li>

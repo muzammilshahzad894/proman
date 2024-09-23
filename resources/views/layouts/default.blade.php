@@ -156,10 +156,11 @@
     <link rel="stylesheet" href="{{url('/')}}/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 
     <script src="{{url('/')}}/plugins/select2/dist/js/select2.min.js"></script>
+    <script src="{{url('/')}}/plugins/jQuery-Mask-Plugin-master/dist/jquery.mask.min.js"></script>
     
     <link rel="stylesheet" href="{{url('/')}}/plugins/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="{{url('/')}}/css/alt/AdminLTE-select2.min.css">
-<link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{asset('css/full_calender.css')}}"/>
     <script type="text/javascript" src="{{asset('js/full_calender.js')}}"></script>
     <script src="{{url('/')}}/plugins/tiny_mce/tinymce.min.js"></script>
@@ -206,6 +207,61 @@
   <?php } ?>
 
   <script src="{{url('/')}}/js/main.js?v={{time()}}"></script>
+  
+  <script>
+    jQuery(document).ready(function($) {
+      if ($('.singledatepicker').length) {
+        $('.singledatepicker').daterangepicker({
+          singleDatePicker: true,
+          showDropdowns: true
+        });
+      };
+
+      if ($('.timepicker').length) {  
+        $('.timepicker').timepicker({ 'scrollDefault': 'now' });
+      };
+
+
+      /******** Dateranger picker ********/
+      if ($('.drp').length) {
+        $('.drp').daterangepicker({
+          timePicker: false,
+          timePickerIncrement: 30,
+          opens: 'left',
+          locale: {
+            format: 'MM/DD/YYYY'
+          }
+        });
+      };
+        
+      if ($('.drp_withtime').length) {
+        $('.drp_withtime').daterangepicker({
+          timePicker: true,
+          timePickerIncrement: 30,
+          opens: 'left',
+          locale: {
+              format: 'MM/DD/YYYY h:mm A'
+          }
+        });
+      };
+      
+      if ($('.select2').length) {
+        $('.select2').select2();
+      };
+      
+      if ($('.phone_us').length) {
+        $('.phone_us').mask('(000) 000-0000', {placeholder: "(000) 000-0000"});
+      };
+
+      if ($('.extension').length) {
+        $('.extension').mask('000', {placeholder: "000"});
+      };
+
+      if ($('.zipcode').length) {
+        $('.zipcode').mask('00000', {placeholder: "00000"});
+      };      
+    });
+  </script>
 
 
 @yield('javascript')
