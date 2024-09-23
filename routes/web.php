@@ -167,6 +167,13 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::get('bathroom/{id}/edit', 'BathroomController@edit')->name('bathroom.edit');
 	Route::post('bathroom/{id}/edit', 'BathroomController@update')->name('bathroom.update');
 	Route::delete('bathroom/delete/{id}', 'BathroomController@destroy')->name('bathroom.destroy');
+	
+	Route::get('sleeps', 'SleepController@index')->name('sleeps.index');
+	Route::get('sleep/create', 'SleepController@create')->name('sleep.create');
+	Route::post('sleep', 'SleepController@store')->name('sleep.store');
+	Route::get('sleep/{id}/edit', 'SleepController@edit')->name('sleep.edit');
+	Route::post('sleep/{id}/edit', 'SleepController@update')->name('sleep.update');
+	Route::delete('sleep/delete/{id}', 'SleepController@destroy')->name('sleep.destroy');
 });
 
 
