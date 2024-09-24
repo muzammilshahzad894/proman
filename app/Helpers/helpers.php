@@ -2244,3 +2244,12 @@ function states()
       'WY' => 'Wyoming',
     );
 }
+
+function number_format_without_comma($value='')
+{
+    if (!empty( $value ) ) {
+        $value = number_format($value,2); 
+        $value = str_replace(',', '', $value ); 
+        return $value; 
+    }
+}

@@ -24,7 +24,7 @@ Properties
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-lg-12 col-md-12">
+            <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
                         <div class="row">
@@ -40,7 +40,13 @@ Properties
                             <div class="col-md-6 col-lg-6">
                                 <form action="{{ url('admin/property') }}" method="GET" class="form-inline" role="form">
                                     <div class="form-group">
-                                        <input type="text" name="search" class="form-control input-full" id="" placeholder="Search by Property name" value={{ isset($search) ? $search : '' }}>
+                                        <input 
+                                            type="text" 
+                                            name="search" 
+                                            class="form-control input-full" 
+                                            placeholder="Search by Property name" 
+                                            value={{ isset($search) ? $search : '' }}
+                                        >
                                     </div>
                                     <button type="submit" class="btn btn-primary">Search</button>
                                 </form>
@@ -49,9 +55,8 @@ Properties
 
                             </div>
                         </div>
-
                         <div class="row m-t-20">
-                            <div class="col-md-6 col-lg-6">
+                            <div class="col-md-6">
                                 <span><a href="{{ url('admin/property') }}" class="btn btn-primary btn-sm">All</a></span>
                                 <span><a href="{{ url('admin/property?search=vacationRental') }}" class="btn btn-primary btn-sm">Vacation Rental</a></span>
                                 <span><a href="{{ url('admin/property?search=longTerm') }}" class="btn btn-primary btn-sm">Long Term</a></span>
@@ -62,7 +67,7 @@ Properties
                     <div class="box-body">
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <table class="table table-responsive table-bordered table-striped">
+                                <table class="table table-bordered table-hover normal-table reservations_list_tbl">
                                     <thead>
                                         <tr>
                                             <th>Preview</th>
@@ -120,13 +125,25 @@ Properties
                                                     data-pics="{{ json_encode($property->pictures) }}">Pictures
                                                 </a>
                                             </td>
-                                            <td><a data-toggle="modal" href='#Amenities-{{$key}}' class="btn btn-primary">Amenities</a></td>
-                                            <td><a href="{{ url('admin/reservation/create') }}/{{ $property->id }}" class="btn btn-primary">Add Reservation</a></td>
-                                            <td><a href="{{ url('admin/property/reservation-calendar') }}/{{ $property->id }}" class="btn btn-primary">Calender</a></td>
-                                            <td><a href="{{ url('admin/property/'. $property->id)  }}" class="btn btn-primary">View Res</a></td>
+                                            <td>
+                                                <a data-toggle="modal" href='#Amenities-{{$key}}' class="btn btn-primary">Amenities</a>
+                                            </td>
+                                            <td>
+                                                <a href="{{ url('admin/reservation/create') }}/{{ $property->id }}" class="btn btn-primary">Add Reservation</a>
+                                            </td>
+                                            <td>
+                                                <a href="{{ url('admin/property/reservation-calendar') }}/{{ $property->id }}" class="btn btn-primary">Calender</a>
+                                            </td>
+                                            <td>
+                                                <a href="{{ url('admin/property/'. $property->id)  }}" class="btn btn-primary">View Res</a>
+                                            </td>
                                             <td class="text-center">
-                                                <a href="{{ url('admin/property') }}/{{ $property->id }}/edit"><i class="fa fa-pencil"></i></a>
-                                                <a data-delete-trigger href="#"><i class="fa fa-trash"></i></a>
+                                                <a data-toggle="tooltip" title="Edit" href="{{ url('admin/property') }}/{{ $property->id }}/edit" class="btn btn-primary btn-xs">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+                                                <a data-toggle="tooltip" title="Delete" data-delete-trigger href="#" class="btn btn-danger btn-xs">
+                                                    <i class="fa fa-remove"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -145,11 +162,10 @@ Properties
 </div> <!-- content-wrapper -->
 
 @foreach($properties as $key => $property )
-
 <div class="modal fade" id="Rates-{{$key}}">
     <div class="modal-dialog" style="width: 769px;">
         <div class="modal-content">
-            <form action="{{ url('admin/property') }}/{{ $property->id }}" method="POST" role="form">
+            <form action="{{ url('admin/property') }}/{{ $property->id }}" method="POST" role="form" class="ajax-submission">
                 @csrf
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -247,11 +263,10 @@ Properties
     </div>
 </div> <!-- #Rates -->
 
-
 <div class="modal fade" id="Amenities-{{$key}}">
     <div class="modal-dialog" style="width: 769px;">
         <div class="modal-content">
-            <form action="{{ url('admin/property/update-property-amenities') }}/{{ $property->id }}" method="POST" role="form">
+            <form action="{{ url('admin/property/update-property-amenities') }}/{{ $property->id }}" method="POST" role="form" class="ajax-submission">
                 @csrf
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -280,11 +295,7 @@ Properties
                                     @endif
 
                                     @if($amenity->type=="CheckBox")
-                                    <input type="checkbox" name="value-{{ $amenity->id}}"
-                                        @if ($amenity->pivot->value ==1)
-                                    checked
-                                    @endif
-                                    value="1">
+                                    <input type="checkbox" name="value-{{ $amenity->id}}" @if ($amenity->pivot->value ==1) checked @endif value="1">
                                     @endif
 
                                     @if($amenity->type=="Dropdown")
@@ -309,7 +320,7 @@ Properties
                     </table>
                 </div>
                 <div class="modal-footer">
-                    @if ( $AmenitiesCount > 0 )
+                    @if ($AmenitiesCount > 0 )
                     <button type="submit" class="btn btn-primary">Update</button>
                     @endif
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -318,7 +329,6 @@ Properties
         </div>
     </div>
 </div> <!-- #Amenities -->
-
 
 <div class="modal fade" id="Pictures-{{$key}}">
     <div class="modal-dialog" style="width: 769px;">
@@ -377,7 +387,7 @@ Properties
 @stop
 
 @section('javascript')
-
+@include('layouts.js.ajax-form-submission')
 <script src="{{ url('/plugins/dropzone/dropzone.js') }}"></script>
 <style>
     .uploadTable-container {
@@ -389,13 +399,11 @@ Properties
     var base_url = "{{url('/')}}";
 
     function handleTable(counter) {
-
         if (counter >= 2) {
             $('.uploadTable-container').show();
         } else {
             $('.uploadTable-container').hide();
         };
-
     }
 
     Dropzone.autoDiscover = false;
@@ -432,7 +440,6 @@ Properties
     }
 
     jQuery(document).ready(function($) {
-
         var options = {
             url: "{{url('/')}}/admin/upload-files",
             paramName: 'file',
@@ -554,7 +561,6 @@ Properties
                 });
             } else {
                 $.each(mockFiles, function(index, obj) {
-
                     putFileinTable(obj, obj.obj);
                 });
             }

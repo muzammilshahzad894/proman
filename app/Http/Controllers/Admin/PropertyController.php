@@ -24,6 +24,7 @@ use App\Models\Reservation;
 use App\helpers\Calendar;
 use App\Models\Type;
 use App\Services\PropertyService;
+use App\Helpers\ResponseHelper;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -43,8 +44,7 @@ class PropertyController extends Controller
     public function index(Request $request)
     {
         try {
-            // $seasons = Season::all();
-            $seasons = [];
+            $seasons = Season::all();
             $search = $request->search;
             
             $properties = $this->propertyService->getPropertiesBySearch($search);
@@ -67,29 +67,21 @@ class PropertyController extends Controller
         try {
             $bedrooms = Bedroom::all();
             $bathrooms = Bathroom::all();
-            // $sleeps = Sleep::all();
-            // $house_keepers  = Housekeeper::all();
+            $sleeps = Sleep::all(); 
+            $house_keepers  = Housekeeper::all();
             // $hot_tubs = HotTub::all();
-            $sleeps = [];
-            $house_keepers  = [];
-            $hot_tubs = [];
             $amenities = Amenity::orderBy('display_order')->get();
-            // $seasons = Season::orderBy('display_order')->get();
-            $seasons = [];
-            // $owners = Owner::all();
-            $owners = [];
-            // $types = Type::all();
-            $types = [];
+            $seasons = Season::orderBy('display_order')->get();
+            $types = Type::all();
 
             return view('admin.property.create')
                 ->with('bedrooms', $bedrooms)
                 ->with('bathrooms', $bathrooms)
                 ->with('sleeps', $sleeps)
                 ->with('house_keepers', $house_keepers)
-                ->with('hot_tubs', $hot_tubs)
+                // ->with('hot_tubs', $hot_tubs)
                 ->with('amenities', $amenities)
                 ->with('seasons', $seasons)
-                ->with('owners', $owners)
                 ->with('types', $types);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -125,21 +117,19 @@ class PropertyController extends Controller
             $property->is_online_booking = $request->get('is_online_booking', 0);
 
             // Handle numeric fields
-            $property->commision = nl2zero($request, 'commision');
+            $property->commision = $request->get('commision') ? $request->get('commision') : 0;
             $property->clearing_fee = $request->get('clearing_fee');
-            $property->clearing_fee_active = nl2zero($request, 'clearing_fee_active');
+            $property->clearing_fee_active = $request->get('clearing_fee_active') ? 1 : 0;
             $property->pet_fee = $request->get('pet_fee');
-            $property->pet_fee_active = nl2zero($request, 'pet_fee_active');
-            $property->lodger_tax = nl2zero($request, 'lodger_tax');
-            $property->lodger_tax_active = nl2zero($request, 'lodger_tax_active');
+            $property->pet_fee_active = $request->get('pet_fee_active') ? 1 : 0;
+            $property->lodger_tax = $request->get('lodger_tax') ? $request->get('lodger_tax') : 0;
+            $property->lodger_tax_active = $request->get('lodger_tax_active') ? 1 : 0;
             $property->sales_tax = $request->get('sales_tax');
-            $property->sales_tax_active = nl2zero($request, 'sales_tax_active');
-            $property->is_calendar_active = nl2zero($request, 'is_calendar_active');
+            $property->sales_tax_active = $request->get('sales_tax_active') ? 1 : 0;
+            $property->is_calendar_active = $request->get('is_calendar_active') ? 1 : 0;
 
             // Handle foreign key relationships
             $property->housekeeper_id = $request->get('housekeeper_id');
-            $property->hottub_id = $request->get('hottub_id');
-            $property->owner = $request->get('owner');
 
             // Set property type flags
             $property->is_vacation = $request->get('property_type') === 'is_vacation' ? 1 : 0;
@@ -155,15 +145,15 @@ class PropertyController extends Controller
             $property_id = $property->id;
 
             // Handle pictures (attachments)
-            $pictures = $request->get('pictures', []);
-            foreach ($pictures as $i => $pictureId) {
-                $attachment = Attachment::find($pictureId);
-                if ($attachment) {
-                    $attachment->property_id = $property_id;
-                    $attachment->title = $request->get('pic_title')[$i];
-                    $attachment->order = $request->get('order')[$i];
-                    $attachment->main = $request->get('main') == $pictureId ? 1 : 0;
-                    $attachment->status = 1;
+            $pictures = $request->get('pictures');
+            if (!empty($pictures)) {
+                for ($i=0; $i < sizeof($pictures) ; $i++) {
+                    $attachment = Attachment::find($pictures[$i]);
+                    $attachment->property_id =  $property->id;
+                    $attachment->title =  $request->get('pic_title')[$i];
+                    $attachment->order =  $request->get('order')[$i];
+                    $attachment->main =  ( null != $request->get('main') && $request->get('main')==$pictures[$i])? 1: 0;
+                    $attachment->status =  1;
                     $attachment->save();
                 }
             }
@@ -190,20 +180,11 @@ class PropertyController extends Controller
             // Commit the transaction after all operations
             DB::commit();
 
-            // Flash success message and redirect
-            Session::flash('success', 'Property added successfully.');
-            return redirect()->route('admin.property.index');
-
+            return ResponseHelper::jsonResponse('success', 'Property added successfully.', route('admin.properties.index'));
         } catch (\Exception $e) {
-            // Rollback the transaction in case of error
             DB::rollBack();
-
-            // Log the error message
             Log::error('Error storing property: ' . $e->getMessage());
-
-            // Flash error message and redirect back
-            Session::flash('error', 'Something went wrong. Please try again.');
-            return redirect()->back()->withInput();
+            return ResponseHelper::jsonResponse('error', 'Something went wrong. Please try again.', null, 500);
         }
     }
 
@@ -225,44 +206,30 @@ class PropertyController extends Controller
 
     private function addSeasonRates($request, $property_id)
     {
-
-        //dd($request->all());
-
         $seasons = $request['season_id'];
         $x = 0;
         if ($seasons != null) {
             foreach ($seasons as $season) {
                 if (!isset($request['daily_rate'][$x])) {
-
                     $data['daily_rate'][$x] = '0.00';
-
                     $request->merge($data);
                 }
 
                 if (!isset($request['weekly_rate'][$x])) {
-
                     $data['weekly_rate'][$x] = '0.00';
-
                     $request->merge($data);
                 }
 
                 if (!isset($request['monthly_rate'][$x])) {
-
                     $data['monthly_rate'][$x] = '0.00';
-
                     $request->merge($data);
                 }
 
                 if (!isset($request['deposit'][$x])) {
-
                     $data['deposit'][$x] = '0.00';
-
                     $request->merge($data);
                 }
 
-
-                //if($request['daily_rate'][$x]!="")
-                //{
                 $season_rate = new SeasonsRate();
                 $season_rate->season_id = $season;
                 $season_rate->property_id = $property_id;
@@ -271,7 +238,6 @@ class PropertyController extends Controller
                 $season_rate->monthly_rate = $request['monthly_rate'][$x];
                 $season_rate->deposit =  $request['deposit'][$x];
                 $season_rate->save();
-                //}
                 $x++;
             }
         }
@@ -279,7 +245,6 @@ class PropertyController extends Controller
 
     private function addAmenities($request, $property_id)
     {
-
         $amenities = $request['amenity_id'];
 
         $x = 0;
@@ -339,10 +304,8 @@ class PropertyController extends Controller
         $bathrooms = Bathroom::all();
         $sleeps = Sleep::all();
         $house_keepers  = Housekeeper::all();
-        $hot_tubs = HotTub::all();
         $amenities = Amenity::orderBy('display_order')->get();
         $seasons = Season::orderBy('display_order')->get();
-        $owners = Owner::all();
         $users = user::all();
         $types = Type::all();
 
@@ -353,10 +316,8 @@ class PropertyController extends Controller
             ->with('bathrooms', $bathrooms)
             ->with('sleeps', $sleeps)
             ->with('house_keepers', $house_keepers)
-            ->with('hot_tubs', $hot_tubs)
             ->with('amenities', $amenities)
             ->with('seasons', $seasons)
-            ->with('owners', $owners)
             ->with('types', $types)
             ->with('users', $users);
     }
@@ -370,110 +331,100 @@ class PropertyController extends Controller
      */
     public function updateSeasonRates(Request $request, $id)
     {
-        //first delete old enteries
-        SeasonsRate::where('property_id', $id)->delete();
+        try {
+            //first delete old enteries
+            SeasonsRate::where('property_id', $id)->delete();
 
-        $this->addSeasonRates($request, $id);
+            $this->addSeasonRates($request, $id);
 
-        Session::flash('success', 'Property season rates updated successfully.');
-        return redirect('admin/property');
+            return ResponseHelper::jsonResponse('success', 'Property season rates updated successfully.', url()->previous());
+        } catch (\Exception $e) {
+            Log::error('Error updating property season rates: ' . $e->getMessage());
+            return ResponseHelper::jsonResponse('error', 'Something went wrong. Please try again.', null, 500);
+        }
     }
 
     public function updateAmenities(Request $request, $id)
     {
-
-        //first delete old enteries
-        PropertyAmenity::where('property_id', $id)->delete();
-        $this->addAmenities($request, $id);
-
-        Session::flash('success', 'Property amenities updated successfully.');
-        return redirect('admin/property');
+        try {
+            //first delete old enteries
+            PropertyAmenity::where('property_id', $id)->delete();
+            $this->addAmenities($request, $id);
+            
+            return ResponseHelper::jsonResponse('success', 'Property amenities updated successfully.', url()->previous());
+        } catch (\Exception $e) {
+            Log::error('Error updating property amenities: ' . $e->getMessage());
+            return ResponseHelper::jsonResponse('error', 'Something went wrong. Please try again.', null, 500);
+        }
     }
 
     public function update(AddPropertyRequest $request, $id)
     {
+        try {
+            // Begin transaction in case there are multiple database operations
+            DB::beginTransaction();
+            
+            // Create new Property instance
+            $property = Property::find($id);
+            $property->title = $request->get('title');
+            $property->category_id = $request->get('category_id');
+            $property->bedroom_id = $request->get('bedroom_id');
+            $property->bathroom_id = $request->get('bathroom_id');
+            $property->sleep_id = $request->get('sleep_id');
+            $property->status = ($request->get('status')) !== null ? $request->get('status') : 0;
+            $property->is_featured = ($request->get('is_featured')) !== null ? $request->get('is_featured') : 0;
+            $property->is_pet_friendly = ($request->get('is_pet_friendly')) !== null ? $request->get('is_pet_friendly') : 0;
+            $property->is_online_booking = ($request->get('is_online_booking')) !== null ? $request->get('is_online_booking') : 0;
+            $property->commision = $request->get('commision') ? $request->get('commision') : 0;
+            $property->housekeeper_id = $request->get('housekeeper_id');
 
-        $property = Property::find($id);
-
-        $property->title = $request->get('title');
-
-        $property->category_id = $request->get('category_id');
-
-
-
-        $property->bedroom_id = $request->get('bedroom_id');
-        $property->bathroom_id = $request->get('bathroom_id');
-        $property->sleep_id = $request->get('sleep_id');
-
-        $property->status = ($request->get('status')) !== null ? $request->get('status') : 0;
-        $property->is_featured = ($request->get('is_featured')) !== null ? $request->get('is_featured') : 0;
-        $property->is_pet_friendly = ($request->get('is_pet_friendly')) !== null ? $request->get('is_pet_friendly') : 0;
-        $property->is_online_booking = ($request->get('is_online_booking')) !== null ? $request->get('is_online_booking') : 0;
-
-        $property->commision = $request->get('commision');
-        $property->housekeeper_id = $request->get('housekeeper_id');
-        $property->hottub_id = $request->get('hottub_id');
-
-        $property->clearing_fee = $request->get('clearing_fee');
-        $property->clearing_fee_active = nl2zero($request, 'clearing_fee_active');
-
-        $property->pet_fee = $request->get('pet_fee');
-        $property->pet_fee_active = nl2zero($request, 'pet_fee_active');
-
-        $property->lodger_tax = nl2zero($request, 'lodger_tax');
-        $property->lodger_tax_active = nl2zero($request, 'lodger_tax_active');
-
-        $property->sales_tax = $request->get('sales_tax');
-        $property->sales_tax_active = nl2zero($request, 'sales_tax_active');
-
-        $property->is_calendar_active = nl2zero($request, 'is_calendar_active');
-
-
-        $property->owner = $request->get('owner');
-
-        if ($request->get('property_type') == 'is_vacation') {
-
-            $property->is_vacation = '1';
-        } else {
-
-            $property->is_vacation = '0';
-        }
-
-        if ($request->get('property_type') == 'is_long_term') {
-
-            $property->is_long_term = '1';
-        } else {
-
-            $property->is_long_term = '0';
-        }
-
-        $property->short_description = $request->get('short_description');
-        $property->long_description = $request->get('long_description');
-        $property->display_order = $request->get('display_order');
-
-
-        $property->save();
-
-        $pictures = $request->get('pictures');
-
-
-        if (!empty($pictures)) {
-
-            for ($i = 0; $i < sizeof($pictures); $i++) {
-                $attachment = Attachment::find($pictures[$i]);
-                $attachment->property_id =  $property->id;
-                $attachment->title =  $request->get('pic_title')[$i];
-                $attachment->order =  $request->get('order')[$i];
-                $attachment->main =  (null != $request->get('main') && $request->get('main') == $pictures[$i]) ? 1 : 0;
-                $attachment->status =  1;
-                $attachment->save();
+            $property->clearing_fee = $request->get('clearing_fee');
+            $property->clearing_fee_active = $request->get('clearing_fee_active') ? 1 : 0;
+            $property->pet_fee = $request->get('pet_fee');
+            $property->pet_fee_active = $request->get('pet_fee_active') ? 1 : 0;
+            $property->lodger_tax = $request->get('lodger_tax') ? $request->get('lodger_tax') : 0;
+            $property->lodger_tax_active = $request->get('lodger_tax_active') ? 1 : 0;
+            $property->sales_tax = $request->get('sales_tax');
+            $property->sales_tax_active = $request->get('sales_tax_active') ? 1 : 0;
+            $property->is_calendar_active = $request->get('is_calendar_active') ? 1 : 0;
+            if ($request->get('property_type') == 'is_vacation') {
+                $property->is_vacation = '1';
+            } else {
+                $property->is_vacation = '0';
             }
+
+            if ($request->get('property_type') == 'is_long_term') {
+                $property->is_long_term = '1';
+            } else {
+                $property->is_long_term = '0';
+            }
+
+            $property->short_description = $request->get('short_description');
+            $property->long_description = $request->get('long_description');
+            $property->display_order = $request->get('display_order');
+            $property->save();
+            
+            $pictures = $request->get('pictures');
+            if (!empty($pictures)) {
+                for ($i=0; $i < sizeof($pictures) ; $i++) {
+                    $attachment = Attachment::find($pictures[$i]);
+                    $attachment->property_id =  $property->id;
+                    $attachment->title =  $request->get('pic_title')[$i];
+                    $attachment->order =  $request->get('order')[$i];
+                    $attachment->main =  ( null != $request->get('main') && $request->get('main')==$pictures[$i])? 1: 0;
+                    $attachment->status =  1;
+                    $attachment->save();
+                }
+            }
+            
+            DB::commit();
+            
+            return ResponseHelper::jsonResponse('success', 'Property updated successfully.', route('admin.properties.index'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error updating property: ' . $e->getMessage());
+            return ResponseHelper::jsonResponse('error', 'Something went wrong. Please try again.', null, 500);
         }
-
-        //$this->updateAmenities($request, $property->id);
-
-        Session::flash('success', 'Property updated successfully.');
-        return redirect('admin/property');
     }
 
     /**
@@ -511,7 +462,6 @@ class PropertyController extends Controller
         $pictures = $request->get('pictures');
 
         if (!empty($pictures)) {
-
             for ($i = 0; $i < sizeof($pictures); $i++) {
                 $attachment = Attachment::find($pictures[$i]);
                 $attachment->property_id =  $property->id;

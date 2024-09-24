@@ -17,7 +17,9 @@
             success: function(response) {
                 if (response.status == 'success') {
                     showMessage('success', response.message);
-                    redirectTo(response.redirect, 1000);
+                    if(response.redirect) {
+                        redirectTo(response.redirect, 1000);
+                    }
                 } else {
                     showMessage('danger', response.message || 'An error occurred');
                 }
@@ -45,6 +47,9 @@
                 message +
                 '</div>';
             $('#show-messages').html(messageHtml);
+            $('html, body').animate({
+                scrollTop: $('#show-messages').offset().top
+            }, 1000);
         }
     }
     
@@ -65,6 +70,9 @@
         });
         errorHtml += '</ul></div>';
         $('#show-messages').html(errorHtml);
+        $('html, body').animate({
+            scrollTop: $('#show-messages').offset().top
+        }, 1000);
     }
     
     function clearMessages() {
