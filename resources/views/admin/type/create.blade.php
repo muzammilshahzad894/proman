@@ -13,13 +13,12 @@ Create Type
 <div class="content-wrapper">
     <!-- Main content -->
     <section class="content">
-
         <div class="row">
-            <div class="col-lg-12 col-md-12">
+            <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
                         <div class="row">
-                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <div class="col-md-6">
                                 <h3 class="box-title"> Add Type</h3>
                                 <div class="m-t-10">
                                     <a href="{{url('admin/types')}}" class="btn btn-default">Back</a>
@@ -35,16 +34,23 @@ Create Type
                                 <form action="{{ url('admin/type') }}" method="POST" role="form" enctype="multipart/form-data" class="ajax-submission">
                                     @csrf
                                     <div class="row">
-                                        <div class="col-md-12 col-lg-12">
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="" class="field-required">Title</label>
-                                                <input name="title" type="text" class="form-control" id="title" value="{{ old('title') }}" autofocus="autofocus">
+                                                <input 
+                                                    name="title" 
+                                                    type="text" 
+                                                    class="form-control" 
+                                                    id="title" 
+                                                    value="{{ old('title') }}" 
+                                                    autofocus="autofocus"
+                                                >
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-12 col-lg-12">
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="">Image</label>
                                                 <input name="image" type="file" class="form-control" id="imgInp">
@@ -54,10 +60,17 @@ Create Type
                                     </div>
 
                                     <div class="row m-t-20">
-                                        <div class="col-md-4 col-lg-4">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="" class="field-required">Display Order</label>
-                                                <input name="display_order" type="text" class="form-control input-sm" onkeypress="return isNumber(event)" id="title" value="{{ old('display_order') }}">
+                                                <input 
+                                                    name="display_order" 
+                                                    type="text" 
+                                                    class="form-control input-sm" 
+                                                    onkeypress="return isNumber(event)" 
+                                                    id="title" 
+                                                    value="{{ old('display_order') }}"
+                                                >
                                             </div>
                                         </div>
                                     </div>

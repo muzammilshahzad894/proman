@@ -179,6 +179,28 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::post('property/update-property-amenities/{id}', 'PropertyController@updateAmenities');
     Route::get('property/reservation-calendar/{id}', 'PropertyController@showCalendar');
 	Route::post('property/update/pictures/{id}', 'PropertyController@updatePictures');
+	
+	Route::get('sleeps', 'SleepController@index')->name('sleeps.index');
+	Route::get('sleep/create', 'SleepController@create')->name('sleep.create');
+	Route::post('sleep', 'SleepController@store')->name('sleep.store');
+	Route::get('sleep/{id}/edit', 'SleepController@edit')->name('sleep.edit');
+	Route::post('sleep/{id}/edit', 'SleepController@update')->name('sleep.update');
+	Route::delete('sleep/delete/{id}', 'SleepController@destroy')->name('sleep.destroy');
+	
+	Route::get('seasonrate', 'SeasonController@index')->name('seasonrate.index');
+	Route::get('seasonrate/create', 'SeasonController@create')->name('seasonrate.create');
+	Route::post('seasonrate', 'SeasonController@store')->name('seasonrate.store');
+	Route::get('seasonrate-daily', 'SeasonController@getDailyRate')->name('seasonrate.daily');
+	Route::get('seasonrate/{id}/edit', 'SeasonController@edit')->name('seasonrate.edit');
+	Route::post('seasonrate/{id}/edit', 'SeasonController@update')->name('seasonrate.update');
+	Route::delete('seasonrate/delete/{id}', 'SeasonController@destroy')->name('seasonrate.destroy');
+	
+	Route::get('housekeepers', 'HouseKeeperController@index')->name('housekeepers.index');
+	Route::get('housekeeper/create', 'HouseKeeperController@create')->name('housekeeper.create');
+	Route::post('housekeeper', 'HouseKeeperController@store')->name('housekeeper.store');
+	Route::get('housekeeper/{id}/edit', 'HouseKeeperController@edit')->name('housekeeper.edit');
+	Route::post('housekeeper/{id}/edit', 'HouseKeeperController@update')->name('housekeeper.update');
+	Route::delete('housekeeper/delete/{id}', 'HouseKeeperController@destroy')->name('housekeeper.destroy');
 });
 
 

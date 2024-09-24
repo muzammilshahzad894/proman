@@ -84,7 +84,6 @@ trait SeasonRateCalculator
 
             if ($season->from_month > $season->to_month) {
                 $seasonEndDate = $from_year + 1 . '-' . $season->to_month . '-' . $season->to_day;
-
                 $seasonEndDate = Carbon::parse($seasonEndDate);
             }
             // number of days matching in this season 

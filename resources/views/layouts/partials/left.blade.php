@@ -42,8 +42,8 @@
                     </a>
                     <ul class="treeview-menu">
                         <li class="{{ Request::is('admin/amenities') ? 'active' : '' }}">
-                            <a href="{{ route('admin.amenities.index') }}">Amenities</a>
-                            <li class="treeview ">
+                            <li><a href="{{ route('admin.amenities.index') }}">Amenities</a></li>
+                            <li class="treeview">
                                 <a href="#">Property Master
                                     <span class="pull-right-container">
                                     <i class="fa fa-angle-left pull-right"></i>
@@ -56,6 +56,8 @@
                                     <li><a href="{{ url('admin/sleeps') }}">Sleeps</a></li>
                                 </ul>
                             </li>
+                            <li><a href="{{ route('admin.seasonrate.index') }}">Rates Seasons</a></li>
+                            <li><a href="{{ route('admin.housekeepers.index') }}">Housekeepers</a></li>
                         </li>
                     </ul>
                 </li>
