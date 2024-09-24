@@ -16,6 +16,7 @@ use App\User;
 use App\ProductTimeSlotRate;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 const INSURANCE_ADDON_ID = 16; 
 const CHAFFEE_TAX = 2; //its percentage 2%
@@ -2179,4 +2180,10 @@ if (! function_exists('allowedImageTypes')) {
     function allowedImageTypes() {
 		return '.jpg, .jpeg, .webp, .png, .ico';
     }
+}
+
+function nl2zero(Request $request, $column)
+{
+    $value  = $request->get($column);
+    return ($value !== null)?$value:0;
 }

@@ -59,6 +59,9 @@
                         </li>
                     </ul>
                 </li>
+                <li class="{{ request()->is('*admin/properties*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.properties.index') }}"><i class="fa fa-home"></i>Properties</a>
+                </li>
                  <li
                      class="treeview {{ request()->is('*email_templates*', '*admin/time-slots*', '*admin/categories*', '*admin/attribute-types*', '*admin/attribute-values*', '*admin/products*', '*admin/skis*', '*admin/ski_boot*', '*admin/inventories*', '*addons*', '*maintenance*') ? 'active' : '' }}">
 

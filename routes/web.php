@@ -167,6 +167,18 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::get('bathroom/{id}/edit', 'BathroomController@edit')->name('bathroom.edit');
 	Route::post('bathroom/{id}/edit', 'BathroomController@update')->name('bathroom.update');
 	Route::delete('bathroom/delete/{id}', 'BathroomController@destroy')->name('bathroom.destroy');
+	
+	Route::get('properties', 'PropertyController@index')->name('properties.index');
+	Route::get('property/create', 'PropertyController@create');
+	Route::get('property/{id}', 'PropertyController@show');
+	Route::get('property/{id}/edit', 'PropertyController@edit');
+	Route::post('property/{id}/edit', 'PropertyController@update');
+	Route::post('property/delete/{id}', 'PropertyController@destroy');
+	Route::post('property', 'PropertyController@store');
+	Route::post('property/{id}', 'PropertyController@updateSeasonRates');
+	Route::post('property/update-property-amenities/{id}', 'PropertyController@updateAmenities');
+    Route::get('property/reservation-calendar/{id}', 'PropertyController@showCalendar');
+	Route::post('property/update/pictures/{id}', 'PropertyController@updatePictures');
 });
 
 
