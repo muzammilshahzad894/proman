@@ -164,7 +164,6 @@ Add Season Rate
                             </div>
                             <div class="row">
                                 <div class="col-md-2">
-
                                     <div class="form-group">
                                         <label for="title">Display Order</label>
                                         <input name="display_order" id="sortby" type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'

@@ -14,11 +14,11 @@ Edit Type
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-lg-12 col-md-12">
+            <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
                         <div class="row">
-                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <div class="col-md-6">
                                 <h3 class="box-title"> Edit Type</h3>
                                 <div class="m-t-10">
                                     <a href="{{url('admin/types')}}" class="btn btn-default">Back</a>
@@ -28,15 +28,14 @@ Edit Type
                     </div>
 
                     <div class="box-body">
-                        
+                        @include('shared.errors')
                         <div id="show-messages"></div>
-                        
                         <div class="row">
-                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <div class="col-md-6">
                                 <form action="{{ url('admin/type') }}/{{$type->id}}/edit" method="POST" enctype="multipart/form-data" class="ajax-submission">
                                     @csrf
                                     <div class="row">
-                                        <div class="col-md-12 col-lg-12">
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="" class="field-required">Title</label>
                                                 <input name="title" type="text" class="form-control" id="title" value="{{ old('title', $type->title) }}" autofocus="autofocus">
@@ -44,21 +43,33 @@ Edit Type
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-12 col-lg-12">
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="">Image</label>
-                                                <input name="image" type="file" class="form-control" id="imgInp">
-                                                <img id="blah" src="{{url('/types')}}/{{ $type->image }}" style="max-width:125px;">
+                                                <input 
+                                                    name="image" 
+                                                    type="file" 
+                                                    class="form-control" 
+                                                    id="imgInp"
+                                                >
+                                                <img 
+                                                    id="blah" 
+                                                    src="{{url('/types')}}/{{ $type->image }}" style="max-width:125px;"
+                                                >
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row m-t-20">
-                                        <div class="col-md-4 col-lg-4">
+                                        <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="" class="field-required">Display Order</label>
-                                                <input name="display_order" type="text" class="form-control input-sm"
+                                                <input 
+                                                    name="display_order" 
+                                                    type="text" class="form-control input-sm"
                                                     onkeypress="return isNumber(event)"
-                                                    id="title" value="{{ old('display_order', $type->display_order) }}">
+                                                    id="title" 
+                                                    value="{{ old('display_order', $type->display_order) }}"
+                                                >
                                             </div>
                                         </div>
                                     </div>
