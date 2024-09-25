@@ -42,341 +42,389 @@ Add Property
                             @include('shared.errors')
                             <div id="show-messages"></div>
                             <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="company_name" class="field-required">Name</label>
-                                        <input 
-                                            name="title" 
-                                            type="text" 
-                                            class="form-control" 
-                                            id="company_name"
-                                            value="{{ old('title') }}" 
-                                            autofocus="autofocus"
-                                        >
-                                    </div>
+                                <div class="col-md-6">
+                                    <fieldset>
+                                        <legend>General Details</legend>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="company_name" class="field-required">Name</label>
+                                                    <input 
+                                                        name="title" 
+                                                        type="text" 
+                                                        class="form-control" 
+                                                        id="company_name"
+                                                        value="{{ old('title') }}" 
+                                                        autofocus="autofocus"
+                                                        placeholder="Enter property name"
+                                                    >
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="title" class="field-required">Category</label>
+                                                    <select name="category_id" id="home" class="form-control">
+                                                        <option value="">Select </option>
+                                                        @foreach($types as $type)
+                                                        <option value="{{ $type->id }}"
+                                                            @if(old('category_id')==$type->id) selected @endif
+                                                            >{{ $type->title }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="title">Bedrooms</label>
+                                                    <select name="bedroom_id" id="state" class="form-control">
+                                                        <option value="">Select </option>
+                                                        @foreach($bedrooms as $bedroom)
+                                                        <option value="{{ $bedroom->id }}"
+                                                            @if(old('bedroom_id')==$bedroom->id) selected @endif
+                                                            >{{ $bedroom->title }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="title">Bathrooms</label>
+                                                    <select name="bathroom_id" id="state" class="form-control">
+                                                        <option value="">Select </option>
+                                                        @foreach($bathrooms as $bathroom)
+                                                        <option value="{{ $bathroom->id }}"
+                                                            @if(old('bathroom_id')==$bathroom->id) selected @endif
+                                                            >{{ $bathroom->title }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="title">Sleeps</label>
+                                                    <select name="sleep_id" id="state" class="form-control">
+                                                        <option value="">Select </option>
+                                                        @foreach($sleeps as $sleep)
+                                                        <option value="{{ $sleep->id }}"
+                                                            @if(old('sleep_id')==$sleep->id) selected @endif
+                                                            >{{ $sleep->title }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="title">Housekeeper</label>
+                                                    <select name="housekeeper_id" id="state" class="form-control">
+                                                        <option value="">Select </option>
+                                                        @foreach($house_keepers as $house_keeper)
+                                                        <option value="{{ $house_keeper->id }}">{{ $house_keeper->first_name }} {{ $house_keeper->last_name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="title" class="field-required">Category</label>
-                                        <select name="category_id" id="home" class="form-control">
-                                            <option value="">Select </option>
-                                            @foreach($types as $type)
-                                            <option value="{{ $type->id }}"
-                                                @if(old('category_id')==$type->id) selected @endif
-                                                >{{ $type->title }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                <div class="col-md-6">
+                                    <fieldset>
+                                        <legend>Fee | Taxes</legend>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-xs-8">
+                                                            <label for="clearing-fee">Cleaning Fee ($)</label>
+                                                        </div>
+                                                        <div class="col-xs-4 text-right">
+                                                            <label for="clearing-fee-active">Active</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <input 
+                                                            type="text" 
+                                                            name="clearing_fee" 
+                                                            class="input-sm form-control" 
+                                                            id="clearing_fee" 
+                                                            value="{{ old('clearing_fee') }}" 
+                                                            onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                                        >
+                                                        <span class="input-group-addon">
+                                                            <input 
+                                                                type="checkbox" 
+                                                                name="clearing_fee_active" 
+                                                                id="clearing-fee-active"
+                                                            >
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-xs-8">
+                                                            <label for="pet-fee">Pet Fee ($)</label>
+                                                        </div>
+                                                        <div class="col-xs-4 text-right">
+                                                            <label for="pet-fee-active">Active</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <input 
+                                                            type="text" 
+                                                            name="pet_fee" 
+                                                            class="form-control input-sm" 
+                                                            id="pet-fee"
+                                                            onkeypress='return event.charCode >= 48 && event.charCode <= 57' value="{{ old('pet_fee') }}"
+                                                        >
+                                                        <span class="input-group-addon">
+                                                            <input 
+                                                                type="checkbox" 
+                                                                name="pet_fee_active" 
+                                                                id="pet-fee-active"
+                                                            >
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-xs-8">
+                                                            <label for="lodger-tax">Lodger's Tax (%)</label>
+                                                        </div>
+                                                        <div class="col-xs-4 text-right">
+                                                            <label for="lodger-tax-active">Active</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <input 
+                                                            type="text" 
+                                                            name="lodger_tax" 
+                                                            class="form-control input-sm" 
+                                                            id="lodger-tax" 
+                                                            value="{{ old('lodger_tax') }}"
+                                                        >
+                                                        <span class="input-group-addon">
+                                                            <input 
+                                                                type="checkbox" 
+                                                                name="lodger_tax_active" 
+                                                                id="lodger-tax-active"
+                                                            >
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-xs-8">
+                                                            <label for="sales-tax">Sales Tax (%)</label>
+                                                        </div>
+                                                        <div class="col-xs-4 text-right">
+                                                            <label for="sales-tax-active">Active</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <input 
+                                                            type="text" 
+                                                            name="sales_tax" 
+                                                            class="form-control input-sm" 
+                                                            id="sales-tax" 
+                                                            value="{{ old('sales_tax') }}"
+                                                        >
+                                                        <span class="input-group-addon">
+                                                            <input 
+                                                                type="checkbox" 
+                                                                name="sales_tax_active" 
+                                                                id="sales-tax-active"
+                                                            >
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Commision (%)</label>
+                                                    <input value="{{ old('commission') }}" type="text" class="form-control input-md" name="commission">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="title">Bedrooms</label>
-                                        <select name="bedroom_id" id="state" class="form-control">
-                                            <option value="">Select </option>
-                                            @foreach($bedrooms as $bedroom)
-                                            <option value="{{ $bedroom->id }}"
-                                                @if(old('bedroom_id')==$bedroom->id) selected @endif
-                                                >{{ $bedroom->title }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <fieldset>
+                                        <legend>Property Status</legend>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Status" class="">Status</label><br>
+                                                    <input name="status" type="radio" value="1"
+                                                        @if(old('status')==1) checked @endif
+                                                        @if(old('status')==null) checked @endif> Active &nbsp;&nbsp;
+                                                    <input name="status" type="radio" value="0" @if(old('status')!==null && old('status')==0) checked @endif> Inactive
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="featured" class="">Featured</label><br>
+                                                    <input 
+                                                        name="is_featured" 
+                                                        type="radio" 
+                                                        value="1"
+                                                        @if(old('is_featured')==1) checked @endif
+                                                        @if(old('is_featured')==null) checked @endif
+                                                    > Yes &nbsp;&nbsp;
+                                                    <input 
+                                                        name="is_featured" 
+                                                        type="radio" value="0"
+                                                        @if(old('is_featured')!==null && old('is_featured')==0) checked @endif
+                                                    > No
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="individual" class="">Pet Friendly</label><br>
+                                                    <input 
+                                                        name="is_pet_friendly" 
+                                                        type="radio" 
+                                                        value="1"
+                                                        @if(old('is_pet_friendly')==null) checked @endif
+                                                        @if(old('is_pet_friendly')==1) checked @endif
+                                                    > Active &nbsp;&nbsp;
+                                                    <input 
+                                                        name="is_pet_friendly" 
+                                                        type="radio" 
+                                                        value="0"
+                                                        @if(old('is_pet_friendly')!==null && old('is_pet_friendly')==0) checked @endif
+                                                    > Inactive
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="individual" class="">Online Booking</label><br>
+                                                    <input 
+                                                        name="is_online_booking" 
+                                                        type="radio" 
+                                                        value="1"
+                                                        @if(old('is_online_booking')==null) checked @endif
+                                                        @if(old('is_online_booking')==1) checked @endif
+                                                    > Active &nbsp;&nbsp;
+                                                    <input 
+                                                        name="is_online_booking" 
+                                                        type="radio" 
+                                                        value="0"
+                                                        @if(old('is_online_booking')!==null && old('is_online_booking')==0) checked @endif
+                                                    > Inactive
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="title">Bathrooms</label>
-                                        <select name="bathroom_id" id="state" class="form-control">
-                                            <option value="">Select </option>
-                                            @foreach($bathrooms as $bathroom)
-                                            <option value="{{ $bathroom->id }}"
-                                                @if(old('bathroom_id')==$bathroom->id) selected @endif
-                                                >{{ $bathroom->title }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                <div class="col-md-6">
+                                    <fieldset>
+                                        <legend>File Management</legend>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="pdf">PDF</label>
+                                                    <input name="pdf" type="file">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="" class="d-block">Image Management</label>
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Open</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="title">Sleeps</label>
-                                        <select name="sleep_id" id="state" class="form-control">
-                                            <option value="">Select </option>
-                                            @foreach($sleeps as $sleep)
-                                            <option value="{{ $sleep->id }}"
-                                                @if(old('sleep_id')==$sleep->id) selected @endif
-                                                >{{ $sleep->title }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <fieldset>
+                                        <legend>Property Information</legend>
+                                        <div classs="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="">Property Type</label>
+                                                    <div>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" id="inlineCheckbox1" value="is_vacation" name="property_type" data-property_type checked> Vacation
+                                                        </label>
+                                                        <label class="radio-inline">
+                                                            <input type="radio" id="inlineCheckbox2" value="is_long_term" name="property_type" data-property_type> Long Term
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="title" class="field-required">Short Description</label>
+                                                <textarea 
+                                                    name="short_description" 
+                                                    class="mceEditor"
+                                                    style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
+                                                    {{ old('short_description') }}
+                                                </textarea>
+                                            </div>
+                                            <div class="col-md-6 col-lg-6">
+                                                <label for="title">Long Description</label>
+                                                <textarea 
+                                                    name="long_description" 
+                                                    class="mceEditor"
+                                                    style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
+                                                    {{ old('long_description') }}
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <fieldset>
+                                        <legend>Additional Information</legend>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="" class="d-block">Rates</label>
+                                                    <a class="btn btn-primary" data-toggle="modal" href='#modal-id'>Manage</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="" class="d-block">Amenities</label>
+                                                    <a class="btn btn-primary" data-toggle="modal" href='#ammenties'>Manage</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="calender">Calendar</label><br>
+                                                    <input type="checkbox" value="1" name="is_calendar_active"> Active
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label class="field-required">Display Order</label>
+                                                    <input type="text" class="form-control input-md" id="" name="display_order" value="{{ old('display_order') }}" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
                                 </div>
                             </div>
                             
-                            <div class="row m-t-20">
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-xs-8">
-                                                <label for="clearing-fee">Cleaning Fee ($)</label>
-                                            </div>
-                                            <div class="col-xs-4 text-right">
-                                                <label for="clearing-fee-active">Active</label>
-                                            </div>
-                                        </div>
-                                        <div class="input-group">
-                                            <input 
-                                                type="text" 
-                                                name="clearing_fee" 
-                                                class="input-sm form-control" 
-                                                id="clearing_fee" 
-                                                value="{{ old('clearing_fee') }}" 
-                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                                            >
-                                            <span class="input-group-addon">
-                                                <input 
-                                                    type="checkbox" 
-                                                    name="clearing_fee_active" 
-                                                    id="clearing-fee-active"
-                                                >
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-xs-8">
-                                                <label for="pet-fee">Pet Fee ($)</label>
-                                            </div>
-                                            <div class="col-xs-4 text-right">
-                                                <label for="pet-fee-active">Active</label>
-                                            </div>
-                                        </div>
-                                        <div class="input-group">
-                                            <input 
-                                                type="text" 
-                                                name="pet_fee" 
-                                                class="form-control input-sm" 
-                                                id="pet-fee"
-                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' value="{{ old('pet_fee') }}"
-                                            >
-                                            <span class="input-group-addon">
-                                                <input 
-                                                    type="checkbox" 
-                                                    name="pet_fee_active" 
-                                                    id="pet-fee-active"
-                                                >
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-xs-8">
-                                                <label for="lodger-tax">Lodger's Tax (%)</label>
-                                            </div>
-                                            <div class="col-xs-4 text-right">
-                                                <label for="lodger-tax-active">Active</label>
-                                            </div>
-                                        </div>
-                                        <div class="input-group">
-                                            <input 
-                                                type="text" 
-                                                name="lodger_tax" 
-                                                class="form-control input-sm" 
-                                                id="lodger-tax" 
-                                                value="{{ old('lodger_tax') }}"
-                                            >
-                                            <span class="input-group-addon">
-                                                <input 
-                                                    type="checkbox" 
-                                                    name="lodger_tax_active" 
-                                                    id="lodger-tax-active"
-                                                >
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-xs-8">
-                                                <label for="sales-tax">Sales Tax (%)</label>
-                                            </div>
-                                            <div class="col-xs-4 text-right">
-                                                <label for="sales-tax-active">Active</label>
-                                            </div>
-                                        </div>
-                                        <div class="input-group">
-                                            <input 
-                                                type="text" 
-                                                name="sales_tax" 
-                                                class="form-control input-sm" 
-                                                id="sales-tax" 
-                                                value="{{ old('sales_tax') }}"
-                                            >
-                                            <span class="input-group-addon">
-                                                <input 
-                                                    type="checkbox" 
-                                                    name="sales_tax_active" 
-                                                    id="sales-tax-active"
-                                                >
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label>Commision (%)</label>
-                                        <input value="{{ old('commission') }}" type="text" class="form-control input-md" name="commission">
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="title">Housekeeper</label>
-                                        <select name="housekeeper_id" id="state" class="form-control">
-                                            <option value="">Select </option>
-                                            @foreach($house_keepers as $house_keeper)
-                                            <option value="{{ $house_keeper->id }}">{{ $house_keeper->first_name }} {{ $house_keeper->last_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                            @include('admin.property.season_rates')
 
-                            <div class="row m-t-10">
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="Status" class="">Status</label><br>
-                                        <input name="status" type="radio" value="1"
-                                            @if(old('status')==1) checked @endif
-                                            @if(old('status')==null) checked @endif> Active &nbsp;&nbsp;
-                                        <input name="status" type="radio" value="0" @if(old('status')!==null && old('status')==0) checked @endif> Inactive
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="featured" class="">Featured</label><br>
-                                        <input 
-                                            name="is_featured" 
-                                            type="radio" 
-                                            value="1"
-                                            @if(old('is_featured')==1) checked @endif
-                                            @if(old('is_featured')==null) checked @endif
-                                        > Yes &nbsp;&nbsp;
-                                        <input 
-                                            name="is_featured" 
-                                            type="radio" value="0"
-                                            @if(old('is_featured')!==null && old('is_featured')==0) checked @endif
-                                        > No
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="individual" class="">Pet Friendly</label><br>
-                                        <input 
-                                            name="is_pet_friendly" 
-                                            type="radio" 
-                                            value="1"
-                                            @if(old('is_pet_friendly')==null) checked @endif
-                                            @if(old('is_pet_friendly')==1) checked @endif
-                                        > Active &nbsp;&nbsp;
-                                        <input 
-                                            name="is_pet_friendly" 
-                                            type="radio" 
-                                            value="0"
-                                            @if(old('is_pet_friendly')!==null && old('is_pet_friendly')==0) checked @endif
-                                        > Inactive
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="individual" class="">Online Booking</label><br>
-                                        <input 
-                                            name="is_online_booking" 
-                                            type="radio" 
-                                            value="1"
-                                            @if(old('is_online_booking')==null) checked @endif
-                                            @if(old('is_online_booking')==1) checked @endif
-                                        > Active &nbsp;&nbsp;
-                                        <input 
-                                            name="is_online_booking" 
-                                            type="radio" 
-                                            value="0"
-                                            @if(old('is_online_booking')!==null && old('is_online_booking')==0) checked @endif
-                                        > Inactive
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="">Property Type</label>
-                                        <div>
-                                            <label class="radio-inline">
-                                                <input type="radio" id="inlineCheckbox1" value="is_vacation" name="property_type" data-property_type checked> Vacation
-                                            </label>
-                                            <label class="radio-inline">
-                                                <input type="radio" id="inlineCheckbox2" value="is_long_term" name="property_type" data-property_type> Long Term
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="pdf">PDF</label>
-                                        <input name="pdf" type="file">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row m-t-20">
-                                <div class="col-md-6 col-lg-6">
-                                    <label for="title" class="field-required">Short Description</label>
-                                    <textarea 
-                                        name="short_description" 
-                                        class="mceEditor"
-                                        style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
-                                        {{ old('short_description') }}
-                                    </textarea>
-                                </div>
-                                <div class="col-md-6 col-lg-6">
-                                    <label for="title">Long Description</label>
-                                    <textarea 
-                                        name="long_description" 
-                                        class="mceEditor"
-                                        style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
-                                        {{ old('long_description') }}
-                                    </textarea>
-                                </div>
-                            </div>
+                            @include('admin.property.amenities_popup')
                             
-                            <div class="row m-t-20">
-                                <div class="col-md-6 p-l-0">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="" class="d-block">Image Management</label>
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Open</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="" class="d-block">Rates</label>
-                                            <a class="btn btn-primary" data-toggle="modal" href='#modal-id'>Manage</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="" class="d-block">Amenities</label>
-                                            <a class="btn btn-primary" data-toggle="modal" href='#ammenties'>Manage</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="calender">Calendar</label><br>
-                                            <input type="checkbox" value="1" name="is_calendar_active"> Active
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <br />
-
                             <!-- Modal -->
                             <div id="myModal" class="modal fade" role="dialog">
                                 <div class="modal-dialog modal-lg" style="width: 90%">
@@ -411,10 +459,8 @@ Add Property
                                                             <tbody>
 
                                                             </tbody>
-
                                                         </table>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
@@ -424,24 +470,10 @@ Add Property
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label class="field-required">Display Order</label>
-                                        <input type="text" class="form-control input-md" id="" name="display_order" value="{{ old('display_order') }}" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
-                                    </div>
-                                </div>
-                            </div>
-
-                            @include('admin.property.season_rates')
-
-                            @include('admin.property.amenities_popup')
-
                             <div class="m-b-20">
                                 <button type="submit" class="btn btn-primary m-t-10">Add</button>
                             </div>
-                        </div><!-- /.box-body -->
+                        </div>
                     </div>
                 </div>
             </div>
