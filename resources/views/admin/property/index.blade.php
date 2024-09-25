@@ -14,6 +14,32 @@ Properties
         width: 125px;
         height: 125px;
     }
+    .project-item {
+        background-color: #fff;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .project-item img.avatar-sm {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+    .project-item .actions a {
+        margin-right: 10px;
+        color: #007bff;
+    }
+    .project-item .actions a:hover {
+        color: #0056b3;
+    }
+    .badge-soft-success {
+        background-color: rgba(72, 187, 120, 0.2);
+        color: #48bb78;
+        border-radius: 4px;
+        padding: 5px 10px;
+    }
 </style>
 @stop
 
@@ -35,7 +61,42 @@ Properties
                                 </p>
                             </div>
                         </div>
-
+        
+                        
+                        
+                        <div class="row">
+                            <!-- Project List -->
+                            <div class="col-lg-12">
+                                <div class="project-item">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <img src="https://via.placeholder.com/40" alt="Avatar" class="avatar-sm">
+                                            <a href="#" class="text-body">Simon Ryles</a>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <span class="badge badge-soft-success">Full Stack Developer</span>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            SimonRyles@minible.com
+                                        </div>
+                                        <div class="col-sm-2">
+                                            125
+                                        </div>
+                                        <div class="col-sm-2 text-right actions">
+                                            <a href="#" class="text-primary" data-toggle="tooltip" title="Edit">
+                                                <i class="glyphicon glyphicon-pencil"></i>
+                                            </a>
+                                            <a href="#" class="text-danger" data-toggle="tooltip" title="Delete">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                        
                         <div class="row">
                             <div class="col-md-6 col-lg-6">
                                 <form action="{{ url('admin/property') }}" method="GET" class="form-inline" role="form">
@@ -157,7 +218,6 @@ Properties
                 <!-- /.box -->
             </div>
         </div>
-
     </section>
 </div> <!-- content-wrapper -->
 
