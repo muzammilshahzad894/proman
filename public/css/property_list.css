@@ -1,0 +1,98 @@
+.dz-image img {
+    width: 125px;
+    height: 125px;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.font-weight-bold {
+    font-weight: bold;
+}
+
+.h-80 {
+    height: 80px;
+}
+
+.property-item {
+    background-color: #fff;
+    padding: 0 20px 0 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    border-left: 4px solid #3c8dbc;
+}
+
+.property-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.property-content {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 0;
+}
+
+.property-img {
+    border-radius: 50%;
+}
+
+.property-rating {
+    color: #337ab7;
+}
+
+.property-name-sec {
+    width: 150px;
+}
+
+.type-unit-sec {
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.property-module-sec {
+    display: flex;
+    gap: 17px;
+}
+
+.property-item-actions {
+    display: flex;
+    gap: 10px;
+    min-width: 100px;
+    flex-grow: 1;
+    justify-content: flex-end;
+}
+
+.property-item .actions a {
+    margin-right: 10px;
+    color: #007bff;
+}
+
+.property-item .actions a:hover {
+    color: #0056b3;
+}
+
+.view-reservations {
+    position: relative !important;
+}
+.view-reservations .badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #3c8dbc;
+    color: #fff;
+}

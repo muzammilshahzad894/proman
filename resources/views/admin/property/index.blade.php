@@ -8,39 +8,7 @@ Properties
 @section('css')
 <link rel="stylesheet" href="{{url('/')}}/plugins/dropzone/dropzone.css">
 <link rel="stylesheet" href="{{url('/')}}/plugins/dropzone/basic.css">
-
-<style>
-    .dz-image img {
-        width: 125px;
-        height: 125px;
-    }
-    .project-item {
-        background-color: #fff;
-        padding: 20px;
-        margin-bottom: 15px;
-        border-radius: 8px;
-        /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-    .project-item img.avatar-sm {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-    }
-    .project-item .actions a {
-        margin-right: 10px;
-        color: #007bff;
-    }
-    .project-item .actions a:hover {
-        color: #0056b3;
-    }
-    .badge-soft-success {
-        background-color: rgba(72, 187, 120, 0.2);
-        color: #48bb78;
-        border-radius: 4px;
-        padding: 5px 10px;
-    }
-</style>
+<link rel="stylesheet" href="{{url('/')}}/css/property_list.css">
 @stop
 
 @section('content')
@@ -54,50 +22,34 @@ Properties
                 <div class="box">
                     <div class="box-header">
                         <div class="row">
-                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <div class="col-md-12 d-flex justify-content-between">
                                 <h3 class="box-title">View Properties</h3>
-                                <p class="m-t-10 m-b-10">
-                                    <a href="{{ url('admin/property/create') }}" class="btn btn-success">Add Property</a>
-                                </p>
+                                <a href="{{ url('admin/property/create') }}" class="btn btn-success">Add Property</a>
                             </div>
                         </div>
-        
-                        
-                        
                         <div class="row">
-                            <!-- Project List -->
-                            <div class="col-lg-12">
-                                <div class="project-item">
-                                    <div class="row">
-                                        <div class="col-sm-2">
-                                            <img src="https://via.placeholder.com/40" alt="Avatar" class="avatar-sm">
-                                            <a href="#" class="text-body">Simon Ryles</a>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <span class="badge badge-soft-success">Full Stack Developer</span>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            SimonRyles@minible.com
-                                        </div>
-                                        <div class="col-sm-2">
-                                            125
-                                        </div>
-                                        <div class="col-sm-2 text-right actions">
-                                            <a href="#" class="text-primary" data-toggle="tooltip" title="Edit">
-                                                <i class="glyphicon glyphicon-pencil"></i>
-                                            </a>
-                                            <a href="#" class="text-danger" data-toggle="tooltip" title="Delete">
-                                                <i class="glyphicon glyphicon-trash"></i>
-                                            </a>
-                                        </div>
+                            <div class="col-md-12 d-flex justify-content-center">
+                                <form action="{{ url('admin/property') }}" method="GET" class="form-inline" role="form">
+                                    <div class="form-group">
+                                        <input 
+                                            type="text" 
+                                            name="search" 
+                                            class="form-control input-full" 
+                                            placeholder="Search by Property name" 
+                                            value={{ isset($search) ? $search : '' }}
+                                        >
                                     </div>
-                                </div>
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </form>
+                                <select name="search" id="search" class="form-control" style="width: 140px; margin-left: 15px;">
+                                    <option value="">All</option>
+                                    <option value="vacationRental">Vacation Rental</option>
+                                    <option value="longTerm">Long Term</option>
+                                </select>
                             </div>
                         </div>
                         
-                        
-                        
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-md-6 col-lg-6">
                                 <form action="{{ url('admin/property') }}" method="GET" class="form-inline" role="form">
                                     <div class="form-group">
@@ -122,11 +74,80 @@ Properties
                                 <span><a href="{{ url('admin/property?search=vacationRental') }}" class="btn btn-primary btn-sm">Vacation Rental</a></span>
                                 <span><a href="{{ url('admin/property?search=longTerm') }}" class="btn btn-primary btn-sm">Long Term</a></span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="box-body">
+                        @for($i = 0; $i < 10; $i++)
                         <div class="row">
+                            <!-- Property List -->
+                            <div class="col-lg-12">
+                                <div class="property-item">
+                                    <div class="property-content d-flex flex-nowrap align-items-center">
+                                        <div>
+                                            <img src="https://propman.rezosystems.brownrice.com/uploads/properties/32547-2024-09-18_19h24_19.png" alt="Avatar" class="property-img" width="80" height="80">
+                                        </div>
+                                        <div class="property-name-sec h-80">
+                                            <div>
+                                                <h6 class="font-weight-bold">{{ substr('My First Property', 0, 26) }}{{ strlen('My First Property') > 26 ? '...' : '' }}</h6>
+                                                <span class="property-rating">
+                                                    <span class="fa fa-star-o"></span>
+                                                    <span class="fa fa-star-o"></span>
+                                                    <span class="fa fa-star-o"></span>
+                                                    <span class="fa fa-star-o"></span>
+                                                    <span class="fa fa-star-o"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="type-unit-sec h-80">
+                                            <div>
+                                                <h6 class="font-weight-bold">Type/Unit</h6>
+                                                <span>{{ substr('Vacation Rental', 0, 20) }}{{ strlen('Vacation Rental') > 20 ? '...' : '' }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="property-module-sec">
+                                            <a data-toggle="modal" href='#' class="btn btn-sm btn-default">Rates</a>
+                                            <a data-toggle="modal" href='#' class="btn btn-sm btn-default">Pictures</a>
+                                            <a data-toggle="modal" href='#' class="btn btn-sm btn-default">Ameneties</a>
+                                            <a data-toggle="modal" href='#' class="btn btn-sm btn-default">Add Reservation</a>
+                                            <a data-toggle="modal" href='#' class="btn btn-sm btn-default">Calender</a>
+                                            <a data-toggle="modal" href='#' class="btn btn-sm btn-default view-reservations">
+                                                View Reservation 
+                                                <span class="badge badge-light">3</span> <!-- Example total reservations -->
+                                            </a>
+                                        </div>
+                                        <div class="property-item-actions text-right">
+                                            <a href="#" data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            <a href="#" data-toggle="tooltip" title="Delete" class="btn btn-danger btn-xs">
+                                                <i class="fa fa-remove"></i>
+                                            </a>
+                                        </div>    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endfor
+                        <!-- pagination -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>Showing 1 to 10 of 10</p>
+                                <ul class="pagination">
+                                    <li class="page-item disabled"><span class="page-link">«</span></li>
+                                    <li class="page-item active"><span class="page-link">1</span></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">6</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" rel="next">»</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <table class="table table-bordered table-hover normal-table reservations_list_tbl">
                                     <thead>
@@ -211,7 +232,7 @@ Properties
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <!-- /.box-body -->
                 </div>
