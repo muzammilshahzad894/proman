@@ -401,6 +401,24 @@
 
 
 <style>
+  fieldset {
+    border: 1px dashed #3c8dbc;
+    border-radius: 10px;
+    padding: 7px;
+    margin-bottom: 20px;
+  }
+  
+  legend {
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #3c8dbc;
+    color: #fff;
+    padding: 0 10px;
+    border: 2px solid #ebebeb;
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
   .content {
       min-height: 250px;
       padding: 15px;
