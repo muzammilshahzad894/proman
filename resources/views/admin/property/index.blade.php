@@ -29,8 +29,9 @@ Properties
                         </div>
                         <div class="row">
                             <div class="col-md-12 d-flex justify-content-center">
-                                <form action="{{ url('admin/property') }}" method="GET" class="form-inline" role="form">
+                                <form action="{{ url('admin/properties') }}" method="GET" class="form-inline" role="form">
                                     <div class="form-group">
+                                        <label>Search: </label>
                                         <input 
                                             type="text" 
                                             name="search" 
@@ -41,40 +42,27 @@ Properties
                                     </div>
                                     <button type="submit" class="btn btn-primary">Search</button>
                                 </form>
-                                <select name="search" id="search" class="form-control" style="width: 140px; margin-left: 15px;">
-                                    <option value="">All</option>
-                                    <option value="vacationRental">Vacation Rental</option>
-                                    <option value="longTerm">Long Term</option>
+                                <select name="type" class="form-control" style="width: 140px; margin-left: 15px;" onchange="redirectToURL(this)">
+                                    <option 
+                                        value="{{ url('admin/properties') }}"
+                                    >
+                                        All
+                                    </option>
+                                    <option 
+                                        value="{{ request()->fullUrlWithQuery(['type' => 'vacationRental']) }}"
+                                        @if($type=='vacationRental') selected @endif
+                                    >
+                                        Vacation Rental
+                                    </option>
+                                    <option 
+                                        value="{{ request()->fullUrlWithQuery(['type' => 'longTerm']) }}"
+                                        @if($type=='longTerm') selected @endif
+                                    >
+                                        Long Term
+                                    </option>
                                 </select>
                             </div>
                         </div>
-                        
-                        <!-- <div class="row">
-                            <div class="col-md-6 col-lg-6">
-                                <form action="{{ url('admin/property') }}" method="GET" class="form-inline" role="form">
-                                    <div class="form-group">
-                                        <input 
-                                            type="text" 
-                                            name="search" 
-                                            class="form-control input-full" 
-                                            placeholder="Search by Property name" 
-                                            value={{ isset($search) ? $search : '' }}
-                                        >
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Search</button>
-                                </form>
-                            </div>
-                            <div class="col-md-6 col-lg-6">
-
-                            </div>
-                        </div>
-                        <div class="row m-t-20">
-                            <div class="col-md-6">
-                                <span><a href="{{ url('admin/property') }}" class="btn btn-primary btn-sm">All</a></span>
-                                <span><a href="{{ url('admin/property?search=vacationRental') }}" class="btn btn-primary btn-sm">Vacation Rental</a></span>
-                                <span><a href="{{ url('admin/property?search=longTerm') }}" class="btn btn-primary btn-sm">Long Term</a></span>
-                            </div>
-                        </div> -->
                     </div>
 
                     <div class="box-body">
@@ -94,7 +82,7 @@ Properties
                                             >
                                         @else
                                             <img
-                                                src="https://propman.rezosystems.brownrice.com/uploads/properties/32547-2024-09-18_19h24_19.png"
+                                                src="{{url('/uploads/properties/default.png')}}"
                                                 alt="Avatar"
                                                 title="Default Image"
                                                 height="80"
@@ -168,113 +156,11 @@ Properties
                             </div>
                         </div>
                         @endforeach
-                        <!-- pagination -->
-                        <!-- @if($properties->total()>0)
+                        
+                        @if($properties->total()>0)
                             <p>Showing {!! $properties->firstItem() !!} to {!! $properties->lastItem() !!} of {!! $properties->total() !!}</p>
                             {{ $properties->links() }}
-                        @endif -->
-                        <!-- <div class="row">
-                            <div class="col-md-12">
-                                <p>Showing {!! $properties->firstItem() !!} to {!! $properties->lastItem() !!} of {!! $properties->total() !!}</p>
-                                <ul class="pagination">
-                                    <li class="page-item disabled"><span class="page-link">«</span></li>
-                                    <li class="page-item active"><span class="page-link">1</span></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">6</a></li>
-                                    <li class="page-item"><a class="page-link" href="#" rel="next">»</a></li>
-                                </ul>
-                            </div>
-                        </div> -->
-                        
-                        <!-- <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <table class="table table-bordered table-hover normal-table reservations_list_tbl">
-                                    <thead>
-                                        <tr>
-                                            <th>Preview</th>
-                                            <th>Property Name</th>
-                                            <th>Rating</th>
-                                            <th>Type/Unit</th>
-                                            <th>Rates</th>
-                                            <th>Images</th>
-                                            <th>Ameneties</th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th class="text-center">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($properties as $key => $property)
-                                        <tr data-delete="{{ url('admin/property/delete') }}/{{$property->id}}">
-                                            <td>
-                                                @if ($property->pictures->count())
-                                                <img
-                                                    src="{{url('/uploads/properties/')}}/{{$property->mainpictures->last()->filename}}"
-                                                    title="{{$property->mainpictures->last()->title}}"
-                                                    width="100" height="80">
-                                                @endif
-                                            </td>
-                                            <td>{{ $property->title }}</td>
-                                            <td>
-                                                <span class="fa fa-star-o"></span>
-                                                <span class="fa fa-star-o"></span>
-                                                <span class="fa fa-star-o"></span>
-                                                <span class="fa fa-star-o"></span>
-                                                <span class="fa fa-star-o"></span>
-                                            </td>
-                                            <td>{{ $property->category_id }}<br>
-                                                @if($property->bedroom_id>0) Beds {{$property->bedroom_id}}
-                                                <br>@endif
-
-                                                @if($property->bathrrom_id>0) Bath {{$property->bathroom_id}}
-                                                <br>@endif
-
-                                                @if($property->is_vacation>0) Vacation
-                                                <br>@endif
-
-                                                @if($property->is_long_term>0) Longterm
-                                                <br>@endif
-
-                                            </td>
-                                            <td><a data-toggle="modal" href='#Rates-{{$key}}' class="btn btn-primary">Rates</a></td>
-                                            <td>
-                                                <a data-toggle="modal"
-                                                    href='#Pictures-{{$key}}'
-                                                    class="edit-pics-button btn btn-primary"
-                                                    data-id="{{ $property->id }}"
-                                                    data-pics="{{ json_encode($property->pictures) }}">Pictures
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a data-toggle="modal" href='#Amenities-{{$key}}' class="btn btn-primary">Amenities</a>
-                                            </td>
-                                            <td>
-                                                <a href="{{ url('admin/reservation/create') }}/{{ $property->id }}" class="btn btn-primary">Add Reservation</a>
-                                            </td>
-                                            <td>
-                                                <a href="{{ url('admin/property/reservation-calendar') }}/{{ $property->id }}" class="btn btn-primary">Calender</a>
-                                            </td>
-                                            <td>
-                                                <a href="{{ url('admin/property/'. $property->id)  }}" class="btn btn-primary">View Res</a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a data-toggle="tooltip" title="Edit" href="{{ url('admin/property') }}/{{ $property->id }}/edit" class="btn btn-primary btn-xs">
-                                                    <i class="fa fa-pencil"></i>
-                                                </a>
-                                                <a data-toggle="tooltip" title="Delete" data-delete-trigger href="#" class="btn btn-danger btn-xs">
-                                                    <i class="fa fa-remove"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div> -->
+                        @endif
                     </div>
                     <!-- /.box-body -->
                 </div>
@@ -689,5 +575,12 @@ Properties
             }
         });
     });
+    
+    function redirectToURL(selectElement) {
+        var url = selectElement.value;
+        if (url) {
+            window.location.href = url;
+        }
+    }
 </script>
 @stop

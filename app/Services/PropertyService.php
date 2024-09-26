@@ -12,22 +12,18 @@ class PropertyService
      * @param string|null $search
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getPropertiesBySearch($search = null)
+    public function getPropertiesBySearch($search = null, $type = null)
     {
         $query = Property::where('status', 1)->orderBy('display_order', 'ASC');
 
-        if ($search) {
-            switch ($search) {
-                case 'vacationRental':
-                    $query->where('is_vacation', 1);
-                    break;
-                case 'longTerm':
-                    $query->where('is_long_term', 1);
-                    break;
-                default:
-                    $query->where('title', 'like', '%' . $search . '%');
-                    break;
-            }
+        $query = match ($type) {
+            'vacationRental' => $query->where('is_vacation', 1),
+            'longTerm' => $query->where('is_long_term', 1),
+            default => $query
+        };
+        
+        if($search) {
+            $query->where('title', 'like', '%' . $search . '%');
         }
 
         return $query->paginate(config('pagination.per_page') ?? 10);

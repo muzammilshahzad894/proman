@@ -46,10 +46,11 @@ class PropertyController extends Controller
         try {
             $seasons = Season::all();
             $search = $request->search;
+            $type = $request->type;
             
-            $properties = $this->propertyService->getPropertiesBySearch($search);
+            $properties = $this->propertyService->getPropertiesBySearch($search, $type);
             
-            return view('admin.property.index', compact('properties', 'seasons', 'search'));
+            return view('admin.property.index', compact('properties', 'seasons', 'search', 'type'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             Session::flash('error', 'Something went wrong. Please try again.');
