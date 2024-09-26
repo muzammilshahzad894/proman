@@ -437,14 +437,10 @@ Add Property
                                         <div class="modal-body">
                                             <div class="row">
                                                 <div class="col-md-6">
-
-                                                    <div id="myId" class="dropzone  m-b-20"> </div>
-
+                                                    <div id="myId" class="dropzone m-b-20"> </div>
                                                 </div>
                                                 <div class="col-md-6">
-
                                                     <div class="well uploadTable-container">
-
                                                         <table class="table table-hover uploadTable">
                                                             <thead>
                                                                 <tr>

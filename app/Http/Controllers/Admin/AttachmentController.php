@@ -28,26 +28,15 @@ class AttachmentController extends Controller
             return response($errormsg, 500);
         }
 
-        // upload files 
+        // upload files
         $name = $request->file('file')->getClientOriginalName();
         $name = strtolower($name);
 
-        // // chck duplicte files.
-        // if ( $request->session()->has( $session_key ) ) {
-        //     $fileArray = $request->session()->get( $session_key );
-        //     $index = array_search( $name , $fileArray );
-        //     if (null != $index ) {
-        //         return response('Can not upload duplicate files', 500);
-        //     }
-        // }
-
-        $destinationPath =  public_path() . '/uploads/properties'; // upload path
+        $destinationPath =  public_path() . '/uploads/properties';
         if (!file_exists($destinationPath)) {
             mkdir($destinationPath, 0775, true);
         }
-
-        $fileName = rand(11111, 99999) . '-' . $name; // renameing image
-
+        $fileName = rand(11111, 99999) . '-' . $name;
         if ($request->hasFile('file')) {
             $request->file('file')->move($destinationPath, $fileName);
 
