@@ -31,7 +31,7 @@ Season Rates
                     <div class="box-body">
                         <div class="row">
                             <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-                                <table class="table table-responsive table-bordered table-striped">
+                                <table class="table table-bordered table-hover normal-table">
                                     <thead>
                                         <tr>
                                             <th>Diplay Order</th>
@@ -64,9 +64,13 @@ Season Rates
                                                 <span class="label label-danger">No</span>
                                                 @endif
                                             </td>
-                                            <td class="text-center">
-                                                <a href="{{ url('admin/seasonrate') }}/{{ $season_rate->id }}/edit"><i class="fa fa-pencil"></i></a>
-                                                <a data-delete-trigger href="#"><i class="fa fa-trash"></i></a>
+                                            <td class="text-center">                                                
+                                                <a data-toggle="tooltip" title="Edit" href="{{ url('admin/seasonrate') }}/{{ $season_rate->id }}/edit" class="btn btn-primary btn-xs">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+                                                <a data-toggle="tooltip" title="Delete" data-delete-trigger href="#" class="btn btn-danger btn-xs">
+                                                    <i class="fa fa-remove"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                         @endforeach

@@ -507,8 +507,9 @@ Add Property
     var counter = 1;
 
     function putFileinTable(file, res) {
+        var encodedFilename = encodeURIComponent(res.attachment.filename);
         var html = "<tr data-filename='" + file.name + "'>";
-        html = html + "<td><div style='background: url(" + base_url + "/uploads/properties/" + res.attachment.filename + "); width: 32px;height: 32px;background-size: cover;'></div><input class='form-control' name='pictures[]' type='hidden' value='" + res.attachment.id + "' /></td>";
+        html = html + "<td><div style='background: url(" + base_url + "/uploads/properties/" + encodedFilename + "); width: 32px;height: 32px;background-size: cover;'></div><input class='form-control' name='pictures[]' type='hidden' value='" + res.attachment.id + "' /></td>";
         html = html + "<td><input class='form-control' name='pic_title[]' type='text' value='' /></td>";
         html = html + "<td><input style='max-width: 119px;' class='form-control' name='order[]' type='text'/></td>";
         html = html + "<td><input class='' name='main' type='radio' value='" + res.attachment.id + "' /></td>";

@@ -77,7 +77,6 @@ Properties
                                                 src="{{url('/uploads/properties/')}}/{{$property->mainpictures->last()->filename}}"
                                                 alt="Avatar"
                                                 title="{{$property->mainpictures->last()->title}}"
-                                                class="property-img"
                                                 height="80"
                                                 width="80"
                                             >
@@ -105,18 +104,18 @@ Properties
                                         <div class="type-unit-sec h-80">
                                             <div>
                                                 <h6 class="font-weight-bold">Type/Unit</h6>
-                                                {{ $property->category_id }}<br>
-                                                @if($property->bedroom_id>0) Beds {{$property->bedroom_id}}
-                                                <br>@endif
+                                                <!-- {{ $property->category_id }}<br> -->
+                                                @if($property->bedroom_id>0) (Beds {{$property->bedroom_id}})
+                                                @endif
 
-                                                @if($property->bathrrom_id>0) Bath {{$property->bathroom_id}}
-                                                <br>@endif
+                                                @if($property->bathrrom_id>0) (Bath {{$property->bathroom_id}})
+                                                @endif
 
-                                                @if($property->is_vacation>0) Vacation
-                                                <br>@endif
+                                                @if($property->is_vacation>0) (Vacation)
+                                                @endif
 
-                                                @if($property->is_long_term>0) Longterm
-                                                <br>@endif
+                                                @if($property->is_long_term>0) (Longterm)
+                                                @endif
                                             </div>
                                         </div>
                                         
