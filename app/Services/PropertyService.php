@@ -30,6 +30,6 @@ class PropertyService
             }
         }
 
-        return $query->get();
+        return $query->paginate(config('pagination.per_page') ?? 10);
     }
 }

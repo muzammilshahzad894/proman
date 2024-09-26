@@ -78,18 +78,31 @@ Properties
                     </div>
 
                     <div class="box-body">
-                        @for($i = 0; $i < 10; $i++)
-                        <div class="row">
+                        @foreach($properties as $key => $property)
+                        <div class="row" data-delete="{{ url('admin/property/delete') }}/{{$property->id}}">
                             <!-- Property List -->
                             <div class="col-lg-12">
                                 <div class="property-item">
                                     <div class="property-content d-flex flex-nowrap align-items-center">
-                                        <div>
-                                            <img src="https://propman.rezosystems.brownrice.com/uploads/properties/32547-2024-09-18_19h24_19.png" alt="Avatar" class="property-img" width="80" height="80">
-                                        </div>
+                                        @if ($property->pictures->count())
+                                            <img
+                                                src="{{url('/uploads/properties/')}}/{{$property->mainpictures->last()->filename}}"
+                                                alt="Avatar"
+                                                title="{{$property->mainpictures->last()->title}}"
+                                                class="property-img"
+                                                height="80"
+                                            >
+                                        @else
+                                            <img
+                                                src="https://propman.rezosystems.brownrice.com/uploads/properties/32547-2024-09-18_19h24_19.png"
+                                                alt="Avatar"
+                                                title="Default Image"
+                                                height="80"
+                                            >
+                                        @endif
                                         <div class="property-name-sec h-80">
                                             <div>
-                                                <h6 class="font-weight-bold">{{ substr('My First Property', 0, 26) }}{{ strlen('My First Property') > 26 ? '...' : '' }}</h6>
+                                                <h6 class="font-weight-bold">{{ substr($property->title, 0, 26) }}{{ strlen($property->title) > 26 ? '...' : '' }}</h6>
                                                 <span class="property-rating">
                                                     <span class="fa fa-star-o"></span>
                                                     <span class="fa fa-star-o"></span>
@@ -102,26 +115,51 @@ Properties
                                         <div class="type-unit-sec h-80">
                                             <div>
                                                 <h6 class="font-weight-bold">Type/Unit</h6>
-                                                <span>{{ substr('Vacation Rental', 0, 20) }}{{ strlen('Vacation Rental') > 20 ? '...' : '' }}</span>
+                                                {{ $property->category_id }}<br>
+                                                @if($property->bedroom_id>0) Beds {{$property->bedroom_id}}
+                                                <br>@endif
+
+                                                @if($property->bathrrom_id>0) Bath {{$property->bathroom_id}}
+                                                <br>@endif
+
+                                                @if($property->is_vacation>0) Vacation
+                                                <br>@endif
+
+                                                @if($property->is_long_term>0) Longterm
+                                                <br>@endif
                                             </div>
                                         </div>
                                         
                                         <div class="property-module-sec">
-                                            <a data-toggle="modal" href='#' class="btn btn-sm btn-default">Rates</a>
-                                            <a data-toggle="modal" href='#' class="btn btn-sm btn-default">Pictures</a>
-                                            <a data-toggle="modal" href='#' class="btn btn-sm btn-default">Ameneties</a>
-                                            <a data-toggle="modal" href='#' class="btn btn-sm btn-default">Add Reservation</a>
-                                            <a data-toggle="modal" href='#' class="btn btn-sm btn-default">Calender</a>
-                                            <a data-toggle="modal" href='#' class="btn btn-sm btn-default view-reservations">
-                                                View Reservation 
-                                                <span class="badge badge-light">3</span> <!-- Example total reservations -->
+                                            <a data-toggle="modal" href='#Rates-{{$key}}' class="btn btn-sm btn-default">Rates</a>
+                                            <a 
+                                                data-toggle="modal"
+                                                href='#Pictures-{{$key}}'
+                                                class="edit-pics-button btn btn-sm btn-default"
+                                                data-id="{{ $property->id }}"
+                                                data-pics="{{ json_encode($property->pictures) }}"
+                                            >
+                                                Pictures
+                                            </a>
+                                            <a data-toggle="modal" href='#Amenities-{{$key}}' class="btn btn-sm btn-default">Amenities</a>
+                                            <!-- <a href="{{ url('admin/reservation/create') }}/{{ $property->id }}" class="btn btn-sm btn-default">Add Reservation</a> -->
+                                            <a href="#" class="btn btn-sm btn-default">Add Reservation</a>
+                                            <!-- <a href="{{ url('admin/property/reservation-calendar') }}/{{ $property->id }}" class="btn btn-sm btn-default">Calender</a> -->
+                                            <a href="#" class="btn btn-sm btn-default">Calender</a>
+                                            <!-- <a href="{{ url('admin/property/'. $property->id)  }}" class="btn btn-sm btn-default view-reservations">
+                                                View Reservations
+                                                <span class="badge badge-light">3</span>
+                                            </a> -->
+                                            <a href="#" class="btn btn-sm btn-default view-reservations">
+                                                View Reservations
+                                                <span class="badge badge-light">3</span>
                                             </a>
                                         </div>
                                         <div class="property-item-actions text-right">
-                                            <a href="#" data-toggle="tooltip" title="Edit" class="btn btn-primary btn-xs">
+                                            <a data-toggle="tooltip" title="Edit" href="{{ url('admin/property') }}/{{ $property->id }}/edit" class="btn btn-primary btn-xs">
                                                 <i class="fa fa-pencil"></i>
                                             </a>
-                                            <a href="#" data-toggle="tooltip" title="Delete" class="btn btn-danger btn-xs">
+                                            <a data-toggle="tooltip" title="Delete" data-delete-trigger href="#" class="btn btn-danger btn-xs">
                                                 <i class="fa fa-remove"></i>
                                             </a>
                                         </div>    
@@ -129,11 +167,15 @@ Properties
                                 </div>
                             </div>
                         </div>
-                        @endfor
+                        @endforeach
                         <!-- pagination -->
-                        <div class="row">
+                        <!-- @if($properties->total()>0)
+                            <p>Showing {!! $properties->firstItem() !!} to {!! $properties->lastItem() !!} of {!! $properties->total() !!}</p>
+                            {{ $properties->links() }}
+                        @endif -->
+                        <!-- <div class="row">
                             <div class="col-md-12">
-                                <p>Showing 1 to 10 of 10</p>
+                                <p>Showing {!! $properties->firstItem() !!} to {!! $properties->lastItem() !!} of {!! $properties->total() !!}</p>
                                 <ul class="pagination">
                                     <li class="page-item disabled"><span class="page-link">«</span></li>
                                     <li class="page-item active"><span class="page-link">1</span></li>
@@ -145,7 +187,7 @@ Properties
                                     <li class="page-item"><a class="page-link" href="#" rel="next">»</a></li>
                                 </ul>
                             </div>
-                        </div>
+                        </div> -->
                         
                         <!-- <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

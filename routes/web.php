@@ -174,7 +174,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::get('property/{id}', 'PropertyController@show')->name('property.show');
 	Route::get('property/{id}/edit', 'PropertyController@edit')->name('property.edit');
 	Route::post('property/{id}/edit', 'PropertyController@update')->name('property.update');
-	Route::post('property/delete/{id}', 'PropertyController@destroy')->name('property.destroy');
+	Route::delete('property/delete/{id}', 'PropertyController@destroy')->name('property.destroy');
 	Route::post('property/{id}', 'PropertyController@updateSeasonRates')->name('property.updateSeasonRates');
 	Route::post('property/update-property-amenities/{id}', 'PropertyController@updateAmenities')->name('property.updateAmenities');
     Route::get('property/reservation-calendar/{id}', 'PropertyController@showCalendar')->name('property.showCalendar');
