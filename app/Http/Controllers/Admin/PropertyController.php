@@ -458,23 +458,27 @@ class PropertyController extends Controller
      */
     public function updatePictures(Request $request, $id)
     {
-        $property = Property::query()->findOrFail($id);
+        try {
+            $property = Property::query()->findOrFail($id);
 
-        $pictures = $request->get('pictures');
+            $pictures = $request->get('pictures');
 
-        if (!empty($pictures)) {
-            for ($i = 0; $i < sizeof($pictures); $i++) {
-                $attachment = Attachment::find($pictures[$i]);
-                $attachment->property_id =  $property->id;
-                $attachment->title =  $request->get('pic_title')[$i];
-                $attachment->order =  $request->get('order')[$i];
-                $attachment->main =  (null != $request->get('main') && $request->get('main') == $pictures[$i]) ? 1 : 0;
-                $attachment->status =  1;
-                $attachment->save();
+            if (!empty($pictures)) {
+                for ($i = 0; $i < sizeof($pictures); $i++) {
+                    $attachment = Attachment::find($pictures[$i]);
+                    $attachment->property_id =  $property->id;
+                    $attachment->title =  $request->get('pic_title')[$i];
+                    $attachment->order =  $request->get('order')[$i];
+                    $attachment->main =  (null != $request->get('main') && $request->get('main') == $pictures[$i]) ? 1 : 0;
+                    $attachment->status =  1;
+                    $attachment->save();
+                }
             }
+            
+            return ResponseHelper::jsonResponse('success', 'Property pictures updated successfully.', url()->previous());
+        } catch (\Exception $e) {
+            Log::error('Error updating property pictures: ' . $e->getMessage());
+            return ResponseHelper::jsonResponse('error', 'Something went wrong. Please try again.', null, 500);
         }
-
-        Session::flash('success', 'Pictures updated successfully.');
-        return back();
     }
 }

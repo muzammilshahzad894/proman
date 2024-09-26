@@ -79,6 +79,7 @@ Properties
                                                 title="{{$property->mainpictures->last()->title}}"
                                                 class="property-img"
                                                 height="80"
+                                                width="80"
                                             >
                                         @else
                                             <img
@@ -86,6 +87,7 @@ Properties
                                                 alt="Avatar"
                                                 title="Default Image"
                                                 height="80"
+                                                width="80"
                                             >
                                         @endif
                                         <div class="property-name-sec h-80">
@@ -202,7 +204,6 @@ Properties
                                 <td>{{ $season->title }} <input type="hidden" name="season_id[]" value="{{ $season->id }}"> </td>
                                 <td>{{ $season->from_month }}/{{ $season->from_day }} - {{ $season->to_month }}/{{ $season->to_day }}</td>
                                 @foreach ($season->rates($property->id) as $propertyd)
-
 
                                 @if ($propertyd->pivot->property_id != $property->id)
                                 <?php continue;  ?>
@@ -342,9 +343,8 @@ Properties
 <div class="modal fade" id="Pictures-{{$key}}">
     <div class="modal-dialog" style="width: 769px;">
         <div class="modal-content">
-            <form id="form-edit-{{ $property->id }}" method="post" action="{{ url('/admin/property/update/pictures/' . $property->id) }}">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
+            <form id="form-edit-{{ $property->id }}" method="post" action="{{ url('/admin/property/update/pictures/' . $property->id) }}" class="ajax-submission">
+                @csrf
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title">Pictures</h4>
@@ -360,8 +360,8 @@ Properties
                     {{--</ul>--}}
 
                     <div class="row">
-                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            <div id="drop-id-{{ $property->id }}" class="dropzone  m-b-20"> </div>
+                        <div class="col-md-12">
+                            <div id="drop-id-{{ $property->id }}" class="dropzone m-b-20"> </div>
                         </div>
                     </div>
 
@@ -430,8 +430,9 @@ Properties
     }
 
     function putFileinTable(file, res) {
+        var encodedFilename = encodeURIComponent(res.attachment.filename);
         var html = "<tr data-filename='" + file.name + "'>";
-        html = html + "<td><div style='background: url(" + base_url + "/uploads/properties/" + res.attachment.filename + "); width: 32px;height: 32px;background-size: cover;'></div><input class='form-control' name='pictures[]' type='hidden' value='" + res.attachment.id + "' /></td>";
+        html = html + "<td><div style='background: url(" + base_url + "/uploads/properties/" + encodedFilename + "); width: 32px;height: 32px;background-size: cover;'></div><input class='form-control' name='pictures[]' type='hidden' value='" + res.attachment.id + "' /></td>";
         html = html + "<td><input class='form-control' name='pic_title[]' type='text' value='" + res.attachment.title + "' /></td>";
         html = html + "<td><input style='max-width: 119px;' class='form-control' name='order[]' type='text' value='" + res.attachment.order + "'/></td>";
 
@@ -475,20 +476,16 @@ Properties
                 // Send file starts
                 self.on("sending", function(file, xhr, formData) {
                     formData.append("_token", $('meta[name="csrf-token"]').attr('content'));
+                    var formId = file.previewElement.closest('form').id;
+                    var propertyId = formId.split('-').pop();
+                    formData.append("property_id", propertyId);
 
                     console.log('upload started', file);
                     $('.meter').show();
                 });
 
-                // self.on('thumbnail', function(file, dataUrl) {
-                //       console.log('dataUrl');
-                //       console.log(dataUrl);
-                //   });
-
                 self.on('success', function(file, res) {
                     putFileinTable(file, res);
-                    console.log('success');
-                    console.log(res);
                 });
 
                 self.on('error', function(file) {
@@ -507,21 +504,16 @@ Properties
 
                 // File upload Progress
                 self.on("totaluploadprogress", function(progress) {
-                    console.log("progress ", progress);
                     $('.roller').width(progress + '%');
                 });
 
                 self.on("queuecomplete", function(file, progress) {
-
-
                     $('.meter').delay(999).slideUp(999);
                 });
 
                 // On removing file
                 self.on("removedfile", function(file) {
-
                     $('.uploadTable').find('tbody tr').each(function(index, el) {
-
                         var el = $(el)
                         if (el.data('filename') == file.name) {
                             el.remove();
@@ -531,7 +523,6 @@ Properties
                     handleTable(counter);
 
                     deleteFileFromServer(file.obj.attachment.id);
-                    console.log(file);
                 });
             }
         };
@@ -559,13 +550,10 @@ Properties
             if (!myDropzone) {
                 myDropzone = new Dropzone("#drop-id-" + id, options);
                 $.each(mockFiles, function(index, obj) {
-
                     // Call the default addedfile event handler
                     myDropzone.emit("addedfile", obj);
-
                     // And optionally show the thumbnail of the file:
                     myDropzone.emit("thumbnail", obj, obj.url);
-
                     putFileinTable(obj, obj.obj);
                 });
             } else {

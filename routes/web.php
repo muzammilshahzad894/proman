@@ -201,6 +201,9 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::get('housekeeper/{id}/edit', 'HouseKeeperController@edit')->name('housekeeper.edit');
 	Route::post('housekeeper/{id}/edit', 'HouseKeeperController@update')->name('housekeeper.update');
 	Route::delete('housekeeper/delete/{id}', 'HouseKeeperController@destroy')->name('housekeeper.destroy');
+	
+	Route::post('upload-files', 'AttachmentController@save');
+	Route::get('delete/file/{id}', 'AttachmentController@delete');
 });
 
 
