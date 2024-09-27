@@ -1,0 +1,69 @@
+.d-block {
+    display: block;
+}
+.d-flex {
+    display: flex;
+}
+.justify-content-center {
+    justify-content: center;
+}
+.justify-content-between {
+    justify-content: space-between;
+}
+.align-items-center {
+    align-items: center;
+}
+.mr-10 {
+    margin-right: 10px !important;
+}
+.pr-30 {
+    padding-right: 30px;
+}
+.long-desc-div {
+    background: #F0F0F0;
+    margin-top: 7px;
+    justify-content: space-between;
+    padding: 0 7px 0 7px;
+    cursor: pointer;
+    border: 1px solid lightgray;
+}
+#add-long-des-icon {
+    font-size: 23px;
+    font-weight: bold;
+}
+.icon-btn-group-left {
+    padding: 8px 12px;
+    background-color: #ebeff3;
+    border-right: 1px solid #c0d9fd;
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+.icon-btn-group-center {
+    padding: 8px 12px;
+    background-color: #ebeff3;
+    border-right: 1px solid #c0d9fd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+.icon-btn-group-right {
+    padding: 8px 12px;
+    background-color: #ebeff3;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}

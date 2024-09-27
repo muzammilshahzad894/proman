@@ -8,7 +8,7 @@ Properties
 @section('css')
 <link rel="stylesheet" href="{{url('/')}}/plugins/dropzone/dropzone.css">
 <link rel="stylesheet" href="{{url('/')}}/plugins/dropzone/basic.css">
-<link rel="stylesheet" href="{{url('/')}}/css/property_list.css">
+<link rel="stylesheet" href="{{url('/')}}/css/property/list.css">
 @stop
 
 @section('content')

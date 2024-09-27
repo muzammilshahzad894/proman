@@ -1,4 +1,4 @@
-<div class="modal fade" id="ammenties">
+<div class="modal fade" id="amenities-modal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">

@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal-id">
+<div class="modal fade" id="rates-modal">
   <div class="modal-dialog" style="width: 736px;">
     <div class="modal-content">
       <div class="modal-header">
@@ -21,10 +21,7 @@
             <tbody>
               @foreach($seasons as $season)
                 <tr>
-                  
                   <td>{{ $season->title }} <input type="hidden" name="season_id[]" value="{{ $season->id }}"> </td>  
-
-                  
                   <td>{{ $season->from_month }}/{{ $season->from_day }} - {{ $season->to_month }}/{{ $season->to_day }}</td>
 
                   <td class="daily" >
@@ -34,7 +31,6 @@
                     </div>
                   </td>
 
-                 
                   <td class="weekly">
                      @if($season->allow_weekly_rates==1)
                      <div class="input-group">
@@ -45,8 +41,6 @@
                       <input type="hidden" class="form-control" name="weekly_rate[]">
                     @endif
                   </td>
-                  
-
                   
                   <td class="monthly">
                     @if($season->allow_monthly_rates==1)
@@ -69,9 +63,6 @@
                      <input type="hidden" class="form-control" name="deposit[]">
                     @endif
                   </td>
-
-                  
-
                 </tr>
               @endforeach
             </tbody>
