@@ -329,7 +329,7 @@
                                                             type="checkbox"
                                                             name="status"
                                                             class="mr-10"
-                                                            @if(old('status') == '1' || (isset($property) && $property->status == '1')) checked @endif>Status
+                                                            @if(old('status', isset($property) ? $property->status : '') != '0') checked @endif>Status
                                                     </label>
                                                 </div>
                                             </div>
@@ -338,7 +338,7 @@
                                                     <label class="d-flex">
                                                         <input
                                                             type="checkbox"
-                                                            @if(old('is_featured') == '1' || (isset($property) && $property->is_featured == '1')) checked @endif
+                                                            @if(old('is_featured', isset($property) ? $property->is_featured : '') != '0') checked @endif
                                                             name="is_featured"
                                                             class="mr-10">Featured
                                                     </label>
@@ -351,7 +351,7 @@
                                                             type="checkbox"
                                                             name="is_pet_friendly"
                                                             class="mr-10"
-                                                            @if(old('is_pet_friendly') == '1' || (isset($property) && $property->is_pet_friendly == '1')) checked @endif>Pet Friendly
+                                                            @if(old('is_pet_friendly', isset($property) ? $property->is_pet_friendly : '') != '0') checked @endif>Pet Friendly
                                                     </label>
                                                 </div>
                                             </div>
@@ -362,7 +362,7 @@
                                                             type="checkbox"
                                                             name="is_online_booking"
                                                             class="mr-10"
-                                                            @if(old('is_online_booking') == '1' || (isset($property) && $property->is_online_booking == '1')) checked @endif>Online Booking
+                                                            @if(old('is_online_booking', isset($property) ? $property->is_online_booking : '') != '0') checked @endif>Online Booking
                                                     </label>
                                                 </div>
                                             </div>

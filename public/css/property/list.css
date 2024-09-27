@@ -38,6 +38,10 @@
     border-left: 4px solid #66c0f4;
 }
 
+.property-item:hover .property-item-actions {
+    display: flex !important;
+}
+
 .property-content {
     display: flex;
     flex-wrap: nowrap;
@@ -54,8 +58,18 @@
     color: #337ab7;
 }
 
+
+
+.property-img-sec {
+    min-width: 75px;
+}
+
 .property-name-sec {
-    width: 150px;
+    min-width: 300px;
+}
+
+.property-rating-sec {
+    min-width: 130px;
 }
 
 .type-unit-sec {
@@ -72,8 +86,8 @@
 
 .property-item-actions {
     display: flex;
-    gap: 10px;
-    min-width: 100px;
+    /* gap: 10px;
+    min-width: 100px; */
     flex-grow: 1;
     justify-content: flex-end;
 }

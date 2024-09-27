@@ -9,6 +9,44 @@ Properties
 <link rel="stylesheet" href="{{url('/')}}/plugins/dropzone/dropzone.css">
 <link rel="stylesheet" href="{{url('/')}}/plugins/dropzone/basic.css">
 <link rel="stylesheet" href="{{url('/')}}/css/property/list.css">
+<style>
+.icon-btn-group-left {
+    padding: 8px 12px;
+    background-color: #ebeff3;
+    border-right: 1px solid #c0d9fd;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+.icon-btn-group-center {
+    padding: 8px 12px;
+    background-color: #ebeff3;
+    border-right: 1px solid #c0d9fd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+.icon-btn-group-right {
+    padding: 8px 12px;
+    background-color: #ebeff3;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+</style>
 @stop
 
 @section('content')
@@ -66,32 +104,39 @@ Properties
                     </div>
 
                     <div class="box-body">
+                        <div class=""></div>
                         @foreach($properties as $key => $property)
                         <div class="row" data-delete="{{ url('admin/property/delete') }}/{{$property->id}}">
                             <!-- Property List -->
                             <div class="col-lg-12">
                                 <div class="property-item">
                                     <div class="property-content d-flex flex-nowrap align-items-center">
-                                        @if ($property->pictures->count())
-                                            <img
-                                                src="{{url('/uploads/properties/')}}/{{$property->mainpictures->last()->filename}}"
-                                                alt="Avatar"
-                                                title="{{$property->mainpictures->last()->title}}"
-                                                height="80"
-                                                width="80"
-                                            >
-                                        @else
-                                            <img
-                                                src="{{url('/uploads/properties/default.png')}}"
-                                                alt="Avatar"
-                                                title="Default Image"
-                                                height="80"
-                                                width="80"
-                                            >
-                                        @endif
-                                        <div class="property-name-sec h-80">
+                                        <div class="property-img-sec">
+                                            @if ($property->pictures->count())
+                                                <img
+                                                    src="{{url('/uploads/properties/')}}/{{$property->mainpictures->last()->filename}}"
+                                                    alt="Avatar"
+                                                    title="{{$property->mainpictures->last()->title}}"
+                                                    height="60"
+                                                    width="60"
+                                                >
+                                            @else
+                                                <img
+                                                    src="{{url('/uploads/properties/default.png')}}"
+                                                    alt="Avatar"
+                                                    title="Default Image"
+                                                    height="60"
+                                                    width="60"
+                                                >
+                                            @endif
+                                        </div>
+                                        <div class="property-name-sec">
+                                            <h6 class="font-weight-bold m-0">Name:</h6>
+                                            {{ $property->title }}
+                                        </div>
+                                        <div class="property-rating-sec">
                                             <div>
-                                                <h6 class="font-weight-bold">{{ substr($property->title, 0, 26) }}{{ strlen($property->title) > 26 ? '...' : '' }}</h6>
+                                                <h6 class="font-weight-bold m-0">Rating</h6>
                                                 <span class="property-rating">
                                                     <span class="fa fa-star-o"></span>
                                                     <span class="fa fa-star-o"></span>
@@ -101,9 +146,9 @@ Properties
                                                 </span>
                                             </div>
                                         </div>
-                                        <div class="type-unit-sec h-80">
+                                        <div class="type-unit-sec">
                                             <div>
-                                                <h6 class="font-weight-bold">Type/Unit</h6>
+                                                <h6 class="font-weight-bold m-0">Type/Unit</h6>
                                                 <!-- {{ $property->category_id }}<br> -->
                                                 @if($property->bedroom_id>0) (Beds {{$property->bedroom_id}})
                                                 @endif
@@ -119,39 +164,90 @@ Properties
                                             </div>
                                         </div>
                                         
-                                        <div class="property-module-sec">
-                                            <a data-toggle="modal" href='#Rates-{{$key}}' class="btn btn-sm btn-default">Rates</a>
-                                            <a 
+                                        <div class="property-item-actions text-right btn-group d-flex property-action-sec" style="font-size: 0.878vw; display: none;" role="group" aria-label="Actions">
+                                            <a
                                                 data-toggle="modal"
                                                 href='#Pictures-{{$key}}'
-                                                class="edit-pics-button btn btn-sm btn-default"
+                                                class="edit-pics-button icon-btn-group-left"
                                                 data-id="{{ $property->id }}"
                                                 data-pics="{{ json_encode($property->pictures) }}"
+                                                title="Manage Images"
+                                                data-placement="top"
                                             >
-                                                Pictures
+                                                <i class="fa fa-image"></i>
                                             </a>
-                                            <a data-toggle="modal" href='#Amenities-{{$key}}' class="btn btn-sm btn-default">Amenities</a>
-                                            <!-- <a href="{{ url('admin/reservation/create') }}/{{ $property->id }}" class="btn btn-sm btn-default">Add Reservation</a> -->
-                                            <a href="#" class="btn btn-sm btn-default">Add Reservation</a>
+                                            <a 
+                                                class="icon-btn-group-center" 
+                                                data-toggle="modal" 
+                                                href='#Rates-{{$key}}' 
+                                                title="Manage Rates" 
+                                                data-placement="top"
+                                            >
+                                                <i class="fa fa-usd"></i>
+                                            </a>
+
+                                            <a 
+                                                class="icon-btn-group-center" 
+                                                data-toggle="modal" 
+                                                href='#Amenities-{{$key}}'
+                                                title="Manage Amenities"
+                                                data-placement="top"
+                                            >
+                                                <i class="fa fa-list"></i>
+                                            </a>
+                                            <a
+                                                class="icon-btn-group-center"
+                                                data-toggle="modal" 
+                                                href='#'
+                                                title="Add Reservation"
+                                                data-placement="top"
+                                            >
+                                                <i class="fa fa-calendar-plus-o"></i>
+                                            </a>
                                             <!-- <a href="{{ url('admin/property/reservation-calendar') }}/{{ $property->id }}" class="btn btn-sm btn-default">Calender</a> -->
-                                            <a href="#" class="btn btn-sm btn-default">Calender</a>
+                                            <a 
+                                                class="icon-btn-group-center"
+                                                href='#'
+                                                title="Calendar"
+                                                data-placement="top"
+                                            >
+                                                <i class="fa fa-calendar"></i>
+                                            </a>
                                             <!-- <a href="{{ url('admin/property/'. $property->id)  }}" class="btn btn-sm btn-default view-reservations">
                                                 View Reservations
                                                 <span class="badge badge-light">3</span>
                                             </a> -->
-                                            <a href="#" class="btn btn-sm btn-default view-reservations">
-                                                View Reservations
-                                                <span class="badge badge-light">3</span>
+                                            <a 
+                                                class="icon-btn-group-center"
+                                                href='#'
+                                                title="View Reservations"
+                                                data-placement="top"
+                                            >
+                                                <i class="fa fa-calendar-check-o"></i>
                                             </a>
+                                            <!-- // create one ... icon and when click on it then show the dropdown with the following options edit and delete -->
+                                            <div class="dropdown">
+                                                <a 
+                                                    class="icon-btn-group-right dropdown-toggle" 
+                                                    href="#" 
+                                                    id="dropdownMenuLink" 
+                                                    data-toggle="dropdown" 
+                                                    title="More" 
+                                                    data-placement="top"
+                                                >
+                                                    <i class="fa fa-ellipsis-v"></i>
+                                                </a>
+                                                
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <li>
+                                                        <a href="{{ url('admin/property') }}/{{ $property->id }}/edit">Edit</a>
+                                                    </li>
+                                                    <li>
+                                                        <a data-toggle="tooltip" title="Delete" data-delete-trigger href="#">Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                        <div class="property-item-actions text-right">
-                                            <a data-toggle="tooltip" title="Edit" href="{{ url('admin/property') }}/{{ $property->id }}/edit" class="btn btn-primary btn-xs">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                            <a data-toggle="tooltip" title="Delete" data-delete-trigger href="#" class="btn btn-danger btn-xs">
-                                                <i class="fa fa-remove"></i>
-                                            </a>
-                                        </div>    
                                     </div>
                                 </div>
                             </div>
