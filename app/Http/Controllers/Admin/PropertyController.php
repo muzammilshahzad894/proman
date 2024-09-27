@@ -112,10 +112,10 @@ class PropertyController extends Controller
             $property->sleep_id = $request->get('sleep_id');
 
             // Handle boolean fields with a default value of 0 if not present
-            $property->status = $request->get('status', 0);
-            $property->is_featured = $request->get('is_featured', 0);
-            $property->is_pet_friendly = $request->get('is_pet_friendly', 0);
-            $property->is_online_booking = $request->get('is_online_booking', 0);
+            $property->status = isset($request->status) ? ($request->get('status') ? 1 : 0) : 0;
+            $property->is_featured = isset($request->is_featured) ? ($request->get('is_featured') ? 1 : 0) : 0;
+            $property->is_pet_friendly = isset($request->is_pet_friendly) ? ($request->get('is_pet_friendly') ? 1 : 0) : 0;
+            $property->is_online_booking = isset($request->is_online_booking) ? ($request->get('is_online_booking') ? 1 : 0) : 0;
 
             // Handle numeric fields
             $property->commision = $request->get('commision') ? $request->get('commision') : 0;
@@ -127,7 +127,7 @@ class PropertyController extends Controller
             $property->lodger_tax_active = $request->get('lodger_tax_active') ? 1 : 0;
             $property->sales_tax = $request->get('sales_tax');
             $property->sales_tax_active = $request->get('sales_tax_active') ? 1 : 0;
-            $property->is_calendar_active = $request->get('is_calendar_active') ? 1 : 0;
+            $property->is_calendar_active = isset($request->is_calendar_active) ? ($request->get('is_calendar_active') ? 1 : 0) : 0;
 
             // Handle foreign key relationships
             $property->housekeeper_id = $request->get('housekeeper_id');
