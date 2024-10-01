@@ -195,15 +195,6 @@ Properties
                                             >
                                                 <i class="fa fa-list"></i>
                                             </a>
-                                            <a
-                                                class="icon-btn-group-center"
-                                                data-toggle="modal" 
-                                                href='#'
-                                                title="Add Reservation"
-                                                data-placement="top"
-                                            >
-                                                <i class="fa fa-calendar-plus-o"></i>
-                                            </a>
                                             <!-- <a href="{{ url('admin/property/reservation-calendar') }}/{{ $property->id }}" class="btn btn-sm btn-default">Calender</a> -->
                                             <a 
                                                 class="icon-btn-group-center"
@@ -212,6 +203,15 @@ Properties
                                                 data-placement="top"
                                             >
                                                 <i class="fa fa-calendar"></i>
+                                            </a>
+                                            <a
+                                                class="icon-btn-group-center"
+                                                data-toggle="modal" 
+                                                href="{{ url('admin/reservation/create') }}/{{ $property->id }}"
+                                                title="Add Reservation"
+                                                data-placement="top"
+                                            >
+                                                <i class="fa fa-calendar-plus-o"></i>
                                             </a>
                                             <!-- <a href="{{ url('admin/property/'. $property->id)  }}" class="btn btn-sm btn-default view-reservations">
                                                 View Reservations

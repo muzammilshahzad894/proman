@@ -80,7 +80,6 @@ class PropertyController extends Controller
                 ->with('bathrooms', $bathrooms)
                 ->with('sleeps', $sleeps)
                 ->with('house_keepers', $house_keepers)
-                // ->with('hot_tubs', $hot_tubs)
                 ->with('amenities', $amenities)
                 ->with('seasons', $seasons)
                 ->with('types', $types);

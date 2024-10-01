@@ -211,6 +211,19 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::get('lineitem/{id}/edit', 'LineItemController@edit')->name('lineitem.edit');
 	Route::post('lineitem/{id}/edit', 'LineItemController@update')->name('lineitem.update');
 	Route::delete('lineitem/delete/{id}', 'LineItemController@destroy')->name('lineitem.destroy');
+	
+	Route::get('reservation', 'ReservationController@index')->name('reservation.index');
+	Route::get('reservation/step1', 'ReservationController@step1')->name('reservation.step1');
+	Route::get('reservation/create/{property_id}', 'ReservationController@create')->name('reservation.create');
+	Route::post('reservation', 'ReservationController@store')->name('reservation.store');
+	Route::get('reservation/{id}/edit', 'ReservationController@edit')->name('reservation.edit');
+	Route::post('reservation/{id}/edit', 'ReservationController@update')->name('reservation.update');
+	Route::post('reservation/delete/{id}', 'ReservationController@destroy')->name('reservation.destroy');
+	Route::get('reservation/view/{id}', 'ReservationController@show')->name('reservation.show');
+	Route::get('reservation/cancel/{id}', 'ReservationController@reservation_cancel')->name('reservation.cancel');
+	Route::post('process_payment/{reservation_id}', 'ReservationController@process_payment')->name('reservation.process_payment');
+	Route::post('reservation/make_refund/{reservation_id}', 'ReservationController@make_refund')->name('reservation.make_refund');
+	Route::post('reservation/void/{reservation_id}', 'ReservationController@void_payment')->name('reservation.void_payment');
 });
 
 
