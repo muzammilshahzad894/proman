@@ -204,6 +204,13 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	
 	Route::post('upload-files', 'AttachmentController@save');
 	Route::get('delete/file/{id}', 'AttachmentController@delete');
+	
+	Route::get('lineitems', 'LineItemController@index')->name('lineitems.index');
+	Route::get('lineitem/create', 'LineItemController@create')->name('lineitem.create');
+	Route::post('lineitem', 'LineItemController@store')->name('lineitem.store');
+	Route::get('lineitem/{id}/edit', 'LineItemController@edit')->name('lineitem.edit');
+	Route::post('lineitem/{id}/edit', 'LineItemController@update')->name('lineitem.update');
+	Route::delete('lineitem/delete/{id}', 'LineItemController@destroy')->name('lineitem.destroy');
 });
 
 

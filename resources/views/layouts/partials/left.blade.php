@@ -43,6 +43,7 @@
                     <ul class="treeview-menu">
                         <li class="{{ Request::is('admin/amenities') ? 'active' : '' }}">
                             <li><a href="{{ route('admin.amenities.index') }}">Amenities</a></li>
+                            <li><a href="{{ route('admin.lineitems.index') }}">Line Items</a></li>
                             <li class="treeview">
                                 <a href="#">Property Master
                                     <span class="pull-right-container">
