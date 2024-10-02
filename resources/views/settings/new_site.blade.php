@@ -32,6 +32,12 @@
                                             <i class="fa fa-money" aria-hidden="true"></i> Sale Tax Settings
                                         </button>
                                     </div>
+                                    <div class="col-md-6" style="padding: 5px;">
+                                        <button type="button" class="btn btn-block btn-lg btn-primary" data-toggle="modal"
+                                            data-target="#emai-sent-settings">
+                                            <i class="fa fa-envelope" aria-hidden="true"></i> Email Sent Settings
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -39,6 +45,7 @@
                 </div>
 
                 @include('settings.site_settings_partials.sales_tax_settings')
+                @include('settings.site_settings_partials.email_sent_settings')
             </form>
         </section>
     </div>
@@ -75,6 +82,7 @@
                 })
                 .done(function() {
                     $('#saleTax_Settings').modal('hide');
+                    $('#emai-sent-settings').modal('hide');
                     swal({
                         title: "Success",
                         text: "Site settings were updated successfully.",
@@ -85,5 +93,14 @@
                 })
             })
         })
+        
+        $('#checkAll').on('change', function(){
+            if(this.checked){
+                $('#emai-sent-settings input[type=checkbox]').attr('checked',true);
+            }
+            else{
+                $('#emai-sent-settings input[type=checkbox]').removeAttr('checked');
+            }
+        });
     </script>
 @endsection

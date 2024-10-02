@@ -178,43 +178,42 @@ class ReservationController extends Controller
             //return $this->authorized_payment($request, $reservation->id, $request->get('total_amount'));
             // $this->addPayment($request, $reservation->id, $reservation->customer_id, $gateway_result);
             
-            // // send emails
+            // send emails
+            if (!isset($input['dont_send_email'])) {
+                try {
+                    if (config('site.admin_reservation_customer')) {
+                        info('sending admin reservation email to customer');
+                        EmailController::sendCustomerEmail($reservation);
+                    }
+                } catch (Exception $e) {
+                    Log::info('sendCustomerEmail dont work');
+                    Log::info($e);
+                }
 
-            // if (!isset($input['dont_send_email'])) {
-            //     try {
-            //         if (config('site.admin_reservation_customer')) {
-            //             info('sending admin reservation email to customer');
-            //             EmailController::sendCustomerEmail($reservation);
-            //         }
-            //     } catch (Exception $e) {
-            //         Log::info('sendCustomerEmail dont work');
-            //         Log::info($e);
-            //     }
+                try {
+                    if ($reservation->housekeeper_id != null) {
+                        if (config('site.admin_reservation_housekeeper')) {
+                            info('sending admin reservation email to Housekeeper');
+                            EmailController::sendHouseKeeperEmail($reservation);
+                        }
+                    }
+                } catch (Exception $e) {
+                    Log::info('sendHouseKeeperEmail dont work');
+                    Log::info($e);
+                }
+            }
 
-            //     try {
-            //         if ($reservation->housekeeper_id != null) {
-            //             if (config('site.admin_reservation_housekeeper')) {
-            //                 info('sending admin reservation email to Housekeeper');
-            //                 EmailController::sendHouseKeeperEmail($reservation);
-            //             }
-            //         }
-            //     } catch (Exception $e) {
-            //         Log::info('sendHouseKeeperEmail dont work');
-            //         Log::info($e);
-            //     }
-            // } 
-
-            // // to admin
-            // try {
-            //     // send email to admin
-            //     if (config('site.admin_reservation_admin')) {
-            //         info('sending admin reservation email to admin');
-            //         EmailController::sendAdminEmail($reservation);
-            //     }
-            // } catch (Exception $e) {
-            //     Log::info('sendAdminEmail dont work');
-            //     Log::info($e);
-            // }
+            // to admin
+            try {
+                // send email to admin
+                if (config('site.admin_reservation_admin')) {
+                    info('sending admin reservation email to admin');
+                    EmailController::sendAdminEmail($reservation);
+                }
+            } catch (Exception $e) {
+                Log::info('sendAdminEmail dont work');
+                Log::info($e);
+            }
             
             // Commit the transaction after all operations
             DB::commit();

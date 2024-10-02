@@ -12,8 +12,6 @@ use App\Services\PaymentService;
 
 class SettingController extends Controller
 {
-
-
     protected $viewsFolder = 'settings.';
 
     public function showGeneral()
@@ -27,7 +25,6 @@ class SettingController extends Controller
         return view($this->viewsFolder . 'general', compact('setting', 'config'));
     }
 
-
     public function updateGeneral(Request $request)
     {
         $input = $request->all();
@@ -36,7 +33,6 @@ class SettingController extends Controller
         $configs = $request->config;
 
         if ($request->hasFile('config.favicon')) {
-            //return "jere";
             $path = store_to_uploads($request->file('config.favicon'), 'favicon', 'logo');
             $configs = array_merge($configs, ['favicon' => $path]);
         }
