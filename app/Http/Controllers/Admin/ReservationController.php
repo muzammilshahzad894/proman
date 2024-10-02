@@ -120,22 +120,22 @@ class ReservationController extends Controller
             $customer_profile = "";
             $customer_payment_profile = "";
             $payment_card_last_four = "";
-            if ($request->payment_mode == 'credit card') {
-                $request->merge([
-                    'address_line_1' => $request->address,
-                ]);
-                $gateway_result = authorized_payment($request, $request, $request->get('amount_deposited'), $charge_customer = 0);
-                if ($gateway_result['status'] != true) {
-                    $request->session()->flash('error', $gateway_result['message']);
-                    return redirect()->back()->withInput();
-                } else {
-                    $customer_profile = $gateway_result['customer_profile'];
-                    $customer_payment_profile = $gateway_result['customer_payment_profile'];
-                    $payment_card_last_four = $gateway_result['card_last_four'];
-                    $payment_transaction_id = $gateway_result['transaction_id'];
-                }
-                //return $gateway_result;
-            }
+            // if ($request->payment_mode == 'credit card') {
+            //     $request->merge([
+            //         'address_line_1' => $request->address,
+            //     ]);
+            //     $gateway_result = authorized_payment($request, $request, $request->get('amount_deposited'), $charge_customer = 0);
+            //     if ($gateway_result['status'] != true) {
+            //         $request->session()->flash('error', $gateway_result['message']);
+            //         return redirect()->back()->withInput();
+            //     } else {
+            //         $customer_profile = $gateway_result['customer_profile'];
+            //         $customer_payment_profile = $gateway_result['customer_payment_profile'];
+            //         $payment_card_last_four = $gateway_result['card_last_four'];
+            //         $payment_transaction_id = $gateway_result['transaction_id'];
+            //     }
+            //     //return $gateway_result;
+            // }
 
             $reservation->customer_id = $this->getCustomerId($request);
             $reservation->address = $request->get('address');
