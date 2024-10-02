@@ -58,14 +58,14 @@ class ReservationController extends Controller
 
     public function step1()
     {
-        if (Auth::user()->type == 'owner') {
-            $properties = Property::where('status', '=', 1)->where('owner', Auth::id())->orderBY('display_order', 'ASC')->get();
+        try {
+            $properties = Property::where('status', '=', 1)->orderBY('display_order', 'ASC')->paginate(config('pagination.per_page') ?? 10);
             return view('admin.reservation.step1')
                 ->with('properties', $properties);
-        } else {
-            $properties = Property::where('status', '=', 1)->orderBY('display_order', 'ASC')->get();
-            return view('admin.reservation.step1')
-                ->with('properties', $properties);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Session::flash('error', 'Something went wrong. Please try again.');
+            return redirect()->back();
         }
     }
 
