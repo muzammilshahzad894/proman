@@ -511,7 +511,7 @@ class ReservationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
+    {        
         Reservation::destroy($id);
         return response()->json('success');
     }

@@ -70,7 +70,7 @@ Reservations
                                                         <a data-toggle="tooltip" title="Edit" href="{{ url('admin/reservation') }}/{{ $reservation->id }}/edit" class="btn btn-primary btn-xs">
                                                             <i class="fa fa-pencil"></i>
                                                         </a>
-                                                        <a data-toggle="tooltip" title="Delete" data-delete-trigger href="#" class="btn btn-danger btn-xs">
+                                                        <a data-toggle="tooltip" title="Delete" delete-trigger href="#" class="btn btn-danger btn-xs">
                                                             <i class="fa fa-remove"></i>
                                                         </a>
                                                     </td>
@@ -105,6 +105,42 @@ Reservations
 
 @section('javascript')
 <script>
-    
+    // delete trigger
+    $(document).on('click', '[delete-trigger]', function(e){
+        e.preventDefault();
+        var url = $(this).closest('tr').data('delete');
+        var tr = $(this).closest('tr');
+        swal({
+            title: "Are you sure?",
+            text: "You will not be able to recover this reservation!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: false
+        }, function(){
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                success: function(result) {
+                    if(result=='success'){
+                        tr.remove();
+                        swal({
+                            title: "Deleted!",
+                            text: 'The entry was successfully deleted',
+                            type: "success",
+                            timer: 1000,
+                            showConfirmButton: false
+                        });
+                        setTimeout(function(){
+                            location.reload();
+                        }, 1000);
+                    }else{
+                        swal("Error!", "Failed to delete reservation.", "error");
+                    }
+                }
+            });
+        });
+    });
 </script>
 @endsection

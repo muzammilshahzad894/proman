@@ -218,7 +218,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::post('reservation', 'ReservationController@store')->name('reservation.store');
 	Route::get('reservation/{id}/edit', 'ReservationController@edit')->name('reservation.edit');
 	Route::post('reservation/{id}/edit', 'ReservationController@update')->name('reservation.update');
-	Route::post('reservation/delete/{id}', 'ReservationController@destroy')->name('reservation.destroy');
+	Route::delete('reservation/delete/{id}', 'ReservationController@destroy')->name('reservation.destroy');
 	Route::get('reservation/view/{id}', 'ReservationController@show')->name('reservation.show');
 	Route::get('reservation/cancel/{id}', 'ReservationController@reservation_cancel')->name('reservation.cancel');
 	Route::post('process_payment/{reservation_id}', 'ReservationController@process_payment')->name('reservation.process_payment');
