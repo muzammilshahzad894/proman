@@ -18,6 +18,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Season;
+use net\authorize\api\contract\v1 as AnetAPI;
+use net\authorize\api\controller as AnetController;
 
 const INSURANCE_ADDON_ID = 16;
 const CHAFFEE_TAX = 2; //its percentage 2%
@@ -2344,4 +2346,295 @@ function ymd($date) {
 
 function mdyWithTime($date) {
 	return (!empty($date)) ? date('m/d/Y h:i A', strtotime(  $date )) : '' ;
+}
+
+function authorized_payment($request, $reservation, $amount, $charge_customer = 0)
+{
+	$msg = '';
+	$customer_profile = "";
+	$customer_payment_profile = "";
+
+	if ($charge_customer == 0) {
+		$cardholdername  = $reservation->first_name . ' ' . $reservation->last_name;
+		$expiration_date = $request->expiry_year . '-' . $request->expiry_month;
+		$customerInfo = [
+			'email' => $reservation->email,
+			'FirstName' => $reservation->first_name,
+			'LastName' => $reservation->last_name,
+			'Address' => $reservation->address_line_1,
+			'City' => $reservation->city,
+			'State' => $reservation->state,
+			'Zip' => $reservation->zip,
+			'PhoneNumber' => isset($reservation->phone)?$reservation->phone:'',
+			'CardNumber' => $request->credit_card,
+			'ExpirationDate' => $expiration_date,
+			'CardCode' => $request->cvv,
+			'amount' => 50,
+			'reservationId' => 77,
+		];
+		$loginfo = [
+			'email' => $reservation->email,
+			'FirstName' => $reservation->first_name,
+			'LastName' => $reservation->last_name,
+			'Address' => $reservation->address_line_1,
+			'City' => $reservation->city,
+			'State' => $reservation->state,
+			'Zip' => $reservation->zip,
+			'PhoneNumber' => isset($reservation->phone)?$reservation->phone:'',
+			'amount' => $amount,
+			
+		];
+		info("Customer Info ".print_r($loginfo,1));
+		$customer_profile_response = createauthorizeProfile($customerInfo);
+		info("customer_profile_response ".print_r($customer_profile_response,1));
+
+		if ($customer_profile_response['code'] != 200) {
+			return [
+				"status"  => false,
+				"message" => "Creating Customer- " . $customer_profile_response['error_text'],
+			];
+		}
+		$customer_profile = $customer_profile_response['customer_profile'];
+		$customer_payment_profile = $customer_profile_response['customer_payment_profile'];
+	} else {
+		$customer_profile = $reservation->customer_profile;
+		$customer_payment_profile = $reservation->customer_payment_profile;
+	}
+
+	$payment_response = chargeCustomerProfile($customer_profile, $customer_payment_profile, $amount);
+	info("payment_response ".print_r($payment_response,1));
+	if ($payment_response['code'] != 1) {
+		return [
+			"status"  => false,
+			"message" => "Charging Customer- " . $payment_response['error_text'],
+		];
+	} else {
+		$data['transaction_id']           = $payment_response['transaction_id'];
+		$data['card_last_four']           = $payment_response['accountNumber'];
+		$data['customer_profile']         = $customer_profile;
+		$data['customer_payment_profile'] = $customer_payment_profile;
+		$data['status']                   = 1;
+	}
+	return $data;
+}
+
+function createauthorizeProfile($customerInfo = '')
+{
+    /* Create a merchantAuthenticationType object with authentication details
+    retrieved from the constants file */
+    $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+
+    if (config('gateway.is_live') == 1) {
+        $merchantAuthentication->setName(config('gateway.login_id'));
+        $merchantAuthentication->setTransactionKey(config('gateway.transaction_key'));
+    } else {
+        $merchantAuthentication->setName('4Cvy54Ds');
+        $merchantAuthentication->setTransactionKey('53qa9X3DA6z88E9T');
+    }
+
+    // Set the transaction's refId
+    $refId = 'ref' . time();
+
+    // Create a Customer Profile Request
+    //  1. (Optionally) create a Payment Profile
+    //  2. (Optionally) create a Shipping Profile
+    //  3. Create a Customer Profile (or specify an existing profile)
+    //  4. Submit a CreateCustomerProfile Request
+    //  5. Validate Profile ID returned
+
+    // Set credit card information for payment profile
+    $creditCard = new AnetAPI\CreditCardType();
+    $creditCard->setCardNumber($customerInfo['CardNumber']);
+    $creditCard->setExpirationDate($customerInfo['ExpirationDate']);
+    $creditCard->setCardCode($customerInfo['CardCode']);
+    $paymentCreditCard = new AnetAPI\PaymentType();
+    $paymentCreditCard->setCreditCard($creditCard);
+
+    // Create the Bill To info for new payment type
+    $billTo = new AnetAPI\CustomerAddressType();
+    $billTo->setFirstName($customerInfo['FirstName']);
+    $billTo->setLastName($customerInfo['LastName']);
+
+    $billTo->setAddress($customerInfo['Address']);
+    $billTo->setCity($customerInfo['City']);
+    $billTo->setState($customerInfo['State']);
+    $billTo->setZip($customerInfo['Zip']);
+    $billTo->setCountry("USA");
+    $billTo->setPhoneNumber($customerInfo['PhoneNumber']);
+    // $billTo->setfaxNumber("999-999-9999");
+
+    // Create a customer shipping address
+    /*  $customerShippingAddress = new AnetAPI\CustomerAddressType();
+    $customerShippingAddress->setFirstName("James");
+    $customerShippingAddress->setLastName("White");
+    $customerShippingAddress->setCompany("Addresses R Us");
+    $customerShippingAddress->setAddress(rand() . " North Spring Street");
+    $customerShippingAddress->setCity("Toms River");
+    $customerShippingAddress->setState("NJ");
+    $customerShippingAddress->setZip("08753");
+    $customerShippingAddress->setCountry("USA");
+    $customerShippingAddress->setPhoneNumber("888-888-8888");
+    $customerShippingAddress->setFaxNumber("999-999-9999");*/
+
+    // Create an array of any shipping addresses
+    // $shippingProfiles[] = $customerShippingAddress;
+
+    // Create a new CustomerPaymentProfile object
+    $paymentProfile = new AnetAPI\CustomerPaymentProfileType();
+    $paymentProfile->setCustomerType('individual');
+    $paymentProfile->setBillTo($billTo);
+    $paymentProfile->setPayment($paymentCreditCard);
+    $paymentProfile->setDefaultpaymentProfile(true);
+    $paymentProfiles[] = $paymentProfile;
+
+    // Create a new CustomerProfileType and add the payment profile object
+    $customerProfile = new AnetAPI\CustomerProfileType();
+    $customerProfile->setDescription("Peace equipment security.");
+    $customerProfile->setMerchantCustomerId("M_" . time());
+    $customerProfile->setEmail($customerInfo['email']);
+    $customerProfile->setpaymentProfiles($paymentProfiles);
+    // $customerProfile->setShipToList($shippingProfiles);
+
+    // Assemble the complete transaction request
+    $request = new AnetAPI\CreateCustomerProfileRequest();
+    $request->setMerchantAuthentication($merchantAuthentication);
+    $request->setRefId($refId);
+    $request->setValidationMode('liveMode');
+
+    $request->setProfile($customerProfile);
+
+    // Create the controller and get the response
+    $controller = new AnetController\CreateCustomerProfileController($request);
+
+    if (config('gateway.is_live') == 1) {
+        $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
+    } else {
+        $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
+    }
+
+    if (($response != null) && ($response->getMessages()->getResultCode() == "Ok")) {
+        $paymentProfiles = $response->getCustomerPaymentProfileIdList();
+        return [
+            'code'                     => 200,
+            'customer_profile'         => $response->getCustomerProfileId(),
+            'customer_payment_profile' => $paymentProfiles[0],
+        ];
+
+        $CustomerProfile                       = new AnetCustomerProfile;
+        $CustomerProfile->reservation_id       = $customerInfo['reservationId'];
+        $CustomerProfile->first_name           = $customerInfo['FirstName'];
+        $CustomerProfile->last_name            = $customerInfo['LastName'];
+        $CustomerProfile->email                = $customerInfo['email'];
+        $CustomerProfile->amount               = $customerInfo['amount'];
+        $CustomerProfile->getcustomerprofileid = $response->getCustomerProfileId();
+        $CustomerProfile->paymentprofiles      = $paymentProfiles[0];
+
+        $CustomerProfile->save();
+        Session::forget('success');
+        Session::flash('success', 'Credit card info saved.');
+
+        return true;
+
+    } else {
+        $errorMessages = $response->getMessages()->getMessage();
+        $error = "Credit Card Error :" . "  " . $errorMessages[0]->getText() . "\n";
+        return [
+            'code'       => $errorMessages[0]->getCode(),
+            'error_text' => $error,
+        ];
+        Log::info($error);
+        $this->authErrors = $error;
+        return false;
+    }
+    return $response;
+}
+
+function chargeCustomerProfile($profileid, $paymentprofileid, $amount)
+{
+    /* Create a merchantAuthenticationType object with authentication details
+    retrieved from the constants file */
+    $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+
+    if (config('gateway.is_live') == 1) {
+        $merchantAuthentication->setName(config('gateway.login_id'));
+        $merchantAuthentication->setTransactionKey(config('gateway.transaction_key'));
+    } else {
+        $merchantAuthentication->setName('4Cvy54Ds');
+        $merchantAuthentication->setTransactionKey('53qa9X3DA6z88E9T');
+    }
+    // Set the transaction's refId
+    $refId           = 'ref' . time();
+    $profileToCharge = new AnetAPI\CustomerProfilePaymentType();
+    $profileToCharge->setCustomerProfileId($profileid);
+    $paymentProfile = new AnetAPI\PaymentProfileType();
+    $paymentProfile->setPaymentProfileId($paymentprofileid);
+    $profileToCharge->setPaymentProfile($paymentProfile);
+    $transactionRequestType = new AnetAPI\TransactionRequestType();
+    $transactionRequestType->setTransactionType("authCaptureTransaction");
+    $transactionRequestType->setAmount($amount);
+    $transactionRequestType->setProfile($profileToCharge);
+    $request = new AnetAPI\CreateTransactionRequest();
+    $request->setMerchantAuthentication($merchantAuthentication);
+    $request->setRefId($refId);
+    $request->setTransactionRequest($transactionRequestType);
+    $controller = new AnetController\CreateTransactionController($request);
+    if (config('gateway.is_live') == 1) {
+        $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
+    } else {
+        $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
+    }
+    if ($response != null) {
+        if ($response->getMessages()->getResultCode() == 'Ok') {
+            $tresponse = $response->getTransactionResponse();
+
+            if ($tresponse != null && $tresponse->getMessages() != null) {
+                /*echo " Transaction Response code : " . $tresponse->getResponseCode() . "\n";
+                echo  "Charge Customer Profile APPROVED  :" . "\n";
+                echo " Charge Customer Profile AUTH CODE : " . $tresponse->getAuthCode() . "\n";
+                echo " Charge Customer Profile TRANS ID  : " . $tresponse->getTransId() . "\n";
+                echo " Code : " . $tresponse->getMessages()[0]->getCode() . "\n";
+                echo " Description : " . $tresponse->getMessages()[0]->getDescription() . "\n";*/
+                //info('customer response'.print_r($tresponse,1));
+                return [
+                    'code' => $tresponse->getResponseCode(),
+                    'transaction_id' => $tresponse->getTransId(),
+                    'accountNumber' => $tresponse->getAccountNumber(),
+                    //'card'=>$tresponse->accountType,
+                    'message' => $tresponse->getMessages()[0]->getDescription() ,
+                    'error_text' => $tresponse->getMessages()[0]->getDescription() ,
+                ];
+            } else {
+                if ($tresponse->getErrors() != null) {
+                    return [
+                        'code' => $tresponse->getErrors()[0]->getErrorCode(),
+                        'error_text' => $tresponse->getErrors()[0]->getErrorText(),
+                        'message' => "Transaction Failed",
+                    ];
+                }
+            }
+        } else {
+            $tresponse = $response->getTransactionResponse();
+            if ($tresponse != null && $tresponse->getErrors() != null) {
+                return [
+                    'code' => $tresponse->getErrors()[0]->getErrorCode(),
+                    'error_text' => $tresponse->getErrors()[0]->getErrorText(),
+                    'message' => "Transaction Failed",
+                ];
+            } else {
+                return [
+                    'code' => $response->getMessages()->getMessage()[0]->getCode(),
+                    'error_text' => $response->getMessages()->getMessage()[0]->getText(),
+                    'message' => "Transaction Failed",
+                ];
+            }
+        }
+    } else {
+        return [
+            'code' => 422,
+            //'error_text'=>$response->getErrors()[0]->getErrorText(),
+            'error_text' => "No response returned",
+            'message' => "No response returned",
+        ];
+    }
+    return $response;
 }

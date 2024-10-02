@@ -24,6 +24,8 @@ class CreatePaymentsTable extends Migration
             $table->double('sales_tax')->nullable()->default(0);
             $table->double('amount_deposited')->nullable()->default(0);
             $table->string('payment_mode', 255);
+            $table->string('transaction_id', 255)->nullable();
+            $table->string('card_last_four', 255)->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();

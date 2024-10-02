@@ -121,22 +121,22 @@ class ReservationController extends Controller
             $customer_profile = "";
             $customer_payment_profile = "";
             $payment_card_last_four = "";
-            // if ($request->payment_mode == 'credit card') {
-            //     $request->merge([
-            //         'address_line_1' => $request->address,
-            //     ]);
-            //     $gateway_result = authorized_payment($request, $request, $request->get('amount_deposited'), $charge_customer = 0);
-            //     if ($gateway_result['status'] != true) {
-            //         $request->session()->flash('error', $gateway_result['message']);
-            //         return redirect()->back()->withInput();
-            //     } else {
-            //         $customer_profile = $gateway_result['customer_profile'];
-            //         $customer_payment_profile = $gateway_result['customer_payment_profile'];
-            //         $payment_card_last_four = $gateway_result['card_last_four'];
-            //         $payment_transaction_id = $gateway_result['transaction_id'];
-            //     }
-            //     //return $gateway_result;
-            // }
+            if ($request->payment_mode == 'credit card') {
+                $request->merge([
+                    'address_line_1' => $request->address,
+                ]);
+                $gateway_result = authorized_payment($request, $request, $request->get('amount_deposited'), $charge_customer = 0);
+                if ($gateway_result['status'] != true) {
+                    return ResponseHelper::jsonResponse('error', $gateway_result['message'], null, 500);
+                    // $request->session()->flash('error', $gateway_result['message']);
+                    // return redirect()->back()->withInput();
+                } else {
+                    $customer_profile = $gateway_result['customer_profile'];
+                    $customer_payment_profile = $gateway_result['customer_payment_profile'];
+                    $payment_card_last_four = $gateway_result['card_last_four'];
+                    $payment_transaction_id = $gateway_result['transaction_id'];
+                }
+            }
 
             $reservation->customer_id = $this->getCustomerId($request);
             $reservation->address = $request->get('address');
@@ -177,7 +177,7 @@ class ReservationController extends Controller
             $reservation->save();
 
             //return $this->authorized_payment($request, $reservation->id, $request->get('total_amount'));
-            // $this->addPayment($request, $reservation->id, $reservation->customer_id, $gateway_result);
+            $this->addPayment($request, $reservation->id, $reservation->customer_id, $gateway_result);
             
             // send emails
             if (!isset($input['dont_send_email'])) {
@@ -217,7 +217,7 @@ class ReservationController extends Controller
             // Commit the transaction after all operations
             DB::commit();
             
-            return ResponseHelper::jsonResponse('success', 'Reservation added successfully.', route('admin.reservation.index'));
+            return ResponseHelper::jsonResponse('success', 'Reservation added successfully.', route('admin.reservations.index'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
             return ResponseHelper::jsonResponse('error', 'Something went wrong. Please try again.', null, 500);
@@ -273,17 +273,13 @@ class ReservationController extends Controller
         }
 
         $payment->lodgers_tax = $request->get('lodgers_tax');
-
         $payment->sales_tax = $request->get('sales_tax');
-
         $payment->amount_deposited = $request->get('amount_deposited');
-
         $payment->payment_mode = $request->get('payment_mode');
         if (!empty($gateway_result)) {
             $payment->transaction_id = $gateway_result['transaction_id'];
             $payment->card_last_four = $gateway_result['card_last_four'];
         }
-
         $payment->save();
     }
 
