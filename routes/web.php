@@ -212,7 +212,7 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::post('lineitem/{id}/edit', 'LineItemController@update')->name('lineitem.update');
 	Route::delete('lineitem/delete/{id}', 'LineItemController@destroy')->name('lineitem.destroy');
 	
-	Route::get('reservation', 'ReservationController@index')->name('reservation.index');
+	Route::get('reservations', 'ReservationController@index')->name('reservations.index');
 	Route::get('reservation/step1', 'ReservationController@step1')->name('reservation.step1');
 	Route::get('reservation/create/{property_id}', 'ReservationController@create')->name('reservation.create');
 	Route::post('reservation', 'ReservationController@store')->name('reservation.store');
@@ -224,6 +224,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::post('process_payment/{reservation_id}', 'ReservationController@process_payment')->name('reservation.process_payment');
 	Route::post('reservation/make_refund/{reservation_id}', 'ReservationController@make_refund')->name('reservation.make_refund');
 	Route::post('reservation/void/{reservation_id}', 'ReservationController@void_payment')->name('reservation.void_payment');
+	
+	Route::get('archeived-reservations','ReservationController@archeived')->name('reservation.archeiveds');
 	
 	Route::get('get-customer', 'AdminController@get_user');
 });

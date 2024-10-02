@@ -34,22 +34,23 @@ class ReservationController extends Controller
      */
     public function index(Request $request)
     {
-        dd('here');
         $t = date_default_timezone_set("America/Denver");
-        $t =  date("Y-m-d");
+        $t = date("Y-m-d");
         $keyword = @$_GET['q'];
         
         $reservations  = Reservation::select('reservations.*')->where('departure', '>', $t)
             ->join('users', 'reservations.customer_id', '=', 'users.id')
             ->where(function ($query) use ($keyword, $request) {
-                $query->where(DB::raw("CONCAT(users.first_name, ' ', users.last_name)"), 'LIKE', "%$keyword%");
+                // $query->where(DB::raw("CONCAT(users.first_name, ' ', users.last_name)"), 'LIKE', "%$keyword%");
+                $query->where('users.name', 'LIKE', "%$keyword%");
                 if ($request->status == 'cancelled') {
                     $query->where('cancelled', 1);
                 } else {
                     $query->where('cancelled', 0);
                 }
             })
-            ->orderBy('arrival', 'desc')->get();
+            ->orderBy('arrival', 'desc')
+            ->paginate(config('pagination.per_page') ?? 10);
 
         return view('admin.reservation.index')
             ->with('reservations', $reservations);
@@ -732,19 +733,26 @@ class ReservationController extends Controller
     }
     public function archeived()
     {
-        $t = date_default_timezone_set("America/Denver");
-        $t =  date("Y-m-d");
-        $keyword = @$_GET['q'];
-        $properties  = Property::all();
-        $reservations = Reservation::select('reservations.*')->where('departure', '<', $t)
-            ->join('users', 'reservations.customer_id', '=', 'users.id')
-            ->where('cancelled', 0)
-            ->where(function ($query) use ($keyword) {
-                //$query->where('users.first_name','like',"%$keyword%")->orWhere('users.last_name','like',"%$keyword%");
-                $query->where(DB::raw("CONCAT(users.first_name, ' ', users.last_name)"), 'LIKE', "%$keyword%");
-            })
-            ->orderBy('arrival', 'desc')->get();
-        return view('admin.reservation.archeived')->with('reservations', $reservations)->with('properties', $properties);
+        try{
+            $t = date_default_timezone_set("America/Denver");
+            $t =  date("Y-m-d");
+            $keyword = @$_GET['q'];
+            $properties  = Property::all();
+            $reservations = Reservation::select('reservations.*')->where('departure', '<', $t)
+                ->join('users', 'reservations.customer_id', '=', 'users.id')
+                ->where('cancelled', 0)
+                ->where(function ($query) use ($keyword) {
+                    $query->where('users.name', 'LIKE', "%$keyword%");
+                })
+                ->orderBy('arrival', 'desc')
+                ->paginate(config('pagination.per_page') ?? 10);
+                
+            return view('admin.reservation.archeived')->with('reservations', $reservations)->with('properties', $properties);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            Session::flash('error', 'Something went wrong. Please try again.');
+            return redirect()->back();
+        }
     }
     public function reservation_cancel($id)
     {

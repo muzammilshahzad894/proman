@@ -25,6 +25,9 @@
                     <ul class="dropdown-menu">
                     </ul>
                 </li>
+                <li>
+                    <a href="{{ route('admin.reservations.index') }}">Reservations</a>
+                </li>
             </ul>
         </div>
         <div class="navbar-custom-menu">

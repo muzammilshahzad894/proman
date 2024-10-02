@@ -2333,3 +2333,15 @@ function price_format($value='')
 		return "$". $value; 
 	}
 }
+
+function mdy($date) {
+	return (!empty($date)) ? date('m/d/Y', strtotime(  $date )) : '' ;
+}
+
+function ymd($date) {
+	return (!empty($date)) ? date('Y-m-d', strtotime(  $date )) : '' ;
+}
+
+function mdyWithTime($date) {
+	return (!empty($date)) ? date('m/d/Y h:i A', strtotime(  $date )) : '' ;
+}
