@@ -2276,3 +2276,49 @@ function getCurrentSeason($from_date = null, $to_date = null)
 
 	return null;
 }
+
+function numberOfDays( $first_date, $second_date )
+{
+    $datePickup = new \Carbon\Carbon($first_date);
+    $dateReturn = new \Carbon\Carbon($second_date);
+   
+    return $datePickup->diffInDays($dateReturn) ;
+}
+
+function seasonRate($property, $season_id , $number_of_days )
+{     
+    $season =  $property->seasons()->find( $season_id );
+    
+    if($season!=null)
+    {
+        try {
+            $rate = 0;
+            if($number_of_days <=7) {
+              $rate = $season->pivot->daily_rate;
+            }
+            if($number_of_days >= 8) {
+               $rate = $season->pivot->weekly_rate / 7;
+                if ( $season->pivot->weekly_rate == '' || $season->pivot->weekly_rate == 0) {
+                   $rate =   $season->pivot->daily_rate;
+                }
+            }
+
+             if($number_of_days >= 30) {
+               $rate = $season->pivot->monthly_rate / 30;
+                if ($season->pivot->monthly_rate == '' || $season->pivot->monthly_rate == 0) {
+                   $rate = $season->pivot->daily_rate;
+                }
+            }
+
+        } catch (Exception $e) {
+           $response = [
+                'status' => 'error',
+                'error' => 'This property is not availalbe in this season.',
+            ];
+            return response()->json($response,200);
+        }
+    } else {
+       $rate = '0';
+    }
+    return  $rate; 
+}

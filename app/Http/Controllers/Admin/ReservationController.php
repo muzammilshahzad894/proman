@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\helpers\Calendar;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\EmailController;
-use App\Http\Requests\AddReservationRequest;
+use App\Http\Requests\ReservationRequest;
 use App\Models\Housekeeper;
 use App\Models\Payment;
 use App\Models\Property;
@@ -22,6 +22,7 @@ use Session;
 use App\Models\Owner;
 use App\Models\Refund;
 use App\Models\sentemail;
+use App\Helpers\ResponseHelper;
 use Auth;
 
 class ReservationController extends Controller
@@ -33,41 +34,25 @@ class ReservationController extends Controller
      */
     public function index(Request $request)
     {
+        dd('here');
         $t = date_default_timezone_set("America/Denver");
         $t =  date("Y-m-d");
         $keyword = @$_GET['q'];
-        if (Auth::user()->type == "owner") {
-            $cid = Auth::id();
-            $properties   = Property::where('owner', $cid)->get();
-            $reservations = Reservation::select('reservations.*')->where('departure', '>', $t)
-                ->join('users', 'reservations.customer_id', '=', 'users.id')
-                ->where(function ($query) use ($keyword, $request) {
-                    $query->where(DB::raw("CONCAT(users.first_name, ' ', users.last_name)"), 'LIKE', "%$keyword%");
-                    if ($request->status == 'cancelled') {
-                        $query->where('cancelled', 1);
-                    } else {
-                        $query->where('cancelled', 0);
-                    }
-                })
-                ->orderBy('arrival', 'desc')->get();
-            return view('admin.reservation.index')
-                ->with('reservations', $reservations)->with('properties', $properties);
-        } else {
-            $reservations  = Reservation::select('reservations.*')->where('departure', '>', $t)
-                ->join('users', 'reservations.customer_id', '=', 'users.id')
-                ->where(function ($query) use ($keyword, $request) {
-                    $query->where(DB::raw("CONCAT(users.first_name, ' ', users.last_name)"), 'LIKE', "%$keyword%");
-                    if ($request->status == 'cancelled') {
-                        $query->where('cancelled', 1);
-                    } else {
-                        $query->where('cancelled', 0);
-                    }
-                })
-                ->orderBy('arrival', 'desc')->get();
+        
+        $reservations  = Reservation::select('reservations.*')->where('departure', '>', $t)
+            ->join('users', 'reservations.customer_id', '=', 'users.id')
+            ->where(function ($query) use ($keyword, $request) {
+                $query->where(DB::raw("CONCAT(users.first_name, ' ', users.last_name)"), 'LIKE', "%$keyword%");
+                if ($request->status == 'cancelled') {
+                    $query->where('cancelled', 1);
+                } else {
+                    $query->where('cancelled', 0);
+                }
+            })
+            ->orderBy('arrival', 'desc')->get();
 
-            return view('admin.reservation.index')
-                ->with('reservations', $reservations);
-        }
+        return view('admin.reservation.index')
+            ->with('reservations', $reservations);
     }
 
     public function step1()
@@ -90,7 +75,7 @@ class ReservationController extends Controller
      */
     public function create($property_id)
     {
-        try {    
+        try {
             $property = Property::find($property_id);
             $house_keepers = Housekeeper::all();
             $customers = User::whereType('customer')->get();
@@ -115,14 +100,15 @@ class ReservationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AddReservationRequest $request)
+    public function store(ReservationRequest $request)
     {
-        $input = $request->all();
-
-        if (Auth::user()->type != "owner") {
-            $reservation              = new Reservation();
+        try {
+            DB::beginTransaction();
+            
+            $input = $request->all();
+            $reservation = new Reservation();
             $reservation->property_id = $request->get('property_id');
-            $property                 = Property::find($request->get('property_id'));
+            $property = Property::find($request->get('property_id'));
 
             $available = $property->propertyCheck($request->get('arrival'), $request->get('departure'));
 
@@ -138,61 +124,46 @@ class ReservationController extends Controller
             $payment_card_last_four = "";
             if ($request->payment_mode == 'credit card') {
                 $request->merge([
-
                     'address_line_1' => $request->address,
-
                 ]);
-                //return $request->all;
                 $gateway_result = authorized_payment($request, $request, $request->get('amount_deposited'), $charge_customer = 0);
                 if ($gateway_result['status'] != true) {
                     $request->session()->flash('error', $gateway_result['message']);
                     return redirect()->back()->withInput();
                 } else {
-                    $customer_profile         = $gateway_result['customer_profile'];
+                    $customer_profile = $gateway_result['customer_profile'];
                     $customer_payment_profile = $gateway_result['customer_payment_profile'];
-                    $payment_card_last_four   = $gateway_result['card_last_four'];
-                    $payment_transaction_id   = $gateway_result['transaction_id'];
+                    $payment_card_last_four = $gateway_result['card_last_four'];
+                    $payment_transaction_id = $gateway_result['transaction_id'];
                 }
                 //return $gateway_result;
             }
 
-            if (isset($input['owner_id']) && !empty($input['owner_id'])) {
-
-                $reservation->is_an_owner_reservation = 1;
-                $reservation->customer_id   = Owner::find($property->owner)->user_id;
-            } else {
-
-                $reservation->customer_id = $this->getCustomerId($request);
-            }
-
-
+            $reservation->customer_id = $this->getCustomerId($request);
             $reservation->address = $request->get('address');
-            $reservation->city    = $request->get('city');
-            $reservation->state   = $request->get('state');
-            $reservation->zip     = $request->get('zip');
-            $reservation->phone     = $request->get('phone');
-
-
-            $reservation->adults    = $request->get('adults');
-            $reservation->children  = $request->get('children');
-            $reservation->pets      =  ($request->get('pets')) ? $request->get('pets') : '0';
-            $reservation->arrival   = Carbon::parse($request->get('arrival'));
+            $reservation->city = $request->get('city');
+            $reservation->state = $request->get('state');
+            $reservation->zip = $request->get('zip');
+            $reservation->phone = $request->get('phone');
+            $reservation->adults = $request->get('adults');
+            $reservation->children = $request->get('children');
+            $reservation->pets = ($request->get('pets')) ? $request->get('pets') : '0';
+            $reservation->arrival = Carbon::parse($request->get('arrival'));
             $reservation->departure = Carbon::parse($request->get('departure'));
-
-            $reservation->special_rate              = $request->special_rate ? 1 : 0;
+            $reservation->special_rate = $request->special_rate ? 1 : 0;
             $reservation->is_non_profit_reservation = $request->is_non_profit_reservation ? 1 : 0;
-            $reservation->is_add_pet_fee            = $request->is_add_pet_fee ? 1 : 0;
+            $reservation->is_add_pet_fee = $request->is_add_pet_fee ? 1 : 0;
 
             $reservation->total_amount = $request->get('total_amount');
-            $reservation->notes        = $request->get('notes');
+            $reservation->notes = $request->get('notes');
 
             $reservation->housekeeper_id = $request->get('housekeeper_id');
-            $reservation->status         = nl2zero('status');
+            $reservation->status = isset($request->status) ? ($request->get('status') ? 1 : 0) : 0;
 
-            $reservation->customer_profile         = $customer_profile;
+            $reservation->customer_profile = $customer_profile;
             $reservation->customer_payment_profile = $customer_payment_profile;
-            $reservation->customer_card            = $payment_card_last_four;
-            $reservation->from_admin            = 1;
+            $reservation->customer_card = $payment_card_last_four;
+            $reservation->from_admin = 1;
             /*saving reservations totals in reservation table instead of payments*/
             $reservation->lodging_amount = $request->get('lodging_amount');
             $reservation->total_amount = $request->get('total_amount');
@@ -206,221 +177,55 @@ class ReservationController extends Controller
             /*end saving reservations totals in reservation table instead of payments*/
             $reservation->save();
 
-
             //return $this->authorized_payment($request, $reservation->id, $request->get('total_amount'));
             $this->addPayment($request, $reservation->id, $reservation->customer_id, $gateway_result);
+            
+            // // send emails
 
-            // send emails
+            // // if owner send owner email
+            // if (!isset($input['dont_send_email'])) {
+            //     try {
+            //         if (config('site.admin_reservation_customer')) {
+            //             info('sending admin reservation email to customer');
+            //             EmailController::sendCustomerEmail($reservation);
+            //         }
+            //     } catch (Exception $e) {
+            //         Log::info('sendCustomerEmail dont work');
+            //         Log::info($e);
+            //     }
 
-            // if owner send owner email
-            if (!isset($input['dont_send_email'])) {
-                if (isset($input['owner_id']) && !empty($input['owner_id'])) {
-                    // send email to house keeper
-                    try {
+            //     try {
+            //         if ($reservation->housekeeper_id != null) {
+            //             if (config('site.admin_reservation_housekeeper')) {
+            //                 info('sending admin reservation email to Housekeeper');
+            //                 EmailController::sendHouseKeeperEmail($reservation);
+            //             }
+            //         }
+            //     } catch (Exception $e) {
+            //         Log::info('sendHouseKeeperEmail dont work');
+            //         Log::info($e);
+            //     }
+            // } 
 
-
-                        if (config('site.admin_reservation_owner')) {
-                            info('sending admin reservation email to owner');
-                            return EmailController::sendOwnerEmail($reservation);
-                        } else {
-                            info('sending admin reservation email to owner TURNED OFF');
-                        }
-
-                        // from here ..
-                    } catch (Exception $e) {
-                        Log::info('sendOwnerEmail dont work');
-                        Log::info($e);
-                    }
-                } else {
-                    try {
-                        if ($reservation->is_an_owner_reservation != 1) // this is a customer reservation
-                        {
-
-                            if (config('site.admin_reservation_customer')) {
-                                info('sending admin reservation email to customer');
-                                EmailController::sendCustomerEmail($reservation);
-                            }
-                            // from here ..
-                        }
-                    } catch (Exception $e) {
-                        Log::info('sendCustomerEmail dont work');
-                        Log::info($e);
-                    }
-                }
-
-                // send email to house keeper
-
-                try {
-                    if ($reservation->housekeeper_id != null) {
-                        if (config('site.admin_reservation_housekeeper')) {
-                            info('sending admin reservation email to Housekeeper');
-                            EmailController::sendHouseKeeperEmail($reservation);
-                        }
-                        // from here ..
-                    }
-                } catch (Exception $e) {
-                    Log::info('sendHouseKeeperEmail dont work');
-                    Log::info($e);
-                }
-
-                // send email to hot tub
-                try {
-                    // send email to hot tub
-                    if ($reservation->property->hottub != null) {
-                        EmailController::sendHottubEmail($reservation);
-                        // from here ..
-                    }
-                } catch (Exception $e) {
-                    Log::info('sendHottubEmail dont work');
-                    Log::info($e);
-                }
-            } //end if send email 
-
-            // to admin
-            try {
-                // send email to admin
-                if (config('site.admin_reservation_admin')) {
-                    info('sending admin reservation email to admin');
-                    EmailController::sendAdminEmail($reservation);
-                }
-                // from here ..
-            } catch (Exception $e) {
-                Log::info('sendAdminEmail dont work');
-                Log::info($e);
-            }
-
-            Session::flash('success', 'Reservation added successfully.');
-
-            return redirect('admin/reservation');
-        } else {
-            $gateway_result = [];
-            $customer_profile = "";
-            $customer_payment_profile = "";
-            $payment_card_last_four = "";
-            $current = Auth::user()->id;
-            $owner   = owner::where('user_id', $current)->first();
-            $address = $owner->address1 . ' ' . $owner->address2;
-            $zip     = $owner->zip;
-            $state   = $owner->state;
-            $phone   = $owner->phone;
-            $city    = $owner->city;
-            $reservation = new Reservation;
-            $reservation->property_id = $request->get('property_id');
-            $property                 = Property::find($request->get('property_id'));
-
-            $available = $property->isPropertyAvailable($request->get('arrival'), $request->get('departure'));
-
-            if (!$available) {
-
-                $request->session()->flash('error', 'Property is not available for selected dates.');
-                return redirect()->back()->withInput();
-            }
-            $reservation->customer_id = $this->getCustomerId($request);
-            $reservation->address     = $address;
-            $reservation->city        = $city;
-            $reservation->state       = $state;
-            $reservation->phone       = $request->get('phone');
-            $reservation->adults      = $request->get('adults');
-            $reservation->children    = $request->get('children');
-            $reservation->special_rate              = $request->special_rate ? 1 : 0;
-            $reservation->is_non_profit_reservation = $request->is_non_profit_reservation ? 1 : 0;
-            $reservation->is_add_pet_fee            = $request->is_add_pet_fee ? 1 : 0;
-            $available = $property->isPropertyAvailable($request->get('arrival'), $request->get('departure'));
-            $reservation->total_amount = $request->get('total_amount');
-
-            if (!$available) {
-
-                $request->session()->flash('error', 'Property is not available for selected dates.');
-                return redirect()->back()->withInput();
-            } else {
-                $reservation->arrival   = Carbon::parse($request->get('arrival'));
-                $reservation->departure = Carbon::parse($request->get('departure'));
-            }
-            $reservation->notes        = $request->get('notes');
-            $reservation->customer_profile         = $customer_profile;
-            $reservation->customer_payment_profile = $customer_payment_profile;
-            $reservation->customer_card            = $payment_card_last_four;
-            $reservation->from_admin            = 1;
-            /*saving reservations totals in reservation table instead of payments*/
-            $reservation->lodging_amount = $request->get('lodging_amount');
-            $reservation->total_amount = $request->get('total_amount');
-            $reservation->cleaning_fee = $request->get('clearing_fee');
-            // $payment->line_items_total = $rates->line_items_total;
-            if ($request->has('pet_fee')) {
-                $reservation->pet_fee = $request->get('pet_fee');
-            }
-            $reservation->lodgers_tax = $request->get('lodgers_tax');
-            $reservation->sales_tax = $request->get('sales_tax');
-            /*end saving reservations totals in reservation table instead of payments*/
-            $reservation->save();
-            //return $this->authorized_payment($request, $reservation->id, $request->get('total_amount'));
-            //return $request->all;
-            //$gateway_result= authorized_payment($request,$request, $request->get('amount_deposited'), $charge_customer = 0);
-            $this->addPayment($request, $reservation->id, $reservation->customer_id, $gateway_result);
-            /// if owner send owner email
-            if (!isset($input['dont_send_email'])) {
-                if (isset($input['owner_id']) && !empty($input['owner_id'])) {
-                    // send email to house keeper
-                    try {
-                        if (config('site.admin_reservation_owner')) {
-                            EmailController::sendOwnerEmail($reservation);
-                        }
-                    } catch (Exception $e) {
-                        Log::info('sendOwnerEmail dont work');
-                        Log::info($e);
-                    }
-                } else {
-                    // to customers
-                    try {
-                        if ($reservation->is_an_owner_reservation != 1) // this is a customer reservation
-                        {
-                            if (config('site.admin_reservation_customer')) {
-                                EmailController::sendCustomerEmail($reservation);
-                            }
-                        }
-                    } catch (Exception $e) {
-                        Log::info('sendCustomerEmail dont work');
-                        Log::info($e);
-                    }
-                }
-
-                // send email to house keeper
-
-                try {
-                    if ($reservation->housekeeper_id != null) {
-                        if (config('site.admin_reservation_housekeeper')) {
-                            EmailController::sendHouseKeeperEmail($reservation);
-                        }
-                    }
-                } catch (Exception $e) {
-                    Log::info('sendHouseKeeperEmail dont work');
-                    Log::info($e);
-                }
-
-                // send email to hot tub
-                try {
-                    // send email to hot tub
-                    if ($reservation->property->hottub != null) {
-                        EmailController::sendHottubEmail($reservation);
-                    }
-                } catch (Exception $e) {
-                    Log::info('sendHottubEmail dont work');
-                    Log::info($e);
-                }
-            }
-
-            // to admin
-            try {
-                // send email to admin
-                if (config('site.admin_reservation_admin')) {
-                    EmailController::sendAdminEmail($reservation);
-                }
-            } catch (Exception $e) {
-                Log::info('sendAdminEmail dont work');
-                Log::info($e);
-            }
-            Session::flash('success', 'Reservation added successfully.');
-            return redirect('admin/reservation');
+            // // to admin
+            // try {
+            //     // send email to admin
+            //     if (config('site.admin_reservation_admin')) {
+            //         info('sending admin reservation email to admin');
+            //         EmailController::sendAdminEmail($reservation);
+            //     }
+            // } catch (Exception $e) {
+            //     Log::info('sendAdminEmail dont work');
+            //     Log::info($e);
+            // }
+            
+            // Commit the transaction after all operations
+            DB::commit();
+            
+            return ResponseHelper::jsonResponse('success', 'Reservation added successfully.', route('admin.reservation.index'));
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return ResponseHelper::jsonResponse('error', 'Something went wrong. Please try again.', null, 500);
         }
     }
 
@@ -439,7 +244,6 @@ class ReservationController extends Controller
 
     private function updateCustomer($request, $customer_id)
     {
-
         $input = $request->all();
 
         $user  = User::find($customer_id);
@@ -479,19 +283,11 @@ class ReservationController extends Controller
 
     private function addPayment($request, $reservation_id, $customer_id, $gateway_result = [])
     {
-
-
-
         $payment = new Payment();
-
         $payment->reservation_id = $reservation_id;
-
         $payment->lodging_amount = $request->get('lodging_amount');
-
         $payment->total = $request->get('total_amount');
-
         $payment->cleaning_fee = $request->get('clearing_fee');
-
         // $payment->line_items_total = $rates->line_items_total;
 
         if ($request->has('pet_fee')) {
@@ -746,27 +542,19 @@ class ReservationController extends Controller
         return response()->json('success');
     }
 
-
-
     public function calendar($property_id)
     {
         $property = Property::find($property_id);
-
-
         $calendar = Calendar::RenderCalendar($property, 'seprate');
-
-
         if ($property == null) {
             dd('no property with that id exists');
         }
-
         return $calendar;
     }
 
 
     public function process_payment(Request $request, $reservation_id)
     {
-        //return  response($request->all(),422);;
         $this->validate($request, array(
             'amount_to_pay' => 'numeric|min:0.1',
             'first_name'    => 'required_without:process_saved_card',

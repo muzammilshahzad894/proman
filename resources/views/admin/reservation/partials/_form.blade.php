@@ -1,18 +1,8 @@
-<form action="{{ url('admin/reservation') }}" method="POST" role="form" enctype="multipart/form-data">
+<form action="{{ $url }}" method="POST" role="form" enctype="multipart/form-data">
     <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <input type="hidden" name="property_id" value="{{ $property->id }}">
-
-        <div class="form-group " id="select-returning-customer" style="display: none;">
-            <label for="">Select Customer</label>
-            <select name="customer_id" id="input" class="form-control" style="width: 100%;  ">
-                <option value="">Select</option>
-                @foreach($customers as $customer)
-                <option value="{{ $customer->id }}">{{ $customer->name() }}</option>
-                @endforeach
-            </select>
-        </div>
-
+        @csrf
+        <input type="hidden" name="property_id" value="{{ @$property->id }}">
+        
         <div class="row customerinfo">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <div class="form-group">
@@ -23,7 +13,7 @@
                         name="first_name" 
                         class="form-control" 
                         required 
-                        value="{{old('first_name') ? old('first_name') : (isset($reservation) ? @$reservation->customer->first_name : '') }}">
+                        value="{{ old('first_name') ? old('first_name') : (isset($reservation) ? @$reservation->customer->first_name : '') }}">
                 </div>
             </div>
 
@@ -36,7 +26,7 @@
                         name="last_name" 
                         class="form-control" 
                         required 
-                        value="{{old('last_name') ? old('last_name') : (isset($reservation) ? @$reservation->customer->last_name : '') }}">
+                        value="{{ old('last_name') ? old('last_name') : (isset($reservation) ? @$reservation->customer->last_name : '') }}">
                 </div>
             </div>
         </div>
@@ -44,32 +34,44 @@
         <div class="row customerinfo">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <div class="form-group">
-                    <label class="field-required">Email *</label>
+                    <label class="field-required">Email</label>
                     <input 
                         autocomplete="email_off" 
                         type="text" 
                         name="email" 
                         class="form-control" 
                         required 
-                        value="{{ isset($reservation->customer->email) ? $reservation->customer->email : old('email') }}">
+                        value="{{ old('email') ? old('email') : (isset($reservation->customer->email) ? $reservation->customer->email : '') }}">
                 </div>
             </div>
 
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <div class="form-group">
-                    <label for="">Phone *</label>
-                    <input autocomplete="phone_email" type="text" name="phone" required class="form-control phone_us" id="" placeholder="" value="{{ old('phone') }}">
+                    <label class="field-required">Phone</label>
+                    <input 
+                        autocomplete="phone_email" 
+                        type="text" 
+                        name="phone" 
+                        required 
+                        class="form-control phone_us" 
+                        value="{{ old('phone') ? old('phone') : (isset($reservation->phone) ? $reservation->phone : '') }}">
                 </div>
             </div>
         </div>
 
-        @if(Auth::user()->type != "owner")
         <div class="addresss well" style="display: none;">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="form-group">
-                        <label for="">Address *</label>
-                        <input autocomplete="address_off" type="text" name="address" required value="{{old('address') }}" class="form-control" id="" placeholder="">
+                        <label class="field-required">Address</label>
+                        <input 
+                            autocomplete="address_off" 
+                            type="text" 
+                            name="address"
+                            class="form-control"
+                            required
+                            value="{{ old('address') ? old('address') : (isset($reservation->address) ? $reservation->address : '') }}"
+                        />
                     </div>
                 </div>
             </div>
@@ -77,52 +79,92 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group">
-                            <label for="">City *</label>
-                            <input autocomplete="city_off" type="text" name="city" value="{{old('city') }}" class="form-control" id="" placeholder="" required>
+                            <label class="field-required">City</label>
+                            <input 
+                                autocomplete="city_off"
+                                type="text"
+                                name="city"
+                                class="form-control"
+                                required
+                                value="{{ old('city') ? old('city') : (isset($reservation->city) ? $reservation->city : '') }}"
+                            />
                         </div>
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group ">
-                            <label for="">State *</label>
+                            <label class="field-required">State</label>
                             <select required name="state" id="input" class="form-control">
                                 <option value="">Select</option>
                                 @foreach ( states() as $key => $state)
-                                <option @if ( old('state')==$key) selected @endif value="{{ $key }}">{{ $state }}</option>
+                                <option  
+                                    @if(old('state') ? (old('state') == $key) : (isset($reservation->state) ? $reservation->state == $key : false)) selected @endif 
+                                    value="{{ $key }}"
+                                >
+                                    {{ $state }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <div class="form-group ">
-                            <label for="">Zip *</label>
-                            <input autocomplete="zip_off" name="zip" type="text" value="{{old('zip') }}" class="form-control zipcode" id="" placeholder="" required>
+                        <div class="form-group">
+                            <label class="field-required">Zip</label>
+                            <input 
+                                autocomplete="zip_off" 
+                                name="zip" 
+                                type="text" 
+                                class="form-control zipcode"
+                                required
+                                value="{{ old('zip') ? old('zip') : (isset($reservation->zip) ? $reservation->zip : '') }}"
+                            />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        @endif
+
         <div class="row">
             <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
                 <div class="form-group">
-                    <label for="">Adults <span class="required">*</span></label>
-                    <input name="adults" type="text" data-calc="true" class="form-control" id="" placeholder="" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                        value="{{ old('adults') }}" required>
+                    <label class="field-required">Adults</label>
+                    <input 
+                        name="adults" 
+                        type="text" 
+                        data-calc="true" 
+                        class="form-control" 
+                        required
+                        onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                        value="{{ old('adults') ? old('adults') : (isset($reservation->adults) ? $reservation->adults : '') }}"
+                    />
                     <p class="help-block">&nbsp;</p>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
                 <div class="form-group">
-                    <label for="">Children</label>
-                    <input type="text" name="children" data-calc="true" class="form-control" id="" placeholder="" onkeypress='return event.charCode >= 48 && event.charCode <= 57' value="{{ old('children') }}">
+                    <label>Children</label>
+                    <input 
+                        type="text" 
+                        name="children" 
+                        data-calc="true" 
+                        class="form-control" 
+                        onkeypress='return event.charCode >= 48 && event.charCode <= 57' 
+                        value="{{ old('children') ? old('children') : (isset($reservation->children) ? $reservation->children : '') }}"
+                    />
                     <p class="help-block">&nbsp;</p>
                 </div>
             </div>
             @if ($property->is_pet_friendly)
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                 <div class="form-group">
-                    <label for="">Pets</label>
-                    <input name="pets" type="text" data-calc="true" class="form-control" id="" placeholder="" onkeypress='return event.charCode >= 48 && event.charCode <= 57' value="{{ old('pets') }}">
+                    <label>Pets</label>
+                    <input 
+                        name="pets" 
+                        type="text" 
+                        data-calc="true" 
+                        class="form-control" 
+                        onkeypress='return event.charCode >= 48 && event.charCode <= 57' 
+                        value="{{ old('pets') ? old('pets') : (isset($reservation->pets) ? $reservation->pets : '') }}"
+                    />
                     <p class="help-block">(Please add details in notes)</p>
                 </div>
             </div>
@@ -131,16 +173,30 @@
         <div class="row">
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 <div class="form-group ">
-                    <label for="">Arival</label>
-                    <input type="text" data-calc="true" autocomplete="off" class="form-control arrivalDate"
-                        id="arrival" name="arrival" placeholder="">
+                    <label>Arival</label>
+                    <input 
+                        type="text" 
+                        data-calc="true" 
+                        autocomplete="off" 
+                        class="form-control arrivalDate"
+                        id="arrival" 
+                        name="arrival"
+                        value="{{ old('arrival') ? date('m/d/Y', strtotime(old('arrival'))) : (isset($reservation->arrival) ? date('m/d/Y', strtotime($reservation->arrival)) : '') }}"
+                    />
                 </div>
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 <div class="form-group ">
                     <label for="">Departure</label>
-                    <input type="text" data-calc="true" class="form-control departureDate"
-                        id="departure" name="departure" autocomplete="off" placeholder="">
+                    <input 
+                        type="text" 
+                        data-calc="true" 
+                        class="form-control departureDate"
+                        id="departure" 
+                        name="departure" 
+                        autocomplete="off" 
+                        value="{{ old('departure') ? date('m/d/Y', strtotime(old('departure'))) : (isset($reservation->departure) ? date('m/d/Y', strtotime($reservation->departure)) : '') }}"
+                    />
                 </div>
             </div>
 
@@ -149,14 +205,6 @@
         <div class="alert alert-danger" style="display: none; ">
         </div>
 
-        <!-- start -->
-        @if(Auth::user()->type != "owner")
-        <style type="text/css">
-            .hide {
-                display: none;
-            }
-        </style>
-        @endif
         <div class="">
             <div class="m-t-10 m-b-20">
                 <div class="form-group input-3rd">
@@ -164,7 +212,8 @@
                     <input
                         type="hidden"
                         id="property_rate"
-                        value="{{ number_format_without_comma(@$property->seasons()->find(getCurrentSeason()->id)->pivot->daily_rate) }}">
+                        value="{{ number_format_without_comma(@$property->seasons()->find(getCurrentSeason()->id)->pivot->daily_rate) }}"
+                    />
                     <input
                         type="text"
                         name="lodging_amount"
@@ -173,7 +222,8 @@
                         readonly=""
                         placeholder="" value="0"
                         onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                        data-calc="true">
+                        data-calc="true"
+                    />
                 </div>
 
                 <label class="checkbox-inline">
@@ -183,7 +233,7 @@
                     <input type="checkbox" data-calc="true" name="non_profit" id="non_profit" value="option2"> Non-Profit Reservation
                 </label>
                 <input type="hidden" name="pet_fee" id="pet_fee_value">
-                @if ($property->pet_fee_active==1)
+                @if (@$property->pet_fee_active==1)
                 <label class="checkbox-inline">
                     <input name="is_add_pet_fee" type="checkbox" data-calc="true" id="chk_add_pet_fee" value="option3"> Add Pet Fee
                 </label>
@@ -201,14 +251,14 @@
                     </p>
 
                     <p id="p_pet_fee" style="display: none;">
-                        Pet Fee: $<span id="pet_fee" data-fee="{{ empty($property->pet_fee)?0:$property->pet_fee }}">@if($property->pet_fee_active==1){{ $property->pet_fee }} @endif</span>
+                        Pet Fee: $<span id="pet_fee" data-fee="{{ empty(@$property->pet_fee)?0:@$property->pet_fee }}">@if(@$property->pet_fee_active==1){{ @$property->pet_fee }} @endif</span>
                     </p>
                     <p>
-                        Lodgers Tax (@if($property->lodger_tax_active==1){{ $property->lodger_tax }} @endif%): $<span id="lodgers_text_label"></span>
+                        Lodgers Tax (@if(@$property->lodger_tax_active==1){{ @$property->lodger_tax }} @endif%): $<span id="lodgers_text_label"></span>
                     </p>
-                    @if ($property->sales_tax_active == 1 )
+                    @if (@$property->sales_tax_active == 1 )
                     <p>
-                        Sales Tax ({{ $property->sales_tax }} %): $<span id="sales_text_label"></span>
+                        Sales Tax ({{ @$property->sales_tax }} %): $<span id="sales_text_label"></span>
                     </p>
                     <input type="hidden" name="sales_tax" id="input-sales_tax" class="form-control" value="">
                     @endif
@@ -219,48 +269,64 @@
                 name="lodgers_tax"
                 id="inputLodgers_tax"
                 class="form-control"
-                value="">
+                value=""
+            />
             <div class="form-group input-3rd">
-                <label for="">Cleaning Fee ($) </label>
-                <input type="text" data-calc="true" class="form-control" id="clearing_fee" placeholder=""
-                    onkeypress="return isNumber(event)"
-                    name="clearing_fee"
-                    value="@if($property->clearing_fee_active==1){{number_format($property->clearing_fee,2)}}@endif">
+                <label for="">Cleaning Fee</label>
+                <div class="input-group">
+                    <div class="input-group-addon">$</div>
+                    <input 
+                        type="text" 
+                        data-calc="true" 
+                        class="form-control" 
+                        id="clearing_fee"
+                        onkeypress="return isNumber(event)"
+                        name="clearing_fee"
+                        value="{{ old('clearing_fee') ? old('clearing_fee') : (isset($reservation) ? to_currency($reservation->cleaning_fee,0) : '') }}"
+                    />
+                </div>
             </div>
             <div class="form-group input-3rd">
-                <label for="">Total Amount ($)</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="total_amount"
-                    onkeypress="return isNumber(event)"
-                    name="total_amount"
-                    value="{{ old('total_amount') }}">
+                <label for="">Total Amount</label>
+                <div class="input-group">
+                    <div class="input-group-addon">$</div>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="total_amount"
+                        onkeypress="return isNumber(event)"
+                        name="total_amount"
+                        value="{{ old('total_amount') ? old('total_amount') : (isset($reservation) ? to_currency($reservation->total_amount,0) : '') }}"
+                    />
+                </div>
             </div>
             <div class="form-group input-3rd">
-                <label for="">Amount To Deposit ($)</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    id="amount_deposited"
-                    onkeypress="return isNumber(event)"
-                    name="amount_deposited"
-                    value="{{ old('amount_deposited') }}">
+                <label for="">Amount To Deposit</label>
+                <div class="input-group">
+                    <div class="input-group-addon">$</div>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="amount_deposited"
+                        onkeypress="return isNumber(event)"
+                        name="amount_deposited"
+                        value="{{ old('amount_deposited') ? old('amount_deposited') : (isset($reservation) ? to_currency($reservation->amount_deposited,0) : '') }}"
+                    />
+                </div>
             </div>
             <div class="form-group input-3rd">
                 <label for="">Method of Payment</label>
                 <select name="payment_mode" id="payment_mode" class="form-control">
                     <option value="">Select</option>
-                    <option @if(old('payment_mode')=='check' ) selected="" @endif value="check">Check</option>
-                    <option @if(old('payment_mode')=='credit card' ) selected="" @endif value="credit card">Credit Card</option>
-                    <option @if(old('payment_mode')=='owner' ) selected="" @endif value="check">Owner</option>
+                    <option @if((old('payment_mode') ? (old('payment_mode') == 'check') : (isset($reservation) ? $reservation->basic_payment()->payment_mode == 'check' : false))) selected @endif value="check">Check</option>
+                    <option @if((old('payment_mode') ? (old('payment_mode') == 'credit card') : (isset($reservation) ? $reservation->basic_payment()->payment_mode == 'credit card' : false))) selected @endif value="credit card">Credit Card</option>
                 </select>
             </div>
             <section id="credit_card_section">
                 <div class="form-group">
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="control-label   field-required" for="">Credit Card</label>
+                            <label class="control-label field-required" for="">Credit Card</label>
                             <input
                                 type="text"
                                 value="{{old('credit_card') ? old('credit_card') : (isset($reservation) ? $reservation['credit_card'] : '') }}"
@@ -342,7 +408,7 @@
             </label>
         </div>
         <div class="m-b-20 m-t-20">
-            <button type="submit" class="btn btn-success">Add</button>
+            <button type="submit" class="btn btn-success">{{ $submitBtnText }}</button>
         </div>
     </div>
     <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7">

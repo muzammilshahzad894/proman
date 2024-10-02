@@ -226,6 +226,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::post('reservation/void/{reservation_id}', 'ReservationController@void_payment')->name('reservation.void_payment');
 });
 
+Route::get('calendar/{property_id}', 'Admin\ReservationController@calendar');
+
 
 Route::get('/', function () {
 	return redirect('login');

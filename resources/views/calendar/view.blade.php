@@ -36,12 +36,9 @@ $day_count2 = date('t', strtotime("+2 month", $timestamp));
 $day_count3 = date('t', strtotime("+3 month", $timestamp));
 
 // place all the variable that are coming from DB
-$owner_dates = $owner_dates;
 $reservation = $reservation;
 $pending_dates = $pending_dates;
 $reservation_dates = $reservation_dates;
-$owner_arrival_dates = $owner_arrival_dates;
-$owner_departure_dates = $owner_departure_dates;
 $reservation_arrival_dates = $reservation_arrival_dates;
 $reservation_departure_dates = $reservation_departure_dates;
 
@@ -60,15 +57,7 @@ $week .= str_repeat('<td></td>', $str);
 for ($day = 1; $day <= $day_count; $day++, $str++) {
     $date = $ym . '-' . sprintf("%02d", $day);
 
-    if (in_array($date, $owner_dates)) {
-        if (in_array($date, $owner_arrival_dates)) {
-            $week .= '<td class="owner_arrival"><span>' . $day;
-        } elseif (in_array($date, $owner_departure_dates)) {
-            $week .= '<td class="owner_departure"><span>' . $day;
-        } else {
-            $week .= '<td class="owner"><span>' . $day;
-        }
-    } elseif (in_array($date, $pending_dates)) {
+    if (in_array($date, $pending_dates)) {
         $week .= '<td class="pending"><span>' . $day;
     } elseif (in_array($date, $reservation_dates)) {
         if (in_array($date, $reservation_arrival_dates)) {
@@ -122,15 +111,7 @@ for ($day = 1; $day <= $day_count1; $day++, $str1++) {
     //$date->add(new DateInterval('P1M')); // add 1month
     $date = $date->format('Y-m-d');
 
-    if (in_array($date, $owner_dates)) {
-        if (in_array($date, $owner_arrival_dates)) {
-            $week1 .= '<td class="owner_arrival"><span>' . $day;
-        } elseif (in_array($date, $owner_departure_dates)) {
-            $week1 .= '<td class="owner_departure"><span>' . $day;
-        } else {
-            $week1 .= '<td class="owner"><span>' . $day;
-        }
-    } elseif (in_array($date, $pending_dates)) {
+    if (in_array($date, $pending_dates)) {
         $week1 .= '<td class="pending">' . $day;
     } elseif (in_array($date, $reservation_dates)) {
         if (in_array($date, $reservation_arrival_dates)) {
@@ -182,16 +163,7 @@ for ($day = 1; $day <= $day_count2; $day++, $str2++) {
     //$date->add(new DateInterval('P2M')); // add 2 months
     $date = $date->format('Y-m-d');
 
-    if (in_array($date, $owner_dates)) {
-        if (in_array($date, $owner_arrival_dates)) {
-            $week2 .= '<td class="owner_arrival"><span>' . $day;
-        } elseif (in_array($date, $owner_departure_dates)) {
-            $week2 .= '<td class="owner_departure"><span>' . $day;
-        } else {
-            $week2 .= '<td class="owner"><span>' . $day;
-        }
-
-    } elseif (in_array($date, $pending_dates)) {
+    if (in_array($date, $pending_dates)) {
         $week2 .= '<td class="pending">' . $day;
     } elseif (in_array($date, $reservation_dates)) {
         if (in_array($date, $reservation_arrival_dates)) {
@@ -241,15 +213,7 @@ for ($day = 1; $day <= $day_count3; $day++, $str3++) {
     $date = new DateTime($date);
     $date = $date->format('Y-m-d');
 
-    if (in_array($date, $owner_dates)) {
-        if (in_array($date, $owner_arrival_dates)) {
-            $week3 .= '<td class="owner_arrival"><span>' . $day;
-        } elseif (in_array($date, $owner_departure_dates)) {
-            $week3 .= '<td class="owner_departure"><span>' . $day;
-        } else {
-            $week3 .= '<td class="owner"><span>' . $day;
-        }
-    } elseif (in_array($date, $pending_dates)) {
+    if (in_array($date, $pending_dates)) {
         $week3 .= '<td class="pending">' . $day;
     } elseif (in_array($date, $reservation_dates)) {
         if (in_array($date, $reservation_arrival_dates)) {
@@ -382,10 +346,6 @@ for ($day = 1; $day <= $day_count3; $day++, $str3++) {
         <div class="labels">
             <span class="text">pending</span>
             <span class="color-box pending"></span>
-        </div>
-        <div class="labels">
-            <span class="text">owner</span>
-            <span class="color-box owner"></span>
         </div>
         <div class="labels">
             <span class="text">available</span>

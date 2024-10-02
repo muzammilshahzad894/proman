@@ -14,7 +14,7 @@ use App\Models\Season;
 use App\Models\Property;
 use App\Models\Reservation;
 use Carbon\Carbon; 
-use App\Http\Controllers\Traits\SeasonRateCalculator as SeasonRateCalculator ;
+use App\Http\Traits\SeasonRateCalculator as SeasonRateCalculator;
 
 class SeasonController extends Controller
 {
@@ -144,9 +144,9 @@ class SeasonController extends Controller
         }
     }
 
-    public function getDailyRate( Request $request )
+    public function getDailyRate(Request $request)
     {
-        $getRate =   $this->getRate( $request );
+        $getRate = $this->getRate($request);
         if ($getRate['status'] == false) {
             $response = [
                 'status' => 'error',
