@@ -55,12 +55,12 @@ Add Reservation
                                         </label>
                                     </div>
 
-                                    <div class="form-group " id="select-returning-customer" style="display: none;">
+                                    <div class="form-group" id="select-returning-customer" style="display: none;">
                                         <label for="">Select Customer</label>
                                         <select name="customer_id" id="input" class="form-control" style="width: 100%;  ">
                                             <option value="">Select</option>
                                             @foreach($customers as $customer)
-                                                <option value="{{ $customer->id }}">{{ $customer->name() }}</option>
+                                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -590,11 +590,8 @@ Add Reservation
             }
         })
         .done(function(data) {
-            if (owner_reservatio) {
-                data = 0;
-            };
-            if (data.status == 'error' && owner_reservatio == false) {
-                showAlert(data.error);
+            if (data.status == 'error') {
+                showMessage('danger', data.error);
                 return;
             };
 

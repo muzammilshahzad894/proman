@@ -8,7 +8,7 @@ use App\Models\Reservation;
 use App\Models\LineItem;
 use App\Models\Base;
 
-use App\Http\Traits\SeasonRateCalculator as SeasonRateCalculator;
+use App\Http\Controllers\Traits\SeasonRateCalculator as SeasonRateCalculator;
 
 class Property extends Base
 {

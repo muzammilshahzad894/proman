@@ -23,7 +23,7 @@ class User extends Authenticatable
     }
     
     protected $fillable = [
-        'name', 'email', 'password','type'
+        'name', 'email', 'password','type', 'phone'
     ];
 
     /**
@@ -38,6 +38,4 @@ class User extends Authenticatable
     public function full_name() {
         return $this->name." ".$this->last_name;
     }
-
-   
 }

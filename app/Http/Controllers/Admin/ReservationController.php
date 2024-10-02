@@ -113,9 +113,7 @@ class ReservationController extends Controller
             $available = $property->propertyCheck($request->get('arrival'), $request->get('departure'));
 
             if (!$available) {
-
-                $request->session()->flash('error', 'Property is not available for selected dates.');
-                return redirect()->back()->withInput();
+                return ResponseHelper::jsonResponse('error', 'Property is not available for selected dates.', null, 500);
             }
 
             $gateway_result = [];
@@ -163,7 +161,7 @@ class ReservationController extends Controller
             $reservation->customer_profile = $customer_profile;
             $reservation->customer_payment_profile = $customer_payment_profile;
             $reservation->customer_card = $payment_card_last_four;
-            $reservation->from_admin = 1;
+            $reservation->from_admin = Auth::user()->type == 'admin' ? 1 : 0;
             /*saving reservations totals in reservation table instead of payments*/
             $reservation->lodging_amount = $request->get('lodging_amount');
             $reservation->total_amount = $request->get('total_amount');
@@ -178,11 +176,10 @@ class ReservationController extends Controller
             $reservation->save();
 
             //return $this->authorized_payment($request, $reservation->id, $request->get('total_amount'));
-            $this->addPayment($request, $reservation->id, $reservation->customer_id, $gateway_result);
+            // $this->addPayment($request, $reservation->id, $reservation->customer_id, $gateway_result);
             
             // // send emails
 
-            // // if owner send owner email
             // if (!isset($input['dont_send_email'])) {
             //     try {
             //         if (config('site.admin_reservation_customer')) {
@@ -231,11 +228,8 @@ class ReservationController extends Controller
 
     private function getCustomerId($request)
     {
-
         $input = $request->all();
-
         if (isset($input['returning_customer_checkbox']) && $input['returning_customer_checkbox'] == '1') {
-
             return $input['customer_id'];
         } else {
             return $this->addCustomer($request);
@@ -259,25 +253,11 @@ class ReservationController extends Controller
 
     private function addCustomer($request)
     {
-        $input = $request->all();
-
-        //$user  = User::whereEmail($input['email'])->first();
-
-        /*if ( $user) {
-            
-            return $user->id;
-
-        } else {*/
-
-        $user  = new User();
-        $user->first_name = $request->get('first_name');
-        $user->last_name  = $request->get('last_name');
-        $user->email      = $request->get('email');
-        $user->type       = 'customer';
+        $user = new User();
+        $user->name = $request->get('first_name') . ' ' . $request->get('last_name');
+        $user->email = $request->get('email');
+        $user->type = 'customer';
         $user->save();
-
-        /*}*/
-
         return $user->id;
     }
 

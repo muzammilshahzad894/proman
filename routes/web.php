@@ -224,6 +224,8 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'as' => 'admin.', 'mi
 	Route::post('process_payment/{reservation_id}', 'ReservationController@process_payment')->name('reservation.process_payment');
 	Route::post('reservation/make_refund/{reservation_id}', 'ReservationController@make_refund')->name('reservation.make_refund');
 	Route::post('reservation/void/{reservation_id}', 'ReservationController@void_payment')->name('reservation.void_payment');
+	
+	Route::get('get-customer', 'AdminController@get_user');
 });
 
 Route::get('calendar/{property_id}', 'Admin\ReservationController@calendar');

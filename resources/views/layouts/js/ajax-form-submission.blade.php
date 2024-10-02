@@ -28,7 +28,8 @@
                 if (response.status === 422) {
                     showValidationErrors(response);
                 } else {
-                    showMessage('danger', response.message || 'An unexpected error occurred.');
+                    let message = response?.message || response?.responseJSON?.message || 'An unexpected error occurred.';
+                    showMessage('danger', message);
                 }
             }
         });

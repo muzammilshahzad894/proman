@@ -33,8 +33,10 @@ trait SeasonRateCalculator
         $status = $property->propertyCheck($from_date, $to_date, $request->edit_reservation);
 
         if ($status == false) {
-
-            return false;
+            $data = [
+                'status' => false,
+            ];
+            return $data;
         }
 
         $from_date_ = Carbon::parse($from_date);
@@ -115,7 +117,6 @@ trait SeasonRateCalculator
 
         $totallodging = number_format_without_comma($totallodging, 2);
         $data = [
-
             'rate' => $totallodging,
             'daily_rate' => $daily_rate,
             'season' => $lastSeason,
