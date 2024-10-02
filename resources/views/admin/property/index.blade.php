@@ -225,8 +225,24 @@ Properties
                                             >
                                                 <i class="fa fa-calendar-check-o"></i>
                                             </a>
-                                            <!-- // create one ... icon and when click on it then show the dropdown with the following options edit and delete -->
-                                            <div class="dropdown">
+                                            <a 
+                                                data-toggle="tooltip" 
+                                                title="Edit" 
+                                                href="{{ url('admin/property') }}/{{ $property->id }}/edit" class="icon-btn-group-center"
+                                            >
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            <a 
+                                                data-toggle="tooltip" 
+                                                title="Delete" 
+                                                data-delete-trigger 
+                                                href="#" 
+                                                class="icon-btn-group-right"
+                                            >
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                            <!-- Mange this latter -->
+                                            <!-- <div class="dropdown">
                                                 <a 
                                                     class="icon-btn-group-right dropdown-toggle" 
                                                     href="#" 
@@ -246,7 +262,7 @@ Properties
                                                         <a data-toggle="tooltip" title="Delete" data-delete-trigger href="#">Delete</a>
                                                     </li>
                                                 </ul>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
