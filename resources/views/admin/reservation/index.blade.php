@@ -18,7 +18,8 @@ Reservations
                             <div class="col-xs-3 col-sm-3 col-md- col-lg-3">
                                 <h3 class="box-title">Reservations</h3>
                                 <p class="m-t-10">
-                                    <a href="{{ url('admin/reservation/step1') }}" class="btn btn-success">Add Reservation</a>
+                                    <a href="#" class="btn btn-success">Add Reservation</a>
+                                    <!-- <a href="{{ url('admin/reservation/step1') }}" class="btn btn-success">Add Reservation</a> -->
                                 </p>
                             </div>
                             <div class="col-md-5 col-lg-5 text-right">
