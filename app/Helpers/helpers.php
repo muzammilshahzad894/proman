@@ -2322,3 +2322,14 @@ function seasonRate($property, $season_id , $number_of_days )
     }
     return  $rate; 
 }
+
+function price_format($value='')
+{ 
+	if (!empty( $value ) ) {
+		$value = number_format($value,2); 
+		return "$". $value; 
+	} else {
+		$value = number_format(0.00,2); 
+		return "$". $value; 
+	}
+}

@@ -144,7 +144,7 @@ class ReservationController extends Controller
             $reservation->zip = $request->get('zip');
             $reservation->phone = $request->get('phone');
             $reservation->adults = $request->get('adults');
-            $reservation->children = $request->get('children');
+            $reservation->children = $request->get('children') ? $request->get('children') : 0;
             $reservation->pets = ($request->get('pets')) ? $request->get('pets') : '0';
             $reservation->arrival = Carbon::parse($request->get('arrival'));
             $reservation->departure = Carbon::parse($request->get('departure'));
@@ -202,10 +202,8 @@ class ReservationController extends Controller
                     Log::info($e);
                 }
             }
-
-            // to admin
+            
             try {
-                // send email to admin
                 if (config('site.admin_reservation_admin')) {
                     info('sending admin reservation email to admin');
                     EmailController::sendAdminEmail($reservation);

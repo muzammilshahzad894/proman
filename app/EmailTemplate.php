@@ -66,8 +66,8 @@ class EmailTemplate extends Model {
 	 */
 	public function getEmailBody($searchReplace, $proposed_variables = null) {
 		$this->dynamic_body = $this->createEmailBody($searchReplace) . $proposed_variables;
-
-		return $this;
+		
+		return $this->dynamic_body;
 	}
 
 	public function getSmsBody($searchReplace, $proposed_variables = null) {
