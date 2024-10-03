@@ -261,3 +261,8 @@ Route::get('log/delete', function () {
 		dump('deleted');
 	}
 });
+
+
+Route::get('/vue', function () {
+    return view('app');
+})->name('application');
