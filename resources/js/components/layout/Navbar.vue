@@ -3,9 +3,10 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-12 col-md-4 text-left">
-                    <a href="https://devrentals5.rezosystems.com/front/checkout/rentals">
+                    <router-link :to="{ name: 'home'}">
                         <img src="https://devrentals5.rezosystems.com/uploads/1720003865.png" class="img-fluid" width="120">
-                    </a>
+                    </router-link>
+                    <!-- <img src="https://devrentals5.rezosystems.com/uploads/1720003865.png" class="img-fluid" width="120"> -->
                 </div>
                 <div class="col-12 col-md-8 mt-3 mt-md-0 text-right navbar-title">
                     <h3 class="float-right text-uppercase">

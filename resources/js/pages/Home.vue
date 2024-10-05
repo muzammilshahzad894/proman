@@ -13,13 +13,13 @@
                                 <article class="featured__card">
                                     <div class="featured__thumbnail position-relative">
                                         <div class="media">
-                                            <a class="featured__thumbnail--link" href="#">
+                                            <router-link :to="{ name: 'propertyDetail', params: { id: property.id } }" class="featured__thumbnail--link">
                                                 <img 
                                                     class="featured__thumbnail--img"
                                                     :src="property.image"
                                                     alt="featured-img"
                                                 />
-                                            </a>
+                                            </router-link>
                                         </div>
                                         <div class="featured__badge">
                                             <span class="badge__field">
@@ -31,9 +31,9 @@
                                     <div class="featured__content">
                                         <div class="featured__content--top d-flex align-items-center justify-content-between">
                                             <h3 class="featured__card--title">
-                                                <a href="#"> 
+                                                <router-link :to="{ name: 'propertyDetail', params: { id: property.id } }">
                                                     {{ $truncateText(property.title, 20) }}
-                                                </a>
+                                                </router-link>
                                             </h3>
                                         </div>
                                         <div class="featured__content--price d-flex align-items-center justify-content-between">

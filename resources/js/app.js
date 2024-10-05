@@ -1,4 +1,6 @@
 import './assets';
+import 'swiper/css';
+import 'glightbox/dist/css/glightbox.css';
 import {createApp} from 'vue'
 import App from './App.vue'
 import utilsPlugin from '@/plugins/utilsPlugin';

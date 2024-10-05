@@ -20,6 +20,6 @@ export default {
 
 <style scoped>
 .main-section {
-    min-height: 50;
+    min-height: 70vh;
 }
 </style>
