@@ -29,6 +29,7 @@
         "@vitejs/plugin-vue": "^3.2.0",
         "@vueform/multiselect": "^2.5.2",
         "animate.css": "^4.1.1",
+        "aos": "^2.3.4",
         "apexcharts": "^3.35.5",
         "bootstrap": "^5.2.1",
         "bootstrap-icons": "^1.9.1",

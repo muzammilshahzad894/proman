@@ -263,6 +263,6 @@ Route::get('log/delete', function () {
 });
 
 
-Route::get('/vue', function () {
+Route::get('/front/{any}', function () {
     return view('app');
-})->name('application');
+})->where('any', '.*');
