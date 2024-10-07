@@ -48,17 +48,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <div class="listing__details--wrapper">
-                        <div class="listing__details--content">
-                            <div class="listing__details--content__step">
-                                <h2 class="listing__details--title mb-25">House In Foxhall Ave, Kingston</h2>
-                                <div class="listing__details--price__id d-flex align-items-center">
-                                    <div class="listing__details--price d-flex">
-                                        <span class="listing__details--price__new">$13000 / Night</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="">
+                        <div class="mt-3">
                             <div class="listing__details--content__step mb-50">
                                 <h3 class="listing__details--content__title">About this property:</h3>
                                 <p class="listing__details--content__desc">
@@ -98,7 +88,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="listing__details--content__step properties__amenities mb-80">
+                            <div class="listing__details--content__step properties__amenities mb-50">
                                 <h3 class="listing__details--content__title mb-40">Properties Amenities</h3>
                                 <div class="properties__amenities--wrapper d-flex">
                                     <ul class="properties__amenities--step">
@@ -181,6 +171,31 @@
                                     </ul>
                                 </div>
                             </div>
+                            <hr>
+                            <div class="listing__details--content__step mt-5 date-range-sec">
+                                <h3 class="days-title">7 nights in Greater London</h3>
+                                <div class="date-range">Nov 18, 2024 - Nov 25, 2024</div>
+                                <div class="range-calendar">
+                                    <VDatePicker 
+                                        is-range
+                                        columns="2"
+                                        :min-date="minDate"
+                                        :color="selectedColor"
+                                    />
+                                </div>
+                                <!-- <VCalendar
+                                    v-model="selectedDateRange"
+                                    is-range
+                                    :min-date="minDate"
+                                    :max-date="maxDate"
+                                    :disabled-dates="disabledDates"
+                                    :attributes="[{ key: 'selected', highlight: true, dates: selectedDateRange }]"
+                                    columns="2"
+                                    show-weekdays
+                                    show-adjacent-months
+                                    :nav-buttons="true"
+                                /> -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -216,6 +231,7 @@
 <script>
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import GLightbox from 'glightbox';
+import { ref } from 'vue';
 
 export default {
     components: {
@@ -225,6 +241,8 @@ export default {
     },
     data() {
         return {
+            minDate: new Date().toISOString().split('T')[0],
+            selectedColor: ref('gray'),
             gallery: [
                 {
                     id: 1,
@@ -346,6 +364,65 @@ export default {
     top: 24px;
     right: 16px;
     background-color: rgba(34, 34, 34, 0.66) !important;
+}
+
+.date-range-sec .days-title {
+    font-size: 22px;
+}
+
+.date-range {
+    color: #6a6a6a;
+    font-size: 14px;
+}
+
+::v-deep .vc-container {
+  width: 100%;
+  border: none;
+  margin-top: 10px;
+}
+
+::v-deep .vc-arrow, ::v-deep .vc-title {
+  background: none;
+}
+
+::v-deep .vc-arrow {
+    border-radius: 50%;
+}
+
+::v-deep .vc-arrow:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+::v-deep .vc-header {
+    margin-bottom: 15px;
+    padding: 0px;
+}
+
+::v-deep .vc-weekdays, ::v-deep .vc-week {
+    height: 40px;
+}
+
+::v-deep .vc-week div:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+::v-deep .vc-disabled {
+    position: relative;
+    color: #ccc;
+}
+
+::v-deep .vc-disabled::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: #ccc;
+    transform: translateY(-50%);
+    z-index: 1;
 }
 
 @media (max-width: 650px) {

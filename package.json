@@ -7,7 +7,7 @@
     "devDependencies": {
         "@editorjs/link": "^2.4.1",
         "@editorjs/simple-image": "^1.4.1",
-        "@popperjs/core": "^2.11.6",
+        "@popperjs/core": "^2.11.8",
         "axios": "^0.27",
         "laravel-vite-plugin": "^0.6.0",
         "lodash": "^4.17.19",
@@ -50,6 +50,7 @@
         "socicon": "^3.0.5",
         "sweetalert2": "^11.4.32",
         "swiper": "^11.1.14",
+        "v-calendar": "^3.1.2",
         "vee-validate": "^4.6.7",
         "vue": "^3.2.36",
         "vue-inline-svg": "^2.1.0",
