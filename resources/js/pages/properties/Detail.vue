@@ -183,18 +183,6 @@
                                         :color="selectedColor"
                                     />
                                 </div>
-                                <!-- <VCalendar
-                                    v-model="selectedDateRange"
-                                    is-range
-                                    :min-date="minDate"
-                                    :max-date="maxDate"
-                                    :disabled-dates="disabledDates"
-                                    :attributes="[{ key: 'selected', highlight: true, dates: selectedDateRange }]"
-                                    columns="2"
-                                    show-weekdays
-                                    show-adjacent-months
-                                    :nav-buttons="true"
-                                /> -->
                             </div>
                         </div>
                     </div>
@@ -204,7 +192,7 @@
                         <div class="widget__step mb-30">
                             <h3 class="mb-3 reservation-details">$87 <span>night</span></h3>
                             <div class="date-selection">
-                                <div class="checking-dates" @click="rangeCalendarVisible = !rangeCalendarVisible">
+                                <div class="checking-dates" ref="dateRangeOpen" @click="rangeCalendarVisible = !rangeCalendarVisible">
                                     <div class="date-item">
                                         <h5>Check-in</h5>
                                         <span>Add date</span>
@@ -217,6 +205,7 @@
                                 <div 
                                     v-if="rangeCalendarVisible"
                                     class="range-calendar-dropdown"
+                                    ref="dateRangeSelection"
                                 >
                                     <VDatePicker 
                                         is-range
@@ -231,7 +220,11 @@
                                 </div>
                             </div>
                             <div class="guest-details">
-                                <div class="guest-details-sec d-flex justify-content-between align-items-center" @click="guestSelectionVisible = !guestSelectionVisible">
+                                <div 
+                                    class="guest-details-sec d-flex justify-content-between align-items-center"
+                                    ref="guestDetailsOpen"
+                                    @click="guestSelectionVisible = !guestSelectionVisible"
+                                >
                                     <div class="guest-list">
                                         <h5>Guests</h5>
                                         <span v-if="adultCount > 0">{{ adultCount }} Adults</span>
@@ -241,6 +234,7 @@
                                 </div>
                                 <div
                                     v-if="guestSelectionVisible"
+                                    ref="guestDetailsSelection"
                                     class="guest-selection-dropdown"
                                 >
                                     <div class="d-flex justify-content-between align-items-center mb-5">
@@ -346,6 +340,8 @@ export default {
             onOpen: () => console.log('Lightbox opened!'),
             onClose: () => console.log('Lightbox closed!'),
         });
+        
+        document.addEventListener('click', this.handleClickOutside);
     },
     setup() {
       const onSwiper = (swiper) => {
@@ -374,6 +370,23 @@ export default {
         childDecrement() {
             if (this.childCount > 0) {
                 this.childCount--;
+            }
+        },
+        handleClickOutside(event) {
+            const dateRangeOpen = this.$refs.dateRangeOpen;
+            const dateRangeSelection = this.$refs.dateRangeSelection;
+
+            if (dateRangeSelection && !dateRangeSelection.contains(event.target) &&
+                !dateRangeOpen.contains(event.target)) {
+                this.rangeCalendarVisible = false;
+            }
+            
+            const guestDetailsOpen = this.$refs.guestDetailsOpen;
+            const guestDetailsSelection = this.$refs.guestDetailsSelection;
+            
+            if (guestDetailsSelection && !guestDetailsSelection.contains(event.target) &&
+                !guestDetailsOpen.contains(event.target)) {
+                this.guestSelectionVisible = false;
             }
         },
     },
