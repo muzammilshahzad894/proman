@@ -14,8 +14,11 @@ import {
     faArrowRightFromBracket,
     faCaretLeft,
     faCaretRight,
+    faCaretUp,
+    faCaretDown,
     faClose,
     faPlus,
+    faMinus,
     faEnvelope,
     faCheck,
     faExclamation,
@@ -27,7 +30,7 @@ import {
     faChevronLeft,
     faInfo,
     faStar,
-    faStarHalfAlt,
+    faStarHalfAlt, 
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -46,7 +49,10 @@ library.add([
     faArrowRightFromBracket,
     faCaretLeft,
     faCaretRight,
+    faCaretUp,
+    faCaretDown,
     faPlus,
+    faMinus,
     faClose,
     faEnvelope,
     faCheck,
