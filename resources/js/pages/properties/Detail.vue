@@ -234,11 +234,10 @@
                                 <div class="guest-details-sec d-flex justify-content-between align-items-center" @click="guestSelectionVisible = !guestSelectionVisible">
                                     <div class="guest-list">
                                         <h5>Guests</h5>
-                                        <span>Add date</span>
+                                        <span v-if="adultCount > 0">{{ adultCount }} Adults</span>
+                                        <span v-if="childCount > 0">, {{ childCount }} Children</span>
                                     </div>
-                                    <font-awesome-icon 
-                                        :icon="guestSelectionVisible ? 'caret-up' : 'caret-down'"
-                                    />
+                                    <font-awesome-icon :icon="guestSelectionVisible ? 'caret-up' : 'caret-down'" />
                                 </div>
                                 <div
                                     v-if="guestSelectionVisible"
@@ -250,9 +249,20 @@
                                             <span>Age 13+</span>
                                         </div>
                                         <div class="increment-decrement d-flex justify-content-center align-items-center gap-3">
-                                            <span class="increment"><font-awesome-icon icon="minus" /></span>
-                                            <span class="count">1</span>
-                                            <span class="decrement"><font-awesome-icon icon="plus" /></span>
+                                            <button 
+                                                class="decrement" 
+                                                @click="adultDecrement"
+                                                :disabled="adultCount === 1"
+                                            >
+                                                <font-awesome-icon icon="minus" />
+                                            </button>
+                                            <span class="count">{{ adultCount }}</span>
+                                            <button 
+                                                class="increment"
+                                                @click="adultIncrement"
+                                            >
+                                                <font-awesome-icon icon="plus" />
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
@@ -261,9 +271,20 @@
                                             <span>Age >13</span>
                                         </div>
                                         <div class="increment-decrement d-flex justify-content-center align-items-center gap-3">
-                                            <span class="increment"><font-awesome-icon icon="minus" /></span>
-                                            <span class="count">1</span>
-                                            <span class="decrement"><font-awesome-icon icon="plus" /></span>
+                                            <button 
+                                                class="decrement"
+                                                @click="childDecrement"
+                                                :disabled="childCount === 0"
+                                            >
+                                                <font-awesome-icon icon="minus" />
+                                            </button>
+                                            <span class="count">{{ childCount }}</span>
+                                            <button 
+                                                class="increment"
+                                                @click="childIncrement"
+                                            >
+                                                <font-awesome-icon icon="plus" />
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="calendar-actions d-flex justify-content-end gap-3 mt-5 p-0 m-0">
@@ -296,6 +317,8 @@ export default {
             selectedColor: ref('gray'),
             rangeCalendarVisible: false,
             guestSelectionVisible: false,
+            adultCount: 1,
+            childCount: 0,
             gallery: [
                 {
                     id: 1,
@@ -335,6 +358,24 @@ export default {
         onSwiper,
         onSlideChange,
       };
+    },
+    methods: {
+        adultIncrement() {
+            this.adultCount++;
+        },
+        adultDecrement() {
+            if (this.adultCount > 1) {
+                this.adultCount--;
+            }
+        },
+        childIncrement() {
+            this.childCount++;
+        },
+        childDecrement() {
+            if (this.childCount > 0) {
+                this.childCount--;
+            }
+        },
     },
   };
 </script>
@@ -598,12 +639,19 @@ export default {
 }
 
 .increment-decrement .increment, .increment-decrement .decrement {
-    height: 25px;
-    width: 25px;
+    height: 27px;
+    width: 27px;
     text-align: center;
-    border: 1px solid gray;
+    border: 1px solid #b0b0b0;
     border-radius: 50%;
     font-size: small;
+    background: #fff;
+}
+
+.decrement:disabled, .increment:disabled {
+    border-color: #eae7e7;
+    color: #ebebeb;
+    cursor: not-allowed;
 }
 
 @media (max-width: 650px) {
