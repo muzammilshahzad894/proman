@@ -13,7 +13,7 @@ const routes = [
             {
                 path: 'front/property/:id',
                 name: 'propertyDetail',
-                component: () => import('./pages/properties/Detail.vue')
+                component: () => import('./pages/properties/details/Detail.vue')
             }
         ]
     },
