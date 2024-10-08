@@ -7,21 +7,18 @@
                 is-range
                 columns="2"
                 :min-date="minDate"
-                :color="selectedColor"
+                color="gray"
             />
         </div>
     </div>
 </template>
 
 <script>
-import { ref } from 'vue';
-
 export default {
     name: 'ReservationDateDetail',
     data() {
         return {
             minDate: new Date().toISOString().split('T')[0],
-            selectedColor: ref('gray'),
         };
     },
 }

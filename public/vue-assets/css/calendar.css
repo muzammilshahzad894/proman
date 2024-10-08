@@ -1,0 +1,151 @@
+.vc-container {
+    width: 100%;
+    border: none;
+    margin-top: 10px;
+    z-index: 0;
+}
+
+.vc-arrow, .vc-title {
+    background: none;
+}
+
+.vc-arrow {
+    border-radius: 50%;
+}
+
+.vc-arrow:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.vc-header {
+    margin-bottom: 15px;
+    padding: 0px;
+}
+
+.vc-weekdays, .vc-week {
+    height: 40px;
+}
+
+.vc-week div:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.vc-disabled {
+    position: relative;
+    color: red;
+}
+
+.vc-disabled::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: red;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.listing__widget {
+    position: sticky;
+    top: 20px;
+}
+
+.reservation-details {
+    font-size: 24px;
+}
+
+.reservation-details span {
+    font-weight: 300;
+    font-size: 20px;
+}
+
+.checking-dates {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+.checking-dates .date-item {
+    flex-grow: 1;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.checking-dates .date-item:last-child {
+    border-left: 1px solid rgb(176, 176, 176) !important;
+}
+
+.checking-dates .date-item h5 {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 11px;
+}
+
+.checking-dates .date-item span {
+    font-size: 13px;
+}
+
+.date-selection {
+    position: relative;
+}
+
+.date-selection .range-calendar-dropdown {
+    background: rgb(255, 255, 255);
+    position: absolute;
+    top: 56px;
+    right: 0px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 6px 20px;
+    border-radius: 1rem;
+    width: 600px;
+    z-index: 1;
+}
+
+.range-calendar-dropdown ::v-deep(.vc-container) {
+    z-index: 1 !important;
+}
+
+.calendar-actions {
+    margin-right: 15px;
+}
+
+.calendar-actions .close-btn {
+    padding: 5px 18px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+.calendar-actions .clear-date-btn {
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    text-decoration: underline;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.calendar-actions .clear-date-btn:hover {
+    background: #F0F0F0;
+}
+
+.increment-decrement .increment, .increment-decrement .decrement {
+    height: 27px;
+    width: 27px;
+    text-align: center;
+    border: 1px solid #b0b0b0;
+    border-radius: 50%;
+    font-size: small;
+    background: #fff;
+}
+
+.decrement:disabled, .increment:disabled {
+    border-color: #eae7e7;
+    color: #ebebeb;
+    cursor: not-allowed;
+}
