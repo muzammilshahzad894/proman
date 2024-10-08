@@ -6,11 +6,11 @@
                 <div class="checking-dates" ref="dateRangeOpen" @click="rangeCalendarVisible = !rangeCalendarVisible">
                     <div class="date-item">
                         <h5>Check-in</h5>
-                        <span>Add date</span>
+                        <span>{{ checkInDate ? $formatDate(checkInDate) : 'Add date' }}</span>
                     </div>
                     <div class="date-item">
                         <h5>Check-out</h5>
-                        <span>Add date</span>
+                        <span>{{ checkOutDate ? $formatDate(checkOutDate) : 'Add date' }}</span>
                     </div>
                 </div>
                 <div 
@@ -18,14 +18,15 @@
                     class="range-calendar-dropdown"
                     ref="dateRangeSelection"
                 >
-                    <VDatePicker 
-                        is-range
-                        columns="2"
+                    <CustomCalendar 
+                        :dateRange="dateRange"
+                        :columns="columns"
                         :min-date="minDate"
                         color="gray"
+                        :updateRange="updateRange"
                     />
                     <div class="calendar-actions d-flex justify-content-end gap-3 mb-4 mr-5">
-                        <button class="clear-date-btn">Clear dates</button>
+                        <button class="clear-date-btn" @click="clearDate">Clear dates</button>
                         <button class="btn btn-dark close-btn" @click="rangeCalendarVisible = false">Close</button>
                     </div>
                 </div>
@@ -97,20 +98,53 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <button class="btn btn-primary w-100 mt-4 reserve-btn">Reserve</button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import CustomCalendar from '@/pages/properties/details/_partials/CustomCalendar.vue';
+
 export default {
     name: 'ReservationSummary',
+    components: {
+        CustomCalendar,
+    },
+    props: {
+        minDate: {
+            type: String,
+            default: new Date().toISOString().split('T')[0],
+        },
+        dateRange: {
+            type: [Array, Object],
+            default: () => [],
+        },
+        columns: {
+            type: Number,
+            default: 1,
+        },
+        checkInDate: {
+            type: [String, Date],
+            default: '',
+        },
+        checkOutDate: {
+            type: [String, Date],
+            default: '',
+        },
+        updateRange: {
+            type: Function,
+            default: () => {},
+        },
+    },
     data() {
         return {
             rangeCalendarVisible: false,
             guestSelectionVisible: false,
             adultCount: 1,
             childCount: 0,
-            minDate: new Date().toISOString().split('T')[0],
         };
     },
     mounted() {
@@ -132,6 +166,11 @@ export default {
             if (this.childCount > 0) {
                 this.childCount--;
             }
+        },
+        clearDate() {
+            this.checkInDate = '';
+            this.checkOutDate = '';
+            this.range = [];
         },
         handleClickOutside(event) {
             const dateRangeOpen = this.$refs.dateRangeOpen;
@@ -186,5 +225,18 @@ export default {
     border-radius: 2px;
     width: 100%;
     padding: 20px 17px;
+}
+
+.reserve-btn {
+    background: var(--color-hover) !important;
+    border: none;
+    padding: 13px;
+    font-size: 18px;
+    border-radius: 6px;
+}
+
+.reserve-btn:focus {
+    box-shadow: none;
+    outline: none;
 }
 </style>
