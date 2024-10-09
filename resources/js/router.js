@@ -14,6 +14,11 @@ const routes = [
                 path: 'front/property/:id',
                 name: 'propertyDetail',
                 component: () => import('./pages/properties/details/Detail.vue')
+            },
+            {
+                path: 'front/property/:id/reservation/step_1',
+                name: 'reservationStep1',
+                component: () => import('./pages/properties/reservation/Step1.vue')
             }
         ]
     },

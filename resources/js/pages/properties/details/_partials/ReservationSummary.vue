@@ -99,7 +99,10 @@
                 </div>
             </div>
             <div>
-                <button class="btn btn-primary w-100 mt-4 reserve-btn">Reserve</button>
+                <router-link :to="{ name: 'reservationStep1', params: { id: propertyId } }" 
+                class="btn btn-primary w-100 mt-4 reserve-btn">
+                    Reserve
+                </router-link>
             </div>
         </div>
     </div>
@@ -107,6 +110,7 @@
 
 <script>
 import CustomCalendar from '@/pages/properties/details/_partials/CustomCalendar.vue';
+import { useRouter } from 'vue-router';
 
 export default {
     name: 'ReservationSummary',
@@ -145,6 +149,7 @@ export default {
             guestSelectionVisible: false,
             adultCount: 1,
             childCount: 0,
+            propertyId: this.$route.params.id,
         };
     },
     mounted() {
@@ -189,6 +194,10 @@ export default {
                 this.guestSelectionVisible = false;
             }
         },
+    },
+    setup() {
+        const router = useRouter();
+        return { router }
     },
 }
 </script>

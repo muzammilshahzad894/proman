@@ -31,6 +31,9 @@ import {
     faInfo,
     faStar,
     faStarHalfAlt, 
+    faPencilSquare,
+    faAngleLeft,
+    faAngleRight,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -66,6 +69,9 @@ library.add([
     faInfo,
     faStar,
     faStarHalfAlt,
+    faPencilSquare,
+    faAngleLeft,
+    faAngleRight,
 ])
 
 export default FontAwesomeIcon
