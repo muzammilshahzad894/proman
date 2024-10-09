@@ -109,10 +109,11 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="d-flex align-items-center gap-4">
-                                            <router-link to="/reservation/step2" class="btn btn-primary mt-4 general-btn">
+                                            <router-link :to="{ name: 'propertyDetail', params: { id: propertyId } }" class="btn btn-primary mt-4 general-btn">
                                                 <font-awesome-icon icon="angle-left" class="back-icon" /> Back
                                             </router-link>
-                                            <router-link to="/reservation/step2" class="btn btn-primary mt-4 general-btn">
+                                            
+                                            <router-link  :to="{ name: 'reservationStep2', params: { id: propertyId } }" class="btn btn-primary mt-4 general-btn">
                                                 <font-awesome-icon icon="angle-right" class="next-icon" /> Next
                                             </router-link>
                                         </div>
@@ -162,8 +163,19 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+
 export default {
     name: 'Step1',
+    data() {
+        return {
+            propertyId: this.$route.params.id,
+        };
+    },
+    setup() {
+        const router = useRouter();
+        return { router }
+    },
 }
 </script>
 
