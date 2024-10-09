@@ -181,11 +181,11 @@
                                     <span class="fw-bold fs-5">$300.00</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center gap-2">
-                                    <h4 class="fw-bold">Lodgers Tax:(2)%:</h4>
+                                    <h4 class="fw-bold">Lodgers Tax:(2%):</h4>
                                     <span class="fw-bold fs-5">$6.00</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center gap-2">
-                                    <h4 class="fw-bold">Sales Tax:(5.5)%:</h4>
+                                    <h4 class="fw-bold">Sales Tax:(5.5%):</h4>
                                     <span class="fw-bold fs-5">$16.50</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center gap-2">
@@ -197,8 +197,8 @@
                                     <span class="fw-bold fs-5">$472.50</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center gap-2">
-                                    <h4 class="fw-bold">Discount:</h4>
-                                    <span class="fw-bold fs-5">$0.00</span>
+                                    <h4 class="fw-bold text-danger">Discount:</h4>
+                                    <span class="fw-bold fs-5 text-danger">$0.00</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center gap-2">
                                     <h4 class="fw-bold">Total:</h4>
