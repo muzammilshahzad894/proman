@@ -52,11 +52,18 @@
                                                 State <span class="text-danger">*</span>
                                             </label>
                                             <div class="select position-relative">
-                                                <select class="add__listing--form__select">
-                                                    <option selected="" value="1">State 1</option>
-                                                    <option value="2">State 3</option>
-                                                    <option value="3">State 4</option>
-                                                    <option value="4">State 5</option>
+                                                <select 
+                                                    class="add__listing--form__select"
+                                                    v-model="reservationDetails.selectedState"
+                                                >
+                                                    <option value='' disabled>-- Select --</option>
+                                                    <option 
+                                                        :value="state.code" 
+                                                        v-for="state in states" 
+                                                        :key="state.code"
+                                                    >
+                                                        {{ state.name }}
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -94,7 +101,16 @@
                                             <label class="add__listing--input__label mb-2">
                                                 Mobile Phone <span class="text-danger">*</span>
                                             </label>
-                                            <input class="add__listing--input__field" type="text">
+                                            <!-- <input class="add__listing--input__field" type="text"> -->
+                                            <InputMask 
+                                                ref="phoneInput"
+                                                id="phoneNumber"
+                                                v-model="reservationDetails.phoneNumber"
+                                                mask="(999) 999-9999"
+                                                @click="$moveCursorToStart($event)"
+                                                placeholder="999 999-9999"
+                                                class="p-inputtext-lg input-style"
+                                            />
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -164,12 +180,75 @@
 
 <script>
 import { useRouter } from 'vue-router';
+import InputMask from 'primevue/inputmask';
 
 export default {
     name: 'Step1',
+    components: {
+        InputMask,
+    },
     data() {
         return {
             propertyId: this.$route.params.id,
+            reservationDetails: {
+                checkIn: '',
+                checkOut: '',
+                guests: 1,
+                selectedState: '',
+            },
+            states: [
+                { name: 'Alabama', code: 'AL' },
+                { name: 'Alaska', code: 'AK' },
+                { name: 'Arizona', code: 'AZ' },
+                { name: 'Arkansas', code: 'AR' },
+                { name: 'California', code: 'CA' },
+                { name: 'Colorado', code: 'CO' },
+                { name: 'Connecticut', code: 'CT' },
+                { name: 'Delaware', code: 'DE' },
+                { name: 'District Of Columbia', code: 'DC' },
+                { name: 'Florida', code: 'FL' },
+                { name: 'Georgia', code: 'GA' },
+                { name: 'Hawaii', code: 'HI' },
+                { name: 'Idaho', code: 'ID' },
+                { name: 'Illinois', code: 'IL' },
+                { name: 'Indiana', code: 'IN' },
+                { name: 'Iowa', code: 'IA' },
+                { name: 'Kansas', code: 'KS' },
+                { name: 'Kentucky', code: 'KY' },
+                { name: 'Louisiana', code: 'LA' },
+                { name: 'Maine', code: 'ME' },
+                { name: 'Maryland', code: 'MD' },
+                { name: 'Massachusetts', code: 'MA' },
+                { name: 'Michigan', code: 'MI' },
+                { name: 'Minnesota', code: 'MN' },
+                { name: 'Mississippi', code: 'MS' },
+                { name: 'Missouri', code: 'MO' },
+                { name: 'Montana', code: 'MT' },
+                { name: 'Nebraska', code: 'NE' },
+                { name: 'Nevada', code: 'NV' },
+                { name: 'New Hampshire', code: 'NH' },
+                { name: 'New Jersey', code: 'NJ' },
+                { name: 'New Mexico', code: 'NM' },
+                { name: 'New York', code: 'NY' },
+                { name: 'North Carolina', code: 'NC' },
+                { name: 'North Dakota', code: 'ND' },
+                { name: 'Ohio', code: 'OH' },
+                { name: 'Oklahoma', code: 'OK' },
+                { name: 'Oregon', code: 'OR' },
+                { name: 'Pennsylvania', code: 'PA' },
+                { name: 'Rhode Island', code: 'RI' },
+                { name: 'South Carolina', code: 'SC' },
+                { name: 'South Dakota', code: 'SD' },
+                { name: 'Tennessee', code: 'TN' },
+                { name: 'Texas', code: 'TX' },
+                { name: 'Utah', code: 'UT' },
+                { name: 'Vermont', code: 'VT' },
+                { name: 'Virginia', code: 'VA' },
+                { name: 'Washington', code: 'WA' },
+                { name: 'West Virginia', code: 'WV' },
+                { name: 'Wisconsin', code: 'WI' },
+                { name: 'Wyoming', code: 'WY' }
+            ],
         };
     },
     setup() {

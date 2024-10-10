@@ -2,7 +2,7 @@
     <div class="pl-3 mt-3 d-flex">
         <i class="pi pi-info-circle ms-3 mt-2 lightIconStyle"></i>
         <span class="text-danger ms-2 label-style" v-if="saveCardOnlyText()">Your credit card will not be charged, but is used to hold your reservation.</span>
-        <span class="text-danger ms-2 label-style" v-else>Please enter your credit card information to complete the reservationreservationreservation</span>
+        <span class="text-danger ms-2 label-style" v-else>Please enter your credit card information to complete the reservation</span>
    </div>
 </template>
 <script>

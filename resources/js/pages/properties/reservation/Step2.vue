@@ -22,10 +22,11 @@
                                                         <div class="p-float-label">
                                                             <InputMask 
                                                                 id="creditCardNo" 
-                                                                name="creditCardNo" 
+                                                                name="creditCardNo"
+                                                                v-model="creditCardNo"
                                                                 mask="9999 9999 9999 9999" 
                                                                 :unmask="true"  
-                                                                @click="moveCursorToStart" 
+                                                                @click="$moveCursorToStart($event)"
                                                                 autocomplete="creditCardNo" 
                                                                 tabindex="1" 
                                                                 :autoClear="false"
@@ -44,6 +45,8 @@
                                                         <div class="p-float-label">
                                                             <Dropdown 
                                                                 id="creditCardMonth"
+                                                                name="creditCardMonth"
+                                                                v-model="creditCardMonth"
                                                                 :options="months" 
                                                                 optionValue="value" 
                                                                 optionLabel="value" 
@@ -61,6 +64,8 @@
                                                         <div class="p-float-label">
                                                             <Dropdown 
                                                                 id="creditCardYear"
+                                                                name="creditCardYear"
+                                                                v-model="creditCardYear"
                                                                 :options="creditCardYears" 
                                                                 optionValue="value" 
                                                                 optionLabel="value" 
@@ -80,6 +85,7 @@
                                                                 autocomplete="creditCardCvv" 
                                                                 id="creditCardCvv" 
                                                                 name="creditCardCvv" 
+                                                                v-model="creditCardCvv"
                                                                 type="text"
                                                                 :maxlength="16" 
                                                                 class="p-inputtext-lg input-style" 
@@ -120,7 +126,7 @@
                                                 :tabindex="6" 
                                             />
                                             <label for="newsletterCheckbox" class="ms-2 label-style">
-                                                I accept Terms & Conditions and Privacy Policy
+                                                I want to receive your newsletter
                                             </label>
                                         </div>
                                     </div>
@@ -262,17 +268,15 @@ export default {
                 { value: '2029' },
                 { value: '2030' },
             ],
+            creditCardNo: '',
+            creditCardMonth: '',
+            creditCardYear: '',
+            creditCardCvv: '',
             acceptTermsConditionCheckbox: true,
             newsletterCheckbox: false,
         };
     },
     methods: {
-        moveCursorToStart(event) {
-            if (event.target.selectionStart !== 0) {
-                // Move cursor to the start of the input field only if it's not already at the start
-                event.target.selectionStart = event.target.selectionEnd = 0;
-            }
-        },
     },
     setup() {
         const router = useRouter();
@@ -344,16 +348,6 @@ export default {
             bottom: 8px;
             right: 29px;
         }
-    }
-    
-    .input-style {
-        width: 100%;
-        height: 40px;
-        font-size: 1.25rem !important;
-    }
-    
-    .required-asterik {
-        color: red;
     }
     
     .label-style {

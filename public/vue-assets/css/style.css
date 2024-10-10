@@ -12919,3 +12919,13 @@ input[type=range]::-moz-range-thumb {
   box-shadow: none;
   outline: none;
 }
+
+.required-asterik {
+  color: red;
+}
+
+.input-style {
+  width: 100%;
+  height: 40px;
+  font-size: 1.25rem !important;
+}

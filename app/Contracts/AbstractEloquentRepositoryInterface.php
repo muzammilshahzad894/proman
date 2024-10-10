@@ -5,7 +5,6 @@ namespace App\Contracts;
 use App\Models\Base;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Illuminate\Http\UploadedFile;
 
 interface AbstractEloquentRepositoryInterface
 {
@@ -47,14 +46,6 @@ interface AbstractEloquentRepositoryInterface
      */
     public function getBy(string $key, mixed $value): Collection;
 
-    /**
-     * @param string $key
-     * @param array $values
-     *
-     * @return Collection
-     */
-    public function getRecordsQuery(string $key, mixed $value): Builder;
-
     public function getByIn(string $key, array $values): Collection;
 
     /**
@@ -89,11 +80,7 @@ interface AbstractEloquentRepositoryInterface
 
     public function getModel(): Base;
 
-    public function getAllByUuid(string $uuid): Collection;
-
     public function active(\Illuminate\Database\Query\Builder $query = null): \Illuminate\Database\Query\Builder;
 
     public function inactive(\Illuminate\Database\Query\Builder $query = null): \Illuminate\Database\Query\Builder;
-
-    public function saveFile(UploadedFile $file, string $path): string;
 }

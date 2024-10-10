@@ -1,7 +1,7 @@
 <template>
     <div class="listing__details--content__step mt-5 date-range-sec">
         <h3 class="days-title" v-if="checkInDate && checkOutDate">
-            {{ $totalDays(checkInDate, checkOutDate) }} days travel
+            {{ $totalDays(checkInDate, checkOutDate) }} days booking
         </h3>
         <h3 class="days-title" v-else>
             Select check-in date
@@ -11,7 +11,7 @@
                 {{ $formatDate(checkInDate) }} - {{ $formatDate(checkOutDate) }}
             </span>
             <span v-else>
-                Add your travel dates
+                Add your booking dates
             </span>
         </div>
         <div class="range-calendar">

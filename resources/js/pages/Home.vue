@@ -79,8 +79,26 @@
 </template>
 
 <script>
+import { usePropertiesStore } from "@/store/properties";
+
 export default {
     name: 'Home',
+    
+    async created() {
+        // await this.getProperties();
+    },
+    
+    setup() {
+        const propertyStore = usePropertiesStore();
+        return { propertyStore };
+    },
+    
+    computed: {
+        properties() {
+            return this.propertyStore.getProperties;
+        },
+    },
+    
     data() {
         return {
             properties: [
@@ -196,6 +214,12 @@ export default {
                 }
             ]
         }
+    },
+    
+    methods: {
+        async getProperties(page = 1) {
+            return await this.propertyStore.getAll(page)
+        },
     },
 }
 </script>
