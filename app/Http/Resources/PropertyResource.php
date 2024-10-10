@@ -17,6 +17,9 @@ class PropertyResource extends JsonResource
      */
     public function toArray($request): array|JsonSerializable|Arrayable
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'uuid' => $this->uuid,
+        ];
     }
 }

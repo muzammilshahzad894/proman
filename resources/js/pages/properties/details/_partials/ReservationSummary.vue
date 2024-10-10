@@ -41,6 +41,7 @@
                         <h5>Guests</h5>
                         <span v-if="adultCount > 0">{{ adultCount }} Adults</span>
                         <span v-if="childCount > 0">, {{ childCount }} Children</span>
+                        <span v-if="petsCount > 0">, {{ petsCount }} Pets</span>
                     </div>
                     <font-awesome-icon :icon="guestSelectionVisible ? 'caret-up' : 'caret-down'" />
                 </div>
@@ -71,7 +72,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-center mb-5">
                         <div class="guest-list">
                             <h5>Children</h5>
                             <span>Age >13</span>
@@ -88,6 +89,28 @@
                             <button 
                                 class="increment"
                                 @click="childIncrement"
+                            >
+                                <font-awesome-icon icon="plus" />
+                            </button>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="guest-list">
+                            <h5>Pets</h5>
+                            <span>Allowed</span>
+                        </div>
+                        <div class="increment-decrement d-flex justify-content-center align-items-center gap-3">
+                            <button 
+                                class="decrement"
+                                @click="petsDecrement"
+                                :disabled="petsCount === 0"
+                            >
+                                <font-awesome-icon icon="minus" />
+                            </button>
+                            <span class="count">{{ petsCount }}</span>
+                            <button 
+                                class="increment"
+                                @click="petsIncrement"
                             >
                                 <font-awesome-icon icon="plus" />
                             </button>
@@ -149,6 +172,7 @@ export default {
             guestSelectionVisible: false,
             adultCount: 1,
             childCount: 0,
+            petsCount: 0,
             propertyId: this.$route.params.id,
         };
     },
@@ -170,6 +194,14 @@ export default {
         childDecrement() {
             if (this.childCount > 0) {
                 this.childCount--;
+            }
+        },
+        petsIncrement() {
+            this.petsCount++;
+        },
+        petsDecrement() {
+            if (this.petsCount > 0) {
+                this.petsCount--;
             }
         },
         clearDate() {
